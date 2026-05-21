@@ -508,15 +508,32 @@ function escapeRegExp(value) {
 }
 
 function parseCli(argv) {
+  const help = argv.includes("--help") || argv.includes("-h");
   const json = argv.includes("--json");
-  const statePath = argv.find((arg) => !arg.startsWith("--"));
-  return { json, statePath };
+  const statePath = argv.find((arg) => !arg.startsWith("-"));
+  return { help, json, statePath };
 }
 
+const HELP_TEXT = `Usage:
+  goalbuddy-repair [--dry-run] [--json] docs/goals/<slug>/state.yaml
+  npm run repair -- [--dry-run] docs/goals/<slug>/state.yaml
+
+Normalize a GoalBuddy board without inventing product details.
+
+Options:
+  --dry-run     Preview repaired state and checker result without writing.
+  --json        Print machine-readable output.
+  -h, --help    Show this help.
+`;
+
 async function main() {
-  const { json, statePath } = parseCli(process.argv.slice(2));
+  const { help, json, statePath } = parseCli(process.argv.slice(2));
+  if (help) {
+    console.log(HELP_TEXT.trimEnd());
+    return;
+  }
   if (!statePath) {
-    console.error("Usage: goalbuddy-board-repair.mjs [--dry-run] [--json] docs/goals/<slug>/state.yaml");
+    console.error("Usage: goalbuddy-repair [--dry-run] [--json] docs/goals/<slug>/state.yaml");
     process.exitCode = 2;
     return;
   }

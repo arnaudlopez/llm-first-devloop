@@ -27,7 +27,12 @@ test("buildReadyModeArtifacts creates a checker-clean TDD board", () => {
   assert.match(artifacts.stateYaml, /worker_kind: implementation/);
   assert.match(artifacts.stateYaml, /T998 has a commit SHA and successful push result/);
   assert.match(artifacts.acceptanceContract, /LLM First Context/);
-  assert.match(artifacts.acceptanceContract, /Acceptance Or Evidence Draft/);
+  assert.match(artifacts.acceptanceContract, /Visible Outcome/);
+  assert.match(artifacts.acceptanceContract, /Acceptance Tests To Write First/);
+  assert.match(artifacts.acceptanceContract, /Failure Modes To Prevent/);
+  assert.match(artifacts.acceptanceContract, /Manual Or Visual Proof If Needed/);
+  assert.match(artifacts.acceptanceContract, /Out Of Scope/);
+  assert.match(artifacts.acceptanceContract, /Shipping Proof/);
 });
 
 test("buildReadyModeArtifacts accepts explicit oracle and frontend visual policy", () => {

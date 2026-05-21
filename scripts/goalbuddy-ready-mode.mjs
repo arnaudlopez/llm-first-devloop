@@ -288,6 +288,37 @@ This contract assumes the exploratory LLM conversation has already happened. The
 
 ${context.oracleSignal}
 
+## Visible Outcome
+
+T001/T002 must replace this placeholder with the observable user-facing behavior, generated artifact, audit answer, or verification result that should exist at the end.
+
+## Acceptance Tests To Write First
+
+${tests.map((line) => `- ${line}`).join("\n")}
+
+## Failure Modes To Prevent
+
+- Implementation starts before the acceptance/evidence contract is specific enough.
+- Tests pass but do not prove the owner-visible outcome.
+- The work drifts outside the LLM-first intent, non-goals, or approved boundaries.
+- Operational risks such as migrations, env/secrets, auth, external services, or shipping proof are discovered but not handled.
+
+## Manual Or Visual Proof If Needed
+
+${context.policy.requiresVisualVerification ? "T001/T002 must define expected screen state, viewport coverage, browser checks, and screenshot evidence before Worker implementation starts." : "If code tests cannot fully prove the outcome, T001/T002 must define the manual, artifact, source-backed, or browser proof required before final audit."}
+
+## Out Of Scope
+
+T001/T002 must keep or revise this list:
+
+- Do not implement behavior outside the approved acceptance contract.
+- Do not change unrelated dirty files.
+${context.policy.requiresTdd ? "- Do not skip the red test stage because implementation seems obvious." : "- Do not add implementation work unless Judge explicitly changes the goal policy."}
+
+## Shipping Proof
+
+${context.policy.requiresShipping ? "- T998 must record commit SHA, remote branch or push string, push result, committed files, and unrelated dirty files left untouched." : "- This policy mode does not require shipping unless Judge changes the policy after evidence."}
+
 ## End-State Evidence To Produce
 
 ${evidence.map((line) => `- ${line}`).join("\n")}
@@ -776,7 +807,8 @@ function parseArgs(argv) {
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
-    if (arg === "--dry-run") args.dryRun = true;
+    if (arg === "-h" || arg === "--help") args.help = true;
+    else if (arg === "--dry-run") args.dryRun = true;
     else if (arg === "--force") args.force = true;
     else if (arg === "--json") args.json = true;
     else if (arg === "--visual") args.visual = true;
@@ -795,6 +827,35 @@ function parseArgs(argv) {
   return args;
 }
 
+const HELP_TEXT = `Usage:
+  goalbuddy-ready --from brief.md --out docs/goals/my-feature [options]
+  npm run ready -- --from brief.md --out docs/goals/my-feature [options]
+
+Generate a GoalBuddy Ready Mode board from a mature brief or explicit goal.
+
+Inputs:
+  --from <file>       Read the goal/brief text from a Markdown file.
+  --goal <text>       Inline goal text. Use this instead of --from for short goals.
+  --oracle <text>     Observable completion proof. Optional but strongly recommended.
+
+Output:
+  --out <dir>         Directory to write goal.md, state.yaml, and acceptance-contract.md.
+  --slug <slug>       Stable slug for generated paths.
+  --title <text>      Human title for the goal.
+  --force             Overwrite generated files if they already exist.
+  --dry-run           Print state.yaml instead of writing files.
+  --json              Print JSON output.
+
+Policy:
+  --mode <mode>       implementation | frontend | data_migration | docs | audit_read_only | verification | research
+  --visual            Require browser/screenshot evidence; implementation goals become frontend goals.
+  --no-shipping       Disable shipping only for non-implementation modes.
+
+Examples:
+  goalbuddy-ready --from examples/brief-feature.md --mode implementation --oracle "Acceptance tests prove saved searches can be created, listed, and reused." --out docs/goals/saved-search
+  npm run ready -- --goal "Audit the publication flow without changing files" --mode audit_read_only --out docs/goals/publication-audit
+`;
+
 function printHuman(result, dryRun) {
   const status = result.check.ok ? "PASS" : "FAIL";
   if (dryRun) {
@@ -812,6 +873,10 @@ function printHuman(result, dryRun) {
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
+  if (args.help) {
+    process.stdout.write(HELP_TEXT);
+    return;
+  }
   const result = args.dryRun ? buildReadyModeArtifacts(args) : writeReadyModeArtifacts(args);
   if (args.json) {
     process.stdout.write(JSON.stringify(result, null, 2));

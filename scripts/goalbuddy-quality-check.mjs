@@ -743,16 +743,33 @@ function printHuman(result, statePath) {
 }
 
 function parseCli(argv) {
+  const help = argv.includes("--help") || argv.includes("-h");
   const json = argv.includes("--json");
   const final = argv.includes("--final");
-  const statePath = argv.find((arg) => !arg.startsWith("--"));
-  return { json, final, statePath };
+  const statePath = argv.find((arg) => !arg.startsWith("-"));
+  return { help, json, final, statePath };
 }
 
+const HELP_TEXT = `Usage:
+  goalbuddy-check [--final] [--json] docs/goals/<slug>/state.yaml
+  npm run check -- [--final] docs/goals/<slug>/state.yaml
+
+Validate a GoalBuddy state.yaml for oracle, policy, TDD, impact, shipping, and final audit evidence.
+
+Options:
+  --final       Enforce final-completion checks even when goal.status is not done.
+  --json        Print machine-readable output.
+  -h, --help    Show this help.
+`;
+
 async function main() {
-  const { json, final, statePath } = parseCli(process.argv.slice(2));
+  const { help, json, final, statePath } = parseCli(process.argv.slice(2));
+  if (help) {
+    console.log(HELP_TEXT.trimEnd());
+    return;
+  }
   if (!statePath) {
-    console.error("Usage: goalbuddy-quality-check.mjs [--final] [--json] docs/goals/<slug>/state.yaml");
+    console.error("Usage: goalbuddy-check [--final] [--json] docs/goals/<slug>/state.yaml");
     process.exitCode = 2;
     return;
   }

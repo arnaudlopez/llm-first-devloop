@@ -1,5 +1,7 @@
 # LLM First DevLoop
 
+[![CI](https://github.com/arnaudlopez/llm-first-devloop/actions/workflows/ci.yml/badge.svg)](https://github.com/arnaudlopez/llm-first-devloop/actions/workflows/ci.yml)
+
 LLM First DevLoop is a small, local workflow layer for turning a mature LLM conversation or PRD into a GoalBuddy run that is driven by an observable oracle, acceptance tests, verification, and shipping proof.
 
 The principle is simple:
@@ -9,16 +11,112 @@ The principle is simple:
 3. **ATDD/TDD execution**: write failing tests or equivalent evidence before implementation, then implement only against approved boundaries.
 4. **Proof before done**: final completion requires verification, review, commit/push proof, or an explicit blocker.
 
-This repository contains the scripts, tests, and documentation extracted from the original working conversation that produced the workflow.
+This repository is meant to be reusable tooling, not just an archive. It gives you a CLI path from "we talked through the idea" to a GoalBuddy board that can be checked, repaired, implemented, audited, and shipped.
 
 ## What Is Included
 
+- `scripts/goalbuddy-brief.mjs`: compiles conversation notes, a PRD, or a transcript into a Ready Mode brief.
+- `scripts/goalbuddy-interview.mjs`: checks whether LLM-first notes are mature enough, or writes clarification questions.
 - `scripts/goalbuddy-ready-mode.mjs`: generates `goal.md`, `state.yaml`, and `acceptance-contract.md` from a mature spec.
+- `scripts/goalbuddy-next.mjs`: inspects a board and prints the exact next prompt without mutating state.
 - `scripts/goalbuddy-quality-check.mjs`: validates GoalBuddy boards for oracle, TDD, impact, shipping, and final audit evidence.
 - `scripts/goalbuddy-board-repair.mjs`: normalizes generated boards without inventing product details.
 - `scripts/personalize-goalbuddy.mjs`: reapplies these customizations after GoalBuddy updates.
+- `examples/`: copyable conversation and brief examples.
 - `docs/ready-mode-implementation-strategy.md`: full strategy and future implementation plan.
 - `docs/conversation-history.md`: condensed history of the design decisions behind the project.
+
+## Quick Start
+
+Clone the repo and run the tests:
+
+```bash
+npm install
+npm test
+```
+
+Check whether conversation notes are mature enough:
+
+```bash
+npm run interview -- \
+  --from examples/conversation-notes.md \
+  --out briefs/saved-search.md \
+  --oracle "Acceptance tests prove saved searches can be created, listed, reopened, renamed, and deleted."
+```
+
+Compile conversation notes directly into a clean brief:
+
+```bash
+npm run brief -- \
+  --from examples/conversation-notes.md \
+  --out briefs/saved-search.md \
+  --oracle "Acceptance tests prove saved searches can be created, listed, reopened, renamed, and deleted."
+```
+
+Generate a Ready Mode board from that brief:
+
+```bash
+npm run ready -- \
+  --from briefs/saved-search.md \
+  --mode implementation \
+  --oracle "Acceptance tests prove saved searches can be created, listed, reopened, renamed, and deleted." \
+  --out docs/goals/saved-search
+```
+
+Check the generated board:
+
+```bash
+npm run check -- docs/goals/saved-search/state.yaml
+```
+
+Ask what to do next without mutating the board:
+
+```bash
+npm run next -- docs/goals/saved-search/state.yaml
+```
+
+Repair a hand-written or older board:
+
+```bash
+npm run repair -- --dry-run --json docs/goals/saved-search/state.yaml
+```
+
+## CLI Commands
+
+When installed as an npm package, the same tools are exposed as binaries:
+
+```bash
+llm-first-devloop --help
+llm-first-devloop brief --help
+llm-first-devloop interview --help
+llm-first-devloop ready --help
+llm-first-devloop next --help
+goalbuddy-brief --help
+goalbuddy-interview --help
+goalbuddy-ready --help
+goalbuddy-check --help
+goalbuddy-repair --help
+goalbuddy-next --help
+```
+
+Until the package is published, use the `npm run` commands from a clone. After publishing, these direct forms will work:
+
+```bash
+npx llm-first-devloop ready --help
+npx --package llm-first-devloop goalbuddy-ready --help
+```
+
+## How To Use
+
+1. Start with an ordinary LLM conversation. Explore the idea, reject weak options, clarify examples, and converge on intent.
+2. Save the useful notes, PRD, or transcript to Markdown.
+3. Run `goalbuddy-interview` if the notes may still be immature; resolve any generated clarification questions in the LLM conversation.
+4. Run `goalbuddy-brief` to turn mature notes into a structured brief with intent, non-goals, oracle, acceptance hints, risks, and constraints.
+5. Run `goalbuddy-ready` when the owner says "go".
+6. Run `goalbuddy-next` to inspect the board and produce the next prompt.
+7. Give the generated `goal.md` and `state.yaml` to GoalBuddy through `/goal`.
+8. Let Scout and Judge refine the acceptance contract before Worker implementation.
+9. Finish only after verification, final audit, and shipping proof or an explicit blocker.
 
 ## GoalBuddy Personalization
 
@@ -97,6 +195,8 @@ It writes:
 - `goal.md`: the `/goal` instruction.
 - `state.yaml`: a checker-clean board with oracle, Scout/Judge/Worker tasks, red-test Worker, implementation Worker, verification, shipping, and final audit.
 - `acceptance-contract.md`: the owner-facing test contract that T001/T002 must refine before code.
+
+The acceptance contract includes visible outcome, tests to write first, failure modes, manual/visual proof, out-of-scope boundaries, and shipping proof.
 
 Use it when the human conversation has converged and the next exchange should be “build this, but prove it from tests first”. The generated board deliberately leaves Worker `allowed_files` and `verify` empty until Scout and Judge inspect the real repository. That prevents the generator from pretending to know module boundaries it has not read yet.
 

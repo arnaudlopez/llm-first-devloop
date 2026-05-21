@@ -4,9 +4,28 @@
   "private": false,
   "type": "module",
   "description": "LLM-first, acceptance-test-driven GoalBuddy workflow tooling.",
+  "bin": {
+    "llm-first-devloop": "scripts/llm-first-devloop.mjs",
+    "goalbuddy-ready": "scripts/goalbuddy-ready-mode.mjs",
+    "goalbuddy-brief": "scripts/goalbuddy-brief.mjs",
+    "goalbuddy-check": "scripts/goalbuddy-quality-check.mjs",
+    "goalbuddy-repair": "scripts/goalbuddy-board-repair.mjs",
+    "goalbuddy-next": "scripts/goalbuddy-next.mjs",
+    "goalbuddy-interview": "scripts/goalbuddy-interview.mjs"
+  },
+  "files": [
+    "README.md",
+    "LICENSE",
+    "scripts",
+    "docs",
+    "examples"
+  ],
   "scripts": {
     "test": "node --test scripts/*.test.mjs",
     "ready": "node scripts/goalbuddy-ready-mode.mjs",
+    "brief": "node scripts/goalbuddy-brief.mjs",
+    "interview": "node scripts/goalbuddy-interview.mjs",
+    "next": "node scripts/goalbuddy-next.mjs",
     "check": "node scripts/goalbuddy-quality-check.mjs",
     "repair": "node scripts/goalbuddy-board-repair.mjs"
   },

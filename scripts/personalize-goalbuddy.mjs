@@ -12,6 +12,9 @@ const scriptDir = dirname(fileURLToPath(import.meta.url));
 const qualityCheckerSource = join(scriptDir, "goalbuddy-quality-check.mjs");
 const boardRepairSource = join(scriptDir, "goalbuddy-board-repair.mjs");
 const readyModeSource = join(scriptDir, "goalbuddy-ready-mode.mjs");
+const briefSource = join(scriptDir, "goalbuddy-brief.mjs");
+const nextSource = join(scriptDir, "goalbuddy-next.mjs");
+const interviewSource = join(scriptDir, "goalbuddy-interview.mjs");
 
 const home = homedir();
 const candidates = [
@@ -40,6 +43,18 @@ const repairTargets = [
 const readyModeTargets = [
   join(home, ".claude", "skills", "goalbuddy", "scripts", "goalbuddy-ready-mode.mjs"),
   ...goalbuddyPluginFiles(home, "skills/goalbuddy/scripts/goalbuddy-ready-mode.mjs"),
+];
+const briefTargets = [
+  join(home, ".claude", "skills", "goalbuddy", "scripts", "goalbuddy-brief.mjs"),
+  ...goalbuddyPluginFiles(home, "skills/goalbuddy/scripts/goalbuddy-brief.mjs"),
+];
+const nextTargets = [
+  join(home, ".claude", "skills", "goalbuddy", "scripts", "goalbuddy-next.mjs"),
+  ...goalbuddyPluginFiles(home, "skills/goalbuddy/scripts/goalbuddy-next.mjs"),
+];
+const interviewTargets = [
+  join(home, ".claude", "skills", "goalbuddy", "scripts", "goalbuddy-interview.mjs"),
+  ...goalbuddyPluginFiles(home, "skills/goalbuddy/scripts/goalbuddy-interview.mjs"),
 ];
 
 const patches = {
@@ -83,6 +98,9 @@ for (const file of unique(candidates)) {
 installScript(qualityCheckerSource, checkerTargets);
 installScript(boardRepairSource, repairTargets);
 installScript(readyModeSource, readyModeTargets);
+installScript(briefSource, briefTargets);
+installScript(nextSource, nextTargets);
+installScript(interviewSource, interviewTargets);
 
 console.log(
   JSON.stringify(
