@@ -53,6 +53,19 @@ The `run` command is the source of truth. It:
 5. returns the active-task handoff;
 6. stops with clarification or blocker output instead of creating a weak board.
 
+## Autonomous Session Loop
+
+After `run` returns `HANDOFF_READY`, keep working in the current Codex session when the active task can be executed locally:
+
+1. read the active-task handoff and boundaries;
+2. execute only that task;
+3. produce a compact receipt with evidence, commands, changed files, blockers, and next recommendation;
+4. call `advance`;
+5. run `run --state` again to get the next handoff;
+6. repeat until the board is blocked, waiting for owner input, or final-audited.
+
+Do not ask the owner to manually run `/goal`, `check`, `next`, or `advance` for normal local work. Surface only real blockers, missing credentials, required approvals, or final results.
+
 When a task is completed in the current session, do not hand-edit `state.yaml` if the receipt is straightforward. Apply the receipt with:
 
 ```bash
@@ -72,4 +85,4 @@ Use `--next T003` for an explicit next task or `--no-next` when the task is bloc
 
 ## After Handoff
 
-When `run` returns `HANDOFF_READY`, use the generated prompt as the next task instruction. Keep the original oracle visible and continue only within the active task boundaries.
+When `run` returns `HANDOFF_READY`, use the generated prompt as the next task instruction. Keep the original oracle visible, continue only within the active task boundaries, and advance the board yourself after each completed task.
