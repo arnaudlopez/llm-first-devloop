@@ -154,6 +154,13 @@ test("reads state from disk", () => {
   assert.equal(result.ok, true, result.errors.join("\n"));
 });
 
+test("fails inline empty list followed by nested list items", () => {
+  const result = checkStateText(skeletonBoard().replace("allowed_files: []", "allowed_files: []\n      - \"test/tasks.test.js\""));
+
+  assert.equal(result.ok, false);
+  assert.match(result.errors.join("\n"), /inline \[\] cannot also have nested list items/);
+});
+
 function skeletonBoard() {
   return `version: 2
 

@@ -112,3 +112,45 @@ test("advanceBoard validates the requested next task", () => {
     assert.equal(result.nextTask.id, "T999");
   });
 });
+
+test("advanceBoard marks the goal complete when final audit finishes", () => {
+  const state = `version: 2
+goal:
+  status: active
+
+goal_policy:
+  mode: docs
+  requires_shipping: false
+
+rules:
+  require_quality_checker: true
+
+active_task: T999
+tasks:
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: active
+    objective: "Audit whether the outcome is complete."
+    receipt: null
+`;
+
+  withState(state, (statePath) => {
+    const result = advanceBoard({
+      statePath,
+      nextTaskId: null,
+      receipt: {
+        result: "done",
+        complete: "complete",
+        full_outcome_complete: true,
+        summary: "Final audit passed.",
+      },
+    });
+
+    assert.equal(result.ok, true, result.errors?.join("\n"));
+    const updated = readFileSync(statePath, "utf8");
+    assert.match(updated, /goal:\n  status: complete/);
+    assert.match(updated, /active_task: null/);
+    assert.match(updated, /id: T999[\s\S]*status: done/);
+  });
+});

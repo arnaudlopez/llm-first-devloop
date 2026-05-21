@@ -60,6 +60,8 @@ export function advanceBoard(options = {}) {
   });
   if (nextTask) {
     nextText = replaceTaskBlock(nextText, nextTask.id, (block) => replaceTaskStatus(block, "active"));
+  } else if (status === "done" && activeTask.id === "T999") {
+    nextText = replaceGoalStatus(nextText, "complete");
   }
 
   const check = checkStateText(nextText);
@@ -191,6 +193,23 @@ function replaceTopLevelScalar(text, key, value) {
     return text.replace(new RegExp(`^${key}:\\s*[^\\n]*`, "m"), `${key}: ${value}`);
   }
   return `${key}: ${value}\n${text}`;
+}
+
+function replaceGoalStatus(text, status) {
+  const lines = text.split(/\r?\n/);
+  const goalIndex = lines.findIndex((line) => line === "goal:");
+  if (goalIndex === -1) return replaceTopLevelScalar(text, "status", status);
+
+  for (let index = goalIndex + 1; index < lines.length; index += 1) {
+    if (/^\S/.test(lines[index])) break;
+    if (/^\s{2}status:\s*/.test(lines[index])) {
+      lines[index] = `  status: ${status}`;
+      return lines.join("\n");
+    }
+  }
+
+  lines.splice(goalIndex + 1, 0, `  status: ${status}`);
+  return lines.join("\n");
 }
 
 function blocked(reason, errors, extra = {}) {

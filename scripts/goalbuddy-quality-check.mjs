@@ -67,6 +67,7 @@ export function checkStateText(text, options = {}) {
   const mode = options.final ? "final" : "progress";
   const errors = [];
   const warnings = [];
+  errors.push(...findStructuralYamlErrors(text));
   const tasks = parseTasks(text);
   const taskById = new Map(tasks.map((task) => [task.id, task]));
   const goalStatus = scalarAtIndent(text, "goal", "status") || scalarTopLevel(text, "status");
@@ -144,7 +145,7 @@ export function checkStateText(text, options = {}) {
     checkWorkerTask(task, policy, tddCycle, errors, warnings);
   }
 
-  const finalMode = mode === "final" || goalStatus === "done";
+  const finalMode = mode === "final" || goalStatus === "done" || goalStatus === "complete";
   if (finalMode) {
     checkFinalState(tasks, taskById, policy, errors, warnings);
   }
@@ -203,6 +204,29 @@ function parseTasks(text) {
       raw,
     };
   });
+}
+
+function findStructuralYamlErrors(text) {
+  const errors = [];
+  const lines = text.split(/\r?\n/);
+  for (let index = 0; index < lines.length - 1; index += 1) {
+    const inlineEmptyList = lines[index].match(/^(\s+)([A-Za-z0-9_-]+):\s*\[\]\s*$/);
+    if (!inlineEmptyList) continue;
+
+    const currentIndent = inlineEmptyList[1].length;
+    for (let next = index + 1; next < lines.length; next += 1) {
+      if (!lines[next].trim()) continue;
+      const nextIndent = lines[next].match(/^(\s*)/)?.[1].length ?? 0;
+      if (nextIndent <= currentIndent) break;
+      if (/^\s+-\s+/.test(lines[next])) {
+        errors.push(
+          `invalid YAML shape near ${inlineEmptyList[2]}: inline [] cannot also have nested list items`,
+        );
+      }
+      break;
+    }
+  }
+  return errors;
 }
 
 function checkWorkerTask(task, policy, tddCycle, errors, warnings) {
