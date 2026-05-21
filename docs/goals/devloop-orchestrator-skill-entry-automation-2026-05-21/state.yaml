@@ -4,7 +4,7 @@ goal:
   id: devloop-orchestrator-skill-entry-automation-2026-05-21
   title: "DevLoop Orchestrator Skill Entry Automation"
   slug: "devloop-orchestrator-skill-entry-automation-2026-05-21"
-  status: active
+  status: done
   kind: specific
   original_request: "Automatiser l'entree du workflow DevLoop via une skill pour ne plus lancer manuellement interview/ready/check/next avant un goal."
   interpreted_outcome: "A Codex skill layer lets the owner invoke DevLoop once, then prepares or reuses a board, repairs/checks it, runs next, and returns the active-task handoff for a SuperMemory T4-style request."
@@ -207,7 +207,7 @@ visual_board:
     command: "npx goalbuddy extend github-projects"
     missing: []
 
-active_task: T998
+active_task: null
 
 tasks:
   - id: T001
@@ -532,7 +532,7 @@ tasks:
   - id: T998
     type: pm
     assignee: PM
-    status: active
+    status: done
     reasoning_hint: medium
     objective: "Ship the verified DevLoop orchestrator entry workflow with clean commit and push proof."
     inputs:
@@ -555,12 +555,30 @@ tasks:
       - "push_result"
       - "committed_files"
       - "unrelated_dirty_files_left_untouched"
-    receipt: null
+    receipt:
+      result: done
+      commit_sha: "71bd915"
+      remote_branch: "origin/main"
+      push_result: "pushed successfully to origin/main"
+      committed_files:
+        - ".github/workflows/ci.yml"
+        - "README.md"
+        - "package.json"
+        - "scripts/llm-first-devloop.mjs"
+        - "scripts/goalbuddy-run.mjs"
+        - "scripts/goalbuddy-run.test.mjs"
+        - "skills/llm-first-devloop/SKILL.md"
+        - "examples/supermemory-t4-notes.md"
+        - "docs/dogfood-v0.2.md"
+        - "docs/goals/devloop-orchestrator-skill-entry-automation-2026-05-21/goal.md"
+        - "docs/goals/devloop-orchestrator-skill-entry-automation-2026-05-21/state.yaml"
+      unrelated_dirty_files_left_untouched: []
+      summary: "Implementation commit 71bd915 was pushed to origin/main. A follow-up board receipt commit records T998/T999 completion evidence."
 
   - id: T999
     type: judge
     assignee: Judge
-    status: queued
+    status: done
     reasoning_hint: high
     objective: "Audit whether the full original outcome is complete."
     inputs:
@@ -586,4 +604,34 @@ tasks:
       - "full_outcome_complete: true | false"
       - "missing evidence"
       - "next task if not complete"
-    receipt: null
+    receipt:
+      result: done
+      decision: complete
+      full_outcome_complete: true
+      workflow_safeguards:
+        design_concept: "present in T001/T002/T004"
+        ubiquitous_language: "present in T001/T002"
+        feedback_policy: "present in T001/T002"
+        test_strategy: "present in T001/T002/T003"
+        module_map: "present in T001/T002"
+        interface_contract: "present in T001/T002 and implemented by T004"
+        architecture_review: "T002 approved CLI-plus-skill"
+        design_delta: "T004 records the addition of deterministic run orchestration plus a thin Codex skill template"
+      oracle_mapping:
+        - "One DevLoop skill/CLI entry now exists via skills/llm-first-devloop/SKILL.md and scripts/goalbuddy-run.mjs."
+        - "Dogfood SuperMemory T4-style input ran with one command and returned HANDOFF_READY."
+        - "Quality check passed for the generated dogfood board with active T001 handoff."
+        - "Owner no longer needs to manually run interview, ready, repair/check, and next for the entry workflow."
+      verification:
+        - "npm test: 40 tests pass"
+        - "node scripts/llm-first-devloop.mjs run --from examples/supermemory-t4-notes.md --out /tmp/llm-first-devloop-t4 --oracle \"A checker-clean SuperMemory T4 board reaches an active-task handoff.\" --force: HANDOFF_READY, Check PASS, Active task T001"
+        - "goalbuddy-quality-check state.yaml: PASS in progress before final audit"
+        - "git diff --check: pass"
+      shipping:
+        commit_sha: "71bd915"
+        remote_branch: "origin/main"
+        push_result: "pushed successfully"
+      manual_choreography_removed: true
+      missing_evidence: []
+      next_task_if_not_complete: null
+      design_delta: "The repo now has an entry orchestrator command and a Codex skill template. Full automatic native /goal launch remains deliberately deferred to a future tranche."
