@@ -33,6 +33,7 @@ jobs:
           node scripts/goalbuddy-ready-mode.mjs --help
           node scripts/goalbuddy-next.mjs --help
           node scripts/goalbuddy-run.mjs --help
+          node scripts/goalbuddy-advance.mjs --help
           node scripts/goalbuddy-quality-check.mjs --help
           node scripts/goalbuddy-board-repair.mjs --help
           node scripts/llm-first-devloop.mjs --help

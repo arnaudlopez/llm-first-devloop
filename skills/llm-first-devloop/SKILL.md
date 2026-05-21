@@ -53,6 +53,16 @@ The `run` command is the source of truth. It:
 5. returns the active-task handoff;
 6. stops with clarification or blocker output instead of creating a weak board.
 
+When a task is completed in the current session, do not hand-edit `state.yaml` if the receipt is straightforward. Apply the receipt with:
+
+```bash
+llm-first-devloop advance \
+  --state docs/goals/<slug>/state.yaml \
+  --receipt-json '{"result":"done","summary":"..."}'
+```
+
+Use `--next T003` for an explicit next task or `--no-next` when the task is blocked and the board should pause.
+
 ## Boundaries
 
 - Do not launch native `/goal` automatically in the current tranche.

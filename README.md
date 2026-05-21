@@ -20,6 +20,7 @@ This repository is meant to be reusable tooling, not just an archive. It gives y
 - `scripts/goalbuddy-ready-mode.mjs`: generates `goal.md`, `state.yaml`, and `acceptance-contract.md` from a mature spec.
 - `scripts/goalbuddy-next.mjs`: inspects a board and prints the exact next prompt without mutating state.
 - `scripts/goalbuddy-run.mjs`: automates the entry workflow from notes or an existing board, then returns the active-task handoff.
+- `scripts/goalbuddy-advance.mjs`: applies a receipt, marks the active task done or blocked, activates the next task, and re-checks the board.
 - `scripts/goalbuddy-quality-check.mjs`: validates GoalBuddy boards for oracle, TDD, impact, shipping, and final audit evidence.
 - `scripts/goalbuddy-board-repair.mjs`: normalizes generated boards without inventing product details.
 - `scripts/personalize-goalbuddy.mjs`: reapplies these customizations after GoalBuddy updates.
@@ -109,6 +110,7 @@ goalbuddy-check --help
 goalbuddy-repair --help
 goalbuddy-next --help
 goalbuddy-run --help
+goalbuddy-advance --help
 ```
 
 Until the package is published, use the `npm run` commands from a clone. After publishing, these direct forms will work:
@@ -151,6 +153,18 @@ llm-first-devloop run \
 The command does not execute native `/goal` yet. It prepares or reuses the board, repairs/checks it, runs `next`, and prints the active-task handoff. If notes are not mature enough, it writes `needs-clarification.md` instead of creating a weak board.
 
 The matching Codex skill template lives in `skills/llm-first-devloop/SKILL.md`. Its job is to invoke `llm-first-devloop run` and continue from the handoff, not to duplicate the CLI workflow in prompt prose.
+
+## DevLoop Advance
+
+`goalbuddy-advance` is the first small runner-automation primitive. It does not do agent reasoning by itself; it safely applies a completed task receipt to `state.yaml`, moves the current task to `done` or `blocked`, activates the next queued task, and validates the board.
+
+```bash
+llm-first-devloop advance \
+  --state docs/goals/<slug>/state.yaml \
+  --receipt-json '{"result":"done","summary":"Scout mapped the target files."}'
+```
+
+Use `--next T003` to choose a specific next task, or `--no-next` when a task is blocked and no safe continuation should start.
 
 ## GoalBuddy Personalization
 
