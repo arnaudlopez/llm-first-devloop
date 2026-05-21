@@ -1,0 +1,589 @@
+version: 2
+
+goal:
+  id: devloop-orchestrator-skill-entry-automation-2026-05-21
+  title: "DevLoop Orchestrator Skill Entry Automation"
+  slug: "devloop-orchestrator-skill-entry-automation-2026-05-21"
+  status: active
+  kind: specific
+  original_request: "Automatiser l'entree du workflow DevLoop via une skill pour ne plus lancer manuellement interview/ready/check/next avant un goal."
+  interpreted_outcome: "A Codex skill layer lets the owner invoke DevLoop once, then prepares or reuses a board, repairs/checks it, runs next, and returns the active-task handoff for a SuperMemory T4-style request."
+  input_shape: specific
+  audience:
+    - "Owner using LLM-first conversations before implementation"
+    - "Future SuperMemory and SwipeLink development runs"
+  authority: requested
+  proof_type:
+    - test
+    - artifact
+    - review
+  completion_proof:
+    - "A DevLoop skill exists and documents/executes the entry workflow without manual command choreography."
+    - "Tests or scripted smoke proof cover existing-board and new-notes entry paths."
+    - "A dogfood SuperMemory T4-style run produces a valid active-task handoff after repair/check/next."
+    - "Changes are committed and pushed, or T998 records a truthful shipping blocker."
+  goal_oracle: "A dogfood run for a SuperMemory T4-style request proves that one DevLoop skill invocation prepares or reuses a board, runs repair/check/next through local tooling, and returns the exact active-task handoff with no manual command sequence required by the owner."
+  likely_misfire: "Creating another checklist or CLI wrapper that still forces the owner to manually run interview, ready, repair, check, and next."
+  non_goals:
+    - "Do not implement SuperMemory T4 itself."
+    - "Do not fully automate native /goal execution in this tranche."
+    - "Do not replace GoalBuddy."
+    - "Do not add hosted state, a database, or an extension marketplace."
+    - "Do not mutate unrelated product repos."
+  constraints:
+    - "Preserve LLM-first as the top-level product principle."
+    - "Use existing CLI commands as implementation primitives where possible."
+    - "Keep the first tranche local, file-backed, testable, and reversible."
+    - "Ask for owner input only when intent, oracle, repo path, or authority is genuinely ambiguous."
+  intake:
+    original_request: "Il faudrait travailler sur l'autonomie du workflow via les skill afin que tout s'enchaine sans que j'aie a lancer tout ca a la main."
+    interpreted_outcome: "Create the first orchestrator skill layer so DevLoop handles the entry workflow automatically."
+    input_shape: specific
+    audience: "Owner and future product-work sessions"
+    authority: requested
+    proof_type: test
+    completion_proof: "Dogfood proof on a SuperMemory T4-style request plus tests/smoke checks and GitHub shipping proof."
+    likely_misfire: "A command list is produced but the owner still has to be the workflow operator."
+    blind_spots_considered:
+      - "The current repo may not be the SuperMemory repo, so the first tranche should dogfood a T4-style request without editing SuperMemory."
+      - "Future full autonomy should launch /goal internally, but this tranche should only automate workflow entry."
+      - "A skill must not duplicate CLI behavior in stale prose; it should call the local CLI or keep the contract minimal."
+      - "The system must distinguish existing board continuation from new notes/spec preparation."
+      - "The skill must have clear blocker behavior for missing repo paths, missing state.yaml, invalid boards, and unclear oracles."
+    existing_plan_facts:
+      - "The public CLI already has interview, ready, check, repair, and next."
+      - "The desired UX is one instruction, not manual command choreography."
+      - "SuperMemory T4 is the representative dogfood target."
+      - "Future direction is automatic /goal launch, but not in this first tranche."
+  oracle:
+    signal: "One DevLoop skill invocation on SuperMemory T4-style input produces a checker-clean active-task handoff after repair/check/next."
+    final_proof: "Final audit maps tests, smoke proof, dogfood output, and shipping proof back to the oracle."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  allow_read_only_goal_without_shipping: true
+  require_impact_assessment: true
+  require_quality_checker: true
+  require_github_ship_task: true
+  require_tdd_worker_flow: true
+  goal_pressure_requires_oracle: true
+  slice_policy:
+    max_consecutive_tiny_tasks: 2
+    prefer_vertical_slices: true
+    judge_picks_largest_safe_slice: true
+    worker_completes_whole_slice: true
+
+goal_policy:
+  mode: implementation
+  requires_tdd: true
+  requires_impact_assessment: true
+  requires_shipping: true
+  requires_visual_verification: false
+  requires_migration_proof: false
+  requires_infra_proof: false
+  requires_dependency_review: false
+  requires_dirty_worktree_guard: true
+  requires_refactor_proof: false
+  rationale: "This is a local tooling implementation: a Codex skill/orchestration entry layer around existing CLI commands, plus tests, dogfood proof, and shipping."
+
+workflow_safeguards:
+  requires_design_delta: true
+  requires_architecture_review: true
+  requires_interface_contract: true
+  requires_module_map: true
+  requires_test_strategy: true
+  requires_feedback_policy: true
+  requires_ubiquitous_language: true
+  requires_design_concept: true
+  require_design_concept: true
+  require_ubiquitous_language: true
+  require_feedback_policy: true
+  require_test_strategy: true
+  require_module_map: true
+  require_interface_contract: true
+  require_architecture_review: true
+  require_impact_assessment: true
+  require_design_delta: true
+  require_t998_shipping: true
+  require_t999_final_audit: true
+  one_active_task: true
+  protect_unrelated_dirty_worktree: true
+  tdd_required: true
+
+design_concept:
+  summary: "DevLoop becomes the operator-facing entry layer: the owner keeps talking LLM-first, then one skill invocation freezes the intent into a board and active-task handoff."
+  principles:
+    - "LLM-first remains the product principle; modes are guardrails."
+    - "The skill orchestrates existing CLI primitives instead of reimplementing them in prose."
+    - "This tranche automates entry, not full /goal execution."
+    - "Dogfood on SuperMemory T4-style input is the proof, not a synthetic command demo only."
+
+ubiquitous_language:
+  devloop_skill: "The Codex skill that turns one owner instruction into the prepared DevLoop/GoalBuddy entry workflow."
+  entry_workflow: "The sequence that prepares or finds a board, repairs/checks it, runs next, and returns the active-task handoff."
+  active_task_handoff: "The exact prompt/action block that the next /goal or PM execution step should follow."
+  dogfood_t4: "A SuperMemory T4-style request used as representative proof without implementing T4 itself."
+  owner_choreography: "Manual commands or copy-paste steps the tool should remove from the owner experience."
+
+feedback_policy:
+  command_feedback:
+    - "Report only high-signal status: found board, created brief, repaired board, check passed, next handoff ready."
+    - "Show blockers with exact missing input or invalid board reason."
+    - "Do not expose noisy command internals unless debug mode is requested."
+  proof_feedback:
+    - "Record dogfood command/output evidence."
+    - "Record tests and smoke checks."
+    - "Record whether owner choreography was removed or still required."
+
+test_strategy:
+  approach: "TDD red -> green for the skill/orchestration contract."
+  required_tests:
+    - "Existing state.yaml path: orchestration runs repair/check/next and returns active-task handoff."
+    - "Notes/spec path with enough intent: orchestration runs interview/ready/check/next and returns active-task handoff."
+    - "Immature notes: orchestration writes or returns clarification output instead of creating a weak board."
+    - "Invalid board: orchestration refuses to advance and reports checker errors."
+    - "Missing path/repo: orchestration blocks with a clear owner-facing message."
+  verification_commands:
+    - "npm test"
+    - "node scripts/llm-first-devloop.mjs --help"
+    - "node scripts/llm-first-devloop.mjs next <dogfood-state.yaml>"
+
+module_map:
+  likely_files:
+    - "README.md"
+    - "package.json"
+    - "scripts/llm-first-devloop.mjs"
+    - "scripts/goalbuddy-*.mjs"
+    - "scripts/*.test.mjs"
+    - ".codex/skills/llm-first-devloop/SKILL.md or a repo-local skill template"
+    - "docs/dogfood-v0.2.md"
+    - "examples/**"
+  avoid_without_judge_approval:
+    - "SuperMemory product source files"
+    - "SwipeLink product source files"
+    - "GoalBuddy plugin cache files outside an explicit install/personalize step"
+    - "GitHub release metadata beyond normal shipping proof"
+
+interface_contract:
+  planned:
+    - "A skill invocation contract: owner asks to use DevLoop; the skill resolves existing-board or notes/spec entry."
+    - "A local orchestration contract that composes interview, ready, repair, check, and next."
+    - "A blocker contract for missing repo/path/oracle/invalid board."
+    - "A dogfood evidence contract for SuperMemory T4-style input."
+  compatibility: "Keep existing CLI commands stable; add orchestration without breaking brief, interview, ready, check, repair, or next."
+
+architecture_review:
+  required_before_worker: true
+  questions:
+    - "Should the implementation live as a Codex skill only, a CLI helper plus skill, or a skill template generated by the repo?"
+    - "How does the skill avoid stale duplicated logic from CLI commands?"
+    - "What is the smallest dogfood proof that represents SuperMemory T4 without editing SuperMemory?"
+    - "What exact behavior is deferred until full automatic /goal launch?"
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+visual_board:
+  selected: local
+  local:
+    status: live
+    url: "http://goalbuddy.localhost:41737/devloop-orchestrator-skill-entry-automation-2026-05-21/"
+    command: "npx goalbuddy board docs/goals/devloop-orchestrator-skill-entry-automation-2026-05-21"
+  github_projects:
+    status: not_requested
+    url: null
+    command: "npx goalbuddy extend github-projects"
+    missing: []
+
+active_task: T998
+
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    reasoning_hint: medium
+    objective: "Map the current DevLoop CLI, available skill locations, and the exact seams for automating entry without executing /goal."
+    inputs:
+      - "Current llm-first-devloop repo"
+      - "Existing CLI commands: interview, ready, repair, check, next"
+      - "Codex skill conventions and local skill paths"
+      - "SuperMemory T4-style owner workflow as dogfood target"
+    constraints:
+      - "Read-only."
+      - "Do not edit implementation files."
+      - "Do not edit SuperMemory."
+      - "Do not launch native /goal execution."
+      - "Use concrete file-path evidence."
+    expected_output:
+      - "module_map: relevant deep modules, boundaries, and shallow-module risks"
+      - "ubiquitous_language: domain terms, overloaded words, and forbidden synonyms"
+      - "design_concept: shared understanding, non-goals, and decision dependencies"
+      - "design_concept: confirm entry automation scope and future full-autonomy boundary"
+      - "ubiquitous_language: terms the skill should use consistently"
+      - "module_map: CLI files, tests, skill/template locations, docs/examples to touch"
+      - "interface_contract: existing-board path, notes/spec path, blockers, active-task handoff"
+      - "test_strategy: exact red tests/smoke checks to write before implementation"
+      - "feedback_policy: owner-facing output and debug/noise boundaries"
+      - "dirty_worktree_risk_map: unrelated files that must stay untouched"
+      - "impact_assessment covering db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs"
+    receipt:
+      result: done
+      summary: "Current CLI already exposes interview, ready, repair, check, and next; the missing seam is a single orchestrator entry plus a concise Codex skill that calls that CLI instead of duplicating workflow logic."
+      design_concept: "Automate entry only: one DevLoop invocation should resolve existing-board versus notes/spec input, run repair/check/next or interview/ready/check/next, then return an active-task handoff. Full automatic /goal execution remains deferred."
+      ubiquitous_language:
+        - "entry workflow: prepare or find board -> repair -> check -> next -> active-task handoff"
+        - "active-task handoff: exact next prompt/status block returned by next"
+        - "owner choreography: manual command sequence to remove from the user experience"
+      module_map:
+        - "scripts/llm-first-devloop.mjs dispatches public commands and is the correct place to add an orchestrator command."
+        - "scripts/goalbuddy-interview.mjs handles mature-notes versus clarification."
+        - "scripts/goalbuddy-ready-mode.mjs writes goal.md/state.yaml/acceptance-contract.md."
+        - "scripts/goalbuddy-board-repair.mjs and scripts/goalbuddy-quality-check.mjs normalize and validate boards."
+        - "scripts/goalbuddy-next.mjs already returns a handoff prompt from state.yaml."
+        - "A Codex skill should be generated as a repo-local skill template or installable skill folder, with minimal instructions pointing back to the CLI."
+      interface_contract:
+        existing_board_path: "Given a state.yaml, run repair/check/next and return the handoff or blocker."
+        notes_path: "Given notes/spec markdown and an out dir, run interview; if ready then ready/check/next, otherwise return clarification."
+        blockers: "Missing path, immature notes, invalid board, missing oracle, and absent state.yaml must stop with actionable messages."
+      test_strategy:
+        - "Add red tests for orchestration from existing state.yaml."
+        - "Add red tests for orchestration from mature notes."
+        - "Add red tests for immature notes and invalid/missing paths."
+        - "Smoke dogfood with a SuperMemory T4-style notes fixture."
+      feedback_policy:
+        - "Default output should be high signal: created/found board, check status, next handoff."
+        - "Debug/noisy command output should stay out of normal skill guidance."
+      dirty_worktree_risk_map:
+        - "Only current dirty files are this goal's docs/goals/devloop-orchestrator-skill-entry-automation-2026-05-21 control files."
+      impact_assessment:
+        db_schema_migrations: "none"
+        data_backfill: "none"
+        env_secrets: "none"
+        auth_permissions: "none"
+        api_contract: "CLI public contract changes only"
+        ui_routes: "none"
+        background_jobs: "none"
+        external_services: "none"
+        deploy_rollback: "npm/GitHub release only if separately shipped"
+        observability: "command output and dogfood evidence"
+        docs: "README, skill instructions, examples, dogfood notes likely affected"
+
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Choose the architecture and largest safe useful implementation slice for the DevLoop orchestrator skill entry workflow."
+    inputs:
+      - "T001 receipt"
+      - "Goal oracle and non-goals"
+    constraints:
+      - "Read-only."
+      - "Do not implement."
+      - "Reject solutions that only document manual commands."
+      - "Reject full automatic /goal launch for this tranche unless separately approved."
+      - "Prefer reusing existing CLI primitives over duplicating logic."
+    expected_output:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "Decision: approved | needs_more_evidence | blocked"
+      - "Architecture decision: skill-only | CLI-plus-skill | template-plus-installer"
+      - "Exact Worker objective"
+      - "allowed_files"
+      - "verify"
+      - "stop_if"
+      - "impact_assessment_ref"
+      - "Deferred full-autonomy tasks"
+    receipt:
+      result: done
+      decision: approved
+      architecture_review: "CLI-plus-skill is approved. Add a deterministic `run` orchestration command that composes existing CLI modules, then create a concise Codex skill that tells the agent to invoke that command and continue from its handoff. Skill-only is rejected because it would be hard to test and would duplicate script logic; full automatic /goal launch is deferred."
+      interface_contract:
+        command: "llm-first-devloop run"
+        existing_board: "`run --state docs/goals/<slug>/state.yaml` repairs the board in place, checks it, runs next, and prints/returns the active-task handoff."
+        notes_entry: "`run --from notes.md --out docs/goals/<slug> --oracle <signal>` runs interview; if mature, ready/check/next; if immature, writes clarification and stops."
+        blockers:
+          - "missing --state or --from"
+          - "missing --out for notes entry"
+          - "immature notes"
+          - "invalid board after repair"
+          - "missing oracle"
+          - "missing input file"
+      module_map:
+        - "scripts/goalbuddy-run.mjs: new orchestrator module and CLI"
+        - "scripts/llm-first-devloop.mjs: add run dispatch"
+        - "package.json: add goalbuddy-run binary and npm script"
+        - "scripts/goalbuddy-run.test.mjs: TDD contract"
+        - "skills/llm-first-devloop/SKILL.md: concise orchestrator skill"
+        - "README.md and docs/dogfood-v0.2.md: user workflow and dogfood proof"
+        - "examples/supermemory-t4-notes.md: representative dogfood input"
+      test_strategy:
+        red_tests:
+          - "existing state.yaml path produces a next handoff after repair/check"
+          - "mature notes path creates a board and returns a handoff"
+          - "immature notes writes clarification and does not create a weak board"
+          - "invalid or missing path blocks with clear status"
+          - "dispatcher exposes run"
+        verify:
+          - "npm test"
+          - "node scripts/llm-first-devloop.mjs run --from examples/supermemory-t4-notes.md --out /tmp/llm-first-devloop-t4 --oracle \"A checker-clean SuperMemory T4 board reaches an active-task handoff.\" --force"
+      feedback_policy:
+        - "Normal output: status, board/clarification path, check result, handoff prompt."
+        - "No noisy command dump in default output."
+        - "JSON mode should expose machine-readable status for tests and future skills."
+      impact_assessment_ref: "T001 impact_assessment"
+      deferred_full_autonomy_tasks:
+        - "Automatically launching native /goal or equivalent execution."
+        - "Applying receipts and advancing state.yaml from the skill."
+        - "Cross-repo repo discovery beyond explicit --repo/working directory handling."
+      worker_brief:
+        objective: "Implement `llm-first-devloop run` plus a repo-local Codex skill template that removes manual entry choreography while keeping full /goal execution deferred."
+        allowed_files:
+          - "README.md"
+          - "package.json"
+          - "scripts/llm-first-devloop.mjs"
+          - "scripts/goalbuddy-run.mjs"
+          - "scripts/goalbuddy-run.test.mjs"
+          - ".github/workflows/ci.yml"
+          - "skills/llm-first-devloop/SKILL.md"
+          - "examples/supermemory-t4-notes.md"
+          - "docs/dogfood-v0.2.md"
+          - "docs/goals/devloop-orchestrator-skill-entry-automation-2026-05-21/**"
+        verify:
+          - "npm test"
+          - "node scripts/llm-first-devloop.mjs run --from examples/supermemory-t4-notes.md --out /tmp/llm-first-devloop-t4 --oracle \"A checker-clean SuperMemory T4 board reaches an active-task handoff.\" --force"
+        stop_if:
+          - "Need to edit SuperMemory or SwipeLink product files."
+          - "Need to launch native /goal automatically."
+          - "Need hosted state, database, credentials, or external service."
+          - "Need files outside allowed_files."
+          - "Verification fails twice without a clear local fix."
+
+  - id: T003
+    type: worker
+    assignee: Worker
+    status: done
+    worker_kind: red_test
+    reasoning_hint: medium
+    objective: "Write failing tests or smoke fixtures for the Judge-approved orchestrator entry contract before implementation."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T002 Worker brief"
+    impact_assessment_ref: null
+    allowed_files:
+      - "scripts/goalbuddy-run.test.mjs"
+      - "examples/supermemory-t4-notes.md"
+      - "docs/goals/devloop-orchestrator-skill-entry-automation-2026-05-21/**"
+    verify:
+      - "npm test"
+    stop_if:
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "T002 has not approved an interface contract."
+      - "Need files outside allowed_files."
+      - "The behavior cannot be expressed as tests or deterministic smoke proof."
+      - "Unrelated dirty files would need to be modified."
+    receipt:
+      result: done
+      changed_files:
+        - "scripts/goalbuddy-run.test.mjs"
+        - "examples/supermemory-t4-notes.md"
+      commands:
+        - cmd: "npm test -- --test-name-pattern runDevLoopEntry"
+          status: "failed_as_expected"
+          summary: "Red test fails because scripts/goalbuddy-run.mjs is not implemented."
+      summary: "TDD red tests now define existing-board continuation, mature-notes entry, immature-note clarification, and missing-input blockers."
+
+  - id: T004
+    type: worker
+    assignee: Worker
+    status: done
+    worker_kind: implementation
+    reasoning_hint: medium
+    objective: "Implement the Judge-approved DevLoop orchestrator skill entry workflow and make the TDD/smoke proof pass."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T002 Worker brief"
+      - "T003 red-test receipt"
+    impact_assessment_ref: null
+    allowed_files:
+      - "README.md"
+      - "package.json"
+      - "scripts/llm-first-devloop.mjs"
+      - "scripts/goalbuddy-run.mjs"
+      - "scripts/goalbuddy-run.test.mjs"
+      - ".github/workflows/ci.yml"
+      - "skills/llm-first-devloop/SKILL.md"
+      - "examples/supermemory-t4-notes.md"
+      - "docs/dogfood-v0.2.md"
+      - "docs/goals/devloop-orchestrator-skill-entry-automation-2026-05-21/**"
+    verify:
+      - "npm test"
+      - "node scripts/llm-first-devloop.mjs run --from examples/supermemory-t4-notes.md --out /tmp/llm-first-devloop-t4 --oracle \"A checker-clean SuperMemory T4 board reaches an active-task handoff.\" --force"
+    stop_if:
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Need files outside allowed_files."
+      - "Need to edit SuperMemory or SwipeLink product files."
+      - "Need full automatic /goal launch to satisfy the tranche."
+      - "Need hosted state, database, credentials, or external service."
+      - "Verification fails twice without a clear local fix."
+    receipt:
+      result: done
+      changed_files:
+        - "README.md"
+        - "package.json"
+        - ".github/workflows/ci.yml"
+        - "scripts/llm-first-devloop.mjs"
+        - "scripts/goalbuddy-run.mjs"
+        - "scripts/goalbuddy-run.test.mjs"
+        - "skills/llm-first-devloop/SKILL.md"
+        - "examples/supermemory-t4-notes.md"
+        - "docs/dogfood-v0.2.md"
+      commands:
+        - cmd: "npm test -- --test-name-pattern runDevLoopEntry"
+          status: pass
+          summary: "40 tests visible in filtered run output; runDevLoopEntry cases pass."
+        - cmd: "npm test"
+          status: pass
+          summary: "40 tests pass."
+        - cmd: "node scripts/llm-first-devloop.mjs run --from examples/supermemory-t4-notes.md --out /tmp/llm-first-devloop-t4 --oracle \"A checker-clean SuperMemory T4 board reaches an active-task handoff.\" --force"
+          status: pass
+          summary: "HANDOFF_READY, Check: PASS, Active task: T001."
+        - cmd: "node scripts/llm-first-devloop.mjs run --help"
+          status: pass
+        - cmd: "git diff --check"
+          status: pass
+      design_delta: "DevLoop now has a deterministic entry orchestration layer (`run`) and a concise Codex skill template. The skill delegates mechanics to the CLI instead of encoding command choreography in prose."
+      summary: "Implemented `llm-first-devloop run` for existing boards and notes/spec entry, added tests, public dispatch/bin wiring, CI smoke coverage, docs, SuperMemory T4 fixture, and the repo-local skill template."
+
+  - id: T005
+    type: worker
+    assignee: Worker
+    status: done
+    worker_kind: verification
+    reasoning_hint: medium
+    objective: "Dogfood the orchestrator on a SuperMemory T4-style request and document whether manual owner choreography was removed."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T004 implementation receipt"
+      - "Goal oracle"
+    impact_assessment_ref: null
+    allowed_files:
+      - "scripts/goalbuddy-run.test.mjs"
+      - "docs/dogfood-v0.2.md"
+      - "examples/supermemory-t4-notes.md"
+      - "docs/goals/devloop-orchestrator-skill-entry-automation-2026-05-21/**"
+    verify:
+      - "node scripts/llm-first-devloop.mjs run --from examples/supermemory-t4-notes.md --out /tmp/llm-first-devloop-t4 --oracle \"A checker-clean SuperMemory T4 board reaches an active-task handoff.\" --force"
+    stop_if:
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "T004 is not complete."
+      - "Need to implement SuperMemory T4."
+      - "Need real /goal execution."
+      - "Need files outside allowed_files."
+      - "Dogfood input is too ambiguous to prove the entry workflow."
+    receipt:
+      result: done
+      changed_files:
+        - "docs/dogfood-v0.2.md"
+      commands:
+        - cmd: "node scripts/llm-first-devloop.mjs run --from examples/supermemory-t4-notes.md --out /tmp/llm-first-devloop-t4 --oracle \"A checker-clean SuperMemory T4 board reaches an active-task handoff.\" --force --json"
+          status: pass
+          summary: "ok=true, mode=notes_entry, status=handoff_ready, check.ok=true, task_count=8, activeTask=T001."
+      manual_choreography_removed: true
+      summary: "Dogfood SuperMemory T4-style input proves one run command now replaces manual interview/ready/repair/check/next and returns the active-task handoff."
+
+  - id: T998
+    type: pm
+    assignee: PM
+    status: active
+    reasoning_hint: medium
+    objective: "Ship the verified DevLoop orchestrator entry workflow with clean commit and push proof."
+    inputs:
+      - "Completed Worker receipts"
+      - "Last verification output"
+      - "Current git status"
+    constraints:
+      - "Do not include unrelated dirty changes."
+      - "If there is no GitHub remote, record shipping_blocker instead of inventing proof."
+      - "Keep committed scope limited to this goal."
+    expected_output:
+      - "Or shipping_blocker: no_git_repository | no_github_remote"
+      - "Unrelated dirty files left untouched"
+      - "Committed files"
+      - "Push result"
+      - "Remote branch"
+      - "Commit SHA"
+      - "commit_sha"
+      - "remote_branch or push string"
+      - "push_result"
+      - "committed_files"
+      - "unrelated_dirty_files_left_untouched"
+    receipt: null
+
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: queued
+    reasoning_hint: high
+    objective: "Audit whether the full original outcome is complete."
+    inputs:
+      - "design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, and design_delta evidence"
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Quality checker final output"
+      - "Completed impact_assessment receipt"
+      - "T998 shipping proof when shipping is required"
+    constraints:
+      - "Reject completion if design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, or design_delta evidence is missing when workflow_safeguards requires it."
+      - "Do not implement."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion unless impact_assessment covers db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs when impact assessment is required."
+      - "For read-only audit goals with no Worker tasks and no changed_files, accept audit_scope/audit_findings/review/decision evidence instead of TDD, impact_assessment, T998, commit, and push."
+      - "For verification goals, reject completion unless safe test/browser command evidence exists and no changed_files are reported."
+      - "Reject completion unless T998 has a commit SHA and successful push result, or an explicit shipping_blocker for no_git_repository/no_github_remote, when shipping is required."
+    expected_output:
+      - "design_delta"
+      - "workflow_safeguards result"
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipt: null

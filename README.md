@@ -19,6 +19,7 @@ This repository is meant to be reusable tooling, not just an archive. It gives y
 - `scripts/goalbuddy-interview.mjs`: checks whether LLM-first notes are mature enough, or writes clarification questions.
 - `scripts/goalbuddy-ready-mode.mjs`: generates `goal.md`, `state.yaml`, and `acceptance-contract.md` from a mature spec.
 - `scripts/goalbuddy-next.mjs`: inspects a board and prints the exact next prompt without mutating state.
+- `scripts/goalbuddy-run.mjs`: automates the entry workflow from notes or an existing board, then returns the active-task handoff.
 - `scripts/goalbuddy-quality-check.mjs`: validates GoalBuddy boards for oracle, TDD, impact, shipping, and final audit evidence.
 - `scripts/goalbuddy-board-repair.mjs`: normalizes generated boards without inventing product details.
 - `scripts/personalize-goalbuddy.mjs`: reapplies these customizations after GoalBuddy updates.
@@ -75,6 +76,15 @@ Ask what to do next without mutating the board:
 npm run next -- docs/goals/saved-search/state.yaml
 ```
 
+Automate the whole entry workflow from notes:
+
+```bash
+npm run run -- \
+  --from examples/supermemory-t4-notes.md \
+  --out docs/goals/supermemory-t4 \
+  --oracle "A checker-clean SuperMemory T4 board reaches an active-task handoff."
+```
+
 Repair a hand-written or older board:
 
 ```bash
@@ -91,12 +101,14 @@ llm-first-devloop brief --help
 llm-first-devloop interview --help
 llm-first-devloop ready --help
 llm-first-devloop next --help
+llm-first-devloop run --help
 goalbuddy-brief --help
 goalbuddy-interview --help
 goalbuddy-ready --help
 goalbuddy-check --help
 goalbuddy-repair --help
 goalbuddy-next --help
+goalbuddy-run --help
 ```
 
 Until the package is published, use the `npm run` commands from a clone. After publishing, these direct forms will work:
@@ -110,13 +122,35 @@ npx --package llm-first-devloop goalbuddy-ready --help
 
 1. Start with an ordinary LLM conversation. Explore the idea, reject weak options, clarify examples, and converge on intent.
 2. Save the useful notes, PRD, or transcript to Markdown.
-3. Run `goalbuddy-interview` if the notes may still be immature; resolve any generated clarification questions in the LLM conversation.
-4. Run `goalbuddy-brief` to turn mature notes into a structured brief with intent, non-goals, oracle, acceptance hints, risks, and constraints.
-5. Run `goalbuddy-ready` when the owner says "go".
-6. Run `goalbuddy-next` to inspect the board and produce the next prompt.
-7. Give the generated `goal.md` and `state.yaml` to GoalBuddy through `/goal`.
-8. Let Scout and Judge refine the acceptance contract before Worker implementation.
-9. Finish only after verification, final audit, and shipping proof or an explicit blocker.
+3. Prefer `goalbuddy-run` when you want the entry workflow handled for you.
+4. If you need manual debugging, run `goalbuddy-interview`, `goalbuddy-brief`, `goalbuddy-ready`, `goalbuddy-check`, and `goalbuddy-next` separately.
+5. Use the generated active-task handoff with GoalBuddy or the current Codex session.
+6. Give the generated `goal.md` and `state.yaml` to GoalBuddy through `/goal` when native GoalBuddy execution is still the next boundary.
+7. Let Scout and Judge refine the acceptance contract before Worker implementation.
+8. Finish only after verification, final audit, and shipping proof or an explicit blocker.
+
+## DevLoop Run
+
+`goalbuddy-run` is the operator-facing entry command. It exists so the owner does not have to manually run every low-level step.
+
+Continue from an existing board:
+
+```bash
+llm-first-devloop run --state docs/goals/<slug>/state.yaml
+```
+
+Start from mature notes:
+
+```bash
+llm-first-devloop run \
+  --from notes.md \
+  --out docs/goals/<slug> \
+  --oracle "Observable proof that the outcome is real"
+```
+
+The command does not execute native `/goal` yet. It prepares or reuses the board, repairs/checks it, runs `next`, and prints the active-task handoff. If notes are not mature enough, it writes `needs-clarification.md` instead of creating a weak board.
+
+The matching Codex skill template lives in `skills/llm-first-devloop/SKILL.md`. Its job is to invoke `llm-first-devloop run` and continue from the handoff, not to duplicate the CLI workflow in prompt prose.
 
 ## GoalBuddy Personalization
 

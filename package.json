@@ -11,20 +11,23 @@
     "goalbuddy-check": "scripts/goalbuddy-quality-check.mjs",
     "goalbuddy-repair": "scripts/goalbuddy-board-repair.mjs",
     "goalbuddy-next": "scripts/goalbuddy-next.mjs",
-    "goalbuddy-interview": "scripts/goalbuddy-interview.mjs"
+    "goalbuddy-interview": "scripts/goalbuddy-interview.mjs",
+    "goalbuddy-run": "scripts/goalbuddy-run.mjs"
   },
   "files": [
     "README.md",
     "LICENSE",
     "scripts",
     "docs",
-    "examples"
+    "examples",
+    "skills"
   ],
   "scripts": {
     "test": "node --test scripts/*.test.mjs",
     "ready": "node scripts/goalbuddy-ready-mode.mjs",
     "brief": "node scripts/goalbuddy-brief.mjs",
     "interview": "node scripts/goalbuddy-interview.mjs",
+    "run": "node scripts/goalbuddy-run.mjs",
     "next": "node scripts/goalbuddy-next.mjs",
     "check": "node scripts/goalbuddy-quality-check.mjs",
     "repair": "node scripts/goalbuddy-board-repair.mjs"

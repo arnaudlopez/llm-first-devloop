@@ -12,6 +12,7 @@ const COMMANDS = {
   repair: "goalbuddy-board-repair.mjs",
   next: "goalbuddy-next.mjs",
   interview: "goalbuddy-interview.mjs",
+  run: "goalbuddy-run.mjs",
 };
 
 const HELP_TEXT = `Usage:
@@ -24,12 +25,14 @@ Commands:
   repair    Normalize a GoalBuddy board without inventing product details.
   next      Inspect a board and print the exact next prompt without mutation.
   interview Check whether LLM-first notes are ready for Ready Mode.
+  run       Automate interview/ready or existing-board entry, then check and print the handoff.
 
 Examples:
   llm-first-devloop brief --from examples/conversation-notes.md --out briefs/saved-search.md
   llm-first-devloop ready --from briefs/saved-search.md --out docs/goals/saved-search
   llm-first-devloop check --final docs/goals/saved-search/state.yaml
   llm-first-devloop next docs/goals/saved-search/state.yaml
+  llm-first-devloop run --from notes.md --out docs/goals/saved-search --oracle "Acceptance tests pass"
 
 Run "llm-first-devloop <command> --help" for command-specific help.
 `;

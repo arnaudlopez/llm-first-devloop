@@ -32,6 +32,7 @@ jobs:
           node scripts/goalbuddy-interview.mjs --help
           node scripts/goalbuddy-ready-mode.mjs --help
           node scripts/goalbuddy-next.mjs --help
+          node scripts/goalbuddy-run.mjs --help
           node scripts/goalbuddy-quality-check.mjs --help
           node scripts/goalbuddy-board-repair.mjs --help
           node scripts/llm-first-devloop.mjs --help
@@ -41,3 +42,4 @@ jobs:
           node scripts/llm-first-devloop.mjs ready --from /tmp/llm-first-devloop-ci/brief.md --out /tmp/llm-first-devloop-ci/goal --oracle "Acceptance tests prove saved searches can be created, listed, reopened, renamed, and deleted."
           node scripts/llm-first-devloop.mjs check /tmp/llm-first-devloop-ci/goal/state.yaml
           node scripts/llm-first-devloop.mjs next /tmp/llm-first-devloop-ci/goal/state.yaml
+          node scripts/llm-first-devloop.mjs run --from examples/supermemory-t4-notes.md --out /tmp/llm-first-devloop-ci/t4 --oracle "A checker-clean SuperMemory T4 board reaches an active-task handoff." --force
