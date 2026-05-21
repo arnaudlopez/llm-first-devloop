@@ -1,0 +1,22 @@
+{
+  "name": "llm-first-devloop",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "LLM-first, acceptance-test-driven GoalBuddy workflow tooling.",
+  "scripts": {
+    "test": "node --test scripts/*.test.mjs",
+    "ready": "node scripts/goalbuddy-ready-mode.mjs",
+    "check": "node scripts/goalbuddy-quality-check.mjs",
+    "repair": "node scripts/goalbuddy-board-repair.mjs"
+  },
+  "keywords": [
+    "llm",
+    "tdd",
+    "atdd",
+    "goalbuddy",
+    "codex",
+    "workflow"
+  ],
+  "license": "MIT"
+}

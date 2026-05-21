@@ -1,0 +1,673 @@
+version: 2
+
+goal:
+  title: "GoalBuddy Video Workflow Upgrades"
+  slug: "goalbuddy-video-workflow-upgrades-2026-05-19"
+  kind: specific
+  tranche: "Design and implement tested local GoalBuddy workflow upgrades inspired by the AI coding fundamentals video."
+  status: done
+  intake:
+    original_request: "Préparer le travail pour améliorer notre modèle GoalBuddy avec toutes les propositions de la vidéo."
+    interpreted_outcome: "GoalBuddy local customization produces boards that improve intake clarity, architecture discipline, feedback cadence, TDD reliability, and final proof without becoming bureaucratic."
+    input_shape: specific
+    audience: "Arnaud using GoalBuddy/Codex for reliable AI-assisted development workflows"
+    authority: requested
+    proof_type:
+      - test
+      - artifact
+      - review
+    completion_proof: "A tested local customization update with example boards/checker coverage and a final audit proving the video-derived workflow safeguards are active and proportionate."
+    likely_misfire: "Adding lots of process fields that look rigorous but slow GoalBuddy down, or forcing implementation-only gates onto audit and verification goals."
+    blind_spots_considered:
+      - "Shared design concept may require intake questions, but the board must not stall when defaults are safe."
+      - "Ubiquitous language should reduce ambiguity, not create a mandatory glossary for trivial work."
+      - "TDD and feedback cadence should apply strongly to code-changing goals, while audit, verification, research, and docs stay proportionate."
+      - "Architecture/deep-module review should protect maintainability without blocking small local fixes."
+      - "Interface-first planning can improve Worker handoffs, but Judge must avoid inventing abstractions before Scout sees the code."
+      - "The existing customization must remain update-friendly and idempotent."
+      - "No active git repository may exist; shipping must be explicit, safe, and honestly blocked if unavailable."
+    existing_plan_facts:
+      - "User chose no visual board."
+      - "User wants all three improvement families: intake clarity, architecture quality, and execution robustness."
+      - "Success proof should be tests plus representative generated/repaired board examples."
+      - "Scope excludes upstream GoalBuddy refactor; keep the local patch/adaptation model."
+      - "Video proposals include shared design concept, grill-me intake, design tree, ubiquitous language, feedback loops, TDD, small steps, deep modules, interface-first delegation, module maps, and daily design investment."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  allow_read_only_goal_without_shipping: true
+  require_impact_assessment: true
+  require_quality_checker: true
+  require_github_ship_task: true
+  require_tdd_worker_flow: true
+  slice_policy:
+    max_consecutive_tiny_tasks: 2
+    prefer_vertical_slices: true
+    judge_picks_largest_safe_slice: true
+    worker_completes_whole_slice: true
+
+goal_policy:
+  mode: implementation
+  requires_tdd: true
+  requires_impact_assessment: true
+  requires_shipping: true
+  requires_visual_verification: false
+  requires_migration_proof: false
+  requires_infra_proof: false
+  requires_dependency_review: false
+  requires_dirty_worktree_guard: true
+  requires_refactor_proof: false
+
+workflow_safeguards:
+  requires_design_concept: true
+  requires_ubiquitous_language: true
+  requires_feedback_policy: true
+  requires_test_strategy: true
+  requires_module_map: true
+  requires_interface_contract: true
+  requires_architecture_review: true
+  requires_design_delta: true
+
+agents:
+  scout: bundled_not_installed
+  worker: bundled_not_installed
+  judge: bundled_not_installed
+
+visual_board:
+  selected: none
+  local:
+    status: not_requested
+    url: null
+    command: "npx goalbuddy board docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19"
+  github_projects:
+    status: not_requested
+    url: null
+    command: "npx goalbuddy extend github-projects"
+    missing: []
+
+active_task: null
+
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    reasoning_hint: high
+    objective: "Map the current local GoalBuddy customization scripts, installed patches, templates, tests, and generated-board failure modes relevant to the video-derived workflow upgrades."
+    inputs:
+      - "Current local customization scripts under scripts/"
+      - "Current GoalBuddy skill and installed patched templates/instructions"
+      - "Existing quality-check, board-repair, and personalization tests"
+      - "Video-derived proposal list from the user conversation"
+    constraints:
+      - "Read-only."
+      - "Do not edit scripts, templates, installed GoalBuddy files, or product files."
+      - "Use concrete file-path evidence."
+      - "Separate implementation-goal needs from audit, verification, research, docs, infra, data migration, frontend, and release needs."
+    expected_output:
+      - "module_map: relevant deep modules, boundaries, and shallow-module risks"
+      - "ubiquitous_language: domain terms, overloaded words, and forbidden synonyms"
+      - "design_concept: shared understanding, non-goals, and decision dependencies"
+      - "Current customization surface map."
+      - "Existing test coverage and gaps."
+      - "Video proposal -> current support matrix."
+      - "Lightweight versus heavyweight gate recommendations by goal_policy.mode."
+      - "Candidate verification commands."
+      - "impact_assessment covering db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs"
+    receipt:
+      result: done
+      summary: "Current customization already gates TDD, impact assessment, policy modes, shipping, board repair, and final audit; video-derived design safeguards are not yet first-class or test-enforced."
+      evidence:
+        - "scripts/goalbuddy-quality-check.mjs"
+        - "scripts/goalbuddy-board-repair.mjs"
+        - "scripts/personalize-goalbuddy.mjs"
+        - "scripts/goalbuddy-quality-check.test.mjs"
+        - "scripts/goalbuddy-board-repair.test.mjs"
+        - "README.md"
+      surface_map:
+        quality_checker:
+          - "Validates version, require_quality_checker, goal_policy modes, implementation TDD evidence, impact_assessment, T998 shipping, T999 final audit, mode-specific proof, and final state."
+          - "Already supports implementation, bugfix, refactor, audit_read_only, verification, research, docs, infra, data_migration, frontend, and release modes."
+        board_repair:
+          - "Adds rules, goal_policy, Scout impact assessment, Worker impact refs/stop conditions, shipping task when required, and final audit."
+          - "Does not yet add video-derived planning sections or final evidence expectations."
+        personalization:
+          - "Copies checker and repair scripts into Claude/Codex GoalBuddy installs and patches Worker/Judge/templates/SKILL.md through managed blocks."
+          - "Current managed blocks are focused on TDD, impact, mode selection, verification/audit proportionality, and GitHub delivery."
+        tests:
+          - "Existing tests cover implementation TDD/shipping, active Worker shape, impact assessment, audit exemption, verification mode, docs mode, data_migration, frontend, disk reads, and repair of implementation/verification boards."
+      video_support_matrix:
+        shared_design_concept: "partial via intake fields and likely_misfire; not a named required contract."
+        grill_me_intake: "partial in GoalBuddy diagnostic ladder; not represented in generated state evidence."
+        design_tree_dependencies: "missing as explicit decision/dependency map."
+        ubiquitous_language: "missing as a board field or Scout/Judge output."
+        feedback_loops: "partial through verify commands and TDD; no explicit feedback cadence/speed limit."
+        tdd_small_steps: "strong for implementation Workers."
+        test_strategy_decisions: "partial; tests required but strategy choices are not explicit."
+        deep_modules: "missing as architecture/deep-module review evidence."
+        interface_first_delegation: "missing as Judge/Worker interface contract."
+        module_map: "missing as Scout/Judge output."
+        design_delta_daily_investment: "missing from final audit."
+      mode_recommendations:
+        implementation_bugfix_frontend_data_migration: "Require design_concept, feedback_policy, test_strategy, and module/interface/architecture notes when code changes are non-trivial."
+        refactor: "Require module_map, interface_contract or public boundary statement, characterization/behavior_unchanged evidence, and design_delta."
+        verification: "Keep lightweight: require safe verification plan/evidence only; allow optional module_map when tests target multiple surfaces."
+        audit_read_only: "Keep lightweight: require audit_scope/findings/decision only; do not require TDD/shipping/design ceremony."
+        research_docs: "Require source/decision or docs proof; optional ubiquitous language if terminology is central."
+        infra_release: "Keep infra proof/rollback primary; optional interface/module notes only if app architecture changes."
+      impact_assessment:
+        db_schema_migrations: not_required
+        data_backfill: not_required
+        env_secrets: not_required
+        auth_permissions: not_required
+        api_contract: not_required
+        ui_routes: not_required
+        background_jobs: not_required
+        external_services: not_required
+        deploy_rollback: not_required
+        observability: not_required
+        docs: required
+      coverage_gaps:
+        - "Checker has no concepts for design_concept, ubiquitous_language, module_map, interface_contract, test_strategy, feedback_policy, architecture_review, or design_delta."
+        - "Repair script cannot add those contracts to generated boards."
+        - "Personalization script does not patch Worker/Judge/SKILL/template instructions with these video-derived safeguards."
+        - "README does not document the new workflow model."
+        - "No regression tests prove mode proportionality for these new safeguards."
+      candidate_verification_commands:
+        - "node --test scripts/goalbuddy-quality-check.test.mjs scripts/goalbuddy-board-repair.test.mjs"
+        - "node scripts/personalize-goalbuddy.mjs --dry-run"
+        - "node scripts/goalbuddy-board-repair.mjs --dry-run --json docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/state.yaml"
+        - "node scripts/goalbuddy-quality-check.mjs docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/state.yaml"
+
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Choose the safest architecture and first implementation package for adding design-concept, ubiquitous-language, feedback-cadence, test-strategy, and architecture-review safeguards."
+    inputs:
+      - "T001 receipt"
+      - "Current goal.md and state.yaml"
+    constraints:
+      - "Do not implement."
+      - "Reject changes that make audit_read_only or verification modes behave like implementation goals."
+      - "Reject broad rewrites of GoalBuddy upstream or installed vendor files outside the personalization script."
+      - "Prefer rules that can be checked deterministically from state.yaml or example boards."
+      - "Pick the largest safe useful Worker slice with explicit allowed_files, verify commands, and stop conditions."
+    expected_output:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "Architecture decision."
+      - "Exact Worker objective."
+      - "allowed_files."
+      - "verify."
+      - "stop_if."
+      - "impact_assessment_ref."
+      - "Deferred or blocked tasks."
+    receipt:
+      result: done
+      decision: "approved"
+      architecture_decision: "Add a workflow-safeguards layer to the existing local customization, not a new subsystem: checker validates evidence, repair inserts missing contract fields, personalization patches installed GoalBuddy prompts/templates, README documents the model."
+      rationale:
+        - "The existing scripts already form the right deep boundary: generated state goes through repair, checker, and installer-managed prompt/template patches."
+        - "New video-derived requirements should be state.yaml evidence, not hidden chat expectations."
+        - "Audit_read_only and verification must stay proportionate; only implementation-like modes should require the heavier design/test/architecture evidence."
+      exact_worker_objective: "Implement deterministic workflow safeguard fields and checks for design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, and design_delta; update repair/personalization/README/tests."
+      allowed_files:
+        - "scripts/goalbuddy-quality-check.mjs"
+        - "scripts/goalbuddy-board-repair.mjs"
+        - "scripts/personalize-goalbuddy.mjs"
+        - "scripts/goalbuddy-quality-check.test.mjs"
+        - "scripts/goalbuddy-board-repair.test.mjs"
+        - "README.md"
+        - "docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/state.yaml"
+      verify:
+        - "node --check scripts/goalbuddy-quality-check.mjs"
+        - "node --check scripts/goalbuddy-board-repair.mjs"
+        - "node --check scripts/personalize-goalbuddy.mjs"
+        - "node --test scripts/goalbuddy-quality-check.test.mjs scripts/goalbuddy-board-repair.test.mjs"
+        - "node scripts/personalize-goalbuddy.mjs --dry-run"
+        - "node scripts/goalbuddy-quality-check.mjs docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/state.yaml"
+      stop_if:
+        - "Need files outside allowed_files."
+        - "Need upstream GoalBuddy refactor instead of local update-friendly customization."
+        - "Cannot express the behavior with deterministic tests."
+        - "The change would force TDD or shipping onto audit_read_only or verification goals."
+        - "Verification fails twice."
+      impact_assessment_ref: T001
+      deferred_or_blocked_tasks:
+        - "Installed-template compatibility can run after local implementation tests pass."
+        - "GitHub shipping is expected to block if this workspace remains outside a git repository."
+
+  - id: T003
+    type: worker
+    assignee: Worker
+    status: done
+    reasoning_hint: medium
+    objective: "Implement the first safe video-derived workflow upgrade package selected by Judge."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "Completed Scout impact assessment"
+      - "Judge decision with allowed_files and verification commands"
+    impact_assessment_ref: T001
+    allowed_files:
+      - "scripts/goalbuddy-quality-check.mjs"
+      - "scripts/goalbuddy-board-repair.mjs"
+      - "scripts/personalize-goalbuddy.mjs"
+      - "scripts/goalbuddy-quality-check.test.mjs"
+      - "scripts/goalbuddy-board-repair.test.mjs"
+      - "README.md"
+      - "docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/state.yaml"
+    verify:
+      - "node --check scripts/goalbuddy-quality-check.mjs"
+      - "node --check scripts/goalbuddy-board-repair.mjs"
+      - "node --check scripts/personalize-goalbuddy.mjs"
+      - "node --test scripts/goalbuddy-quality-check.test.mjs scripts/goalbuddy-board-repair.test.mjs"
+      - "node scripts/personalize-goalbuddy.mjs --dry-run"
+      - "node scripts/goalbuddy-quality-check.mjs docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/state.yaml"
+    stop_if:
+      - "No meaningful failing test can be written."
+      - "Need files outside allowed_files."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Need upstream GoalBuddy refactor instead of local update-friendly customization."
+      - "Cannot express the behavior with deterministic tests."
+      - "The change would force TDD or shipping onto audit_read_only or verification goals."
+      - "Verification fails twice."
+    receipt:
+      result: done
+      changed_files:
+        - "scripts/goalbuddy-quality-check.mjs"
+        - "scripts/goalbuddy-board-repair.mjs"
+        - "scripts/personalize-goalbuddy.mjs"
+        - "scripts/goalbuddy-quality-check.test.mjs"
+        - "scripts/goalbuddy-board-repair.test.mjs"
+        - "README.md"
+        - "docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/state.yaml"
+      red_test:
+        command: "node --test scripts/goalbuddy-quality-check.test.mjs scripts/goalbuddy-board-repair.test.mjs"
+        status: failed_as_expected
+        summary: "New tests failed before implementation: repair did not add workflow_safeguards, verification repair lacked false safeguard flags, and checker accepted implementation completion without video workflow evidence."
+      green_test:
+        command: "node --test scripts/goalbuddy-quality-check.test.mjs scripts/goalbuddy-board-repair.test.mjs"
+        status: passed
+        summary: "17 tests passed after implementing workflow safeguards and tightening migration proof matching."
+      verification:
+        - command: "node --check scripts/goalbuddy-quality-check.mjs"
+          status: passed
+        - command: "node --check scripts/goalbuddy-board-repair.mjs"
+          status: passed
+        - command: "node --check scripts/personalize-goalbuddy.mjs"
+          status: passed
+        - command: "node --test scripts/goalbuddy-quality-check.test.mjs scripts/goalbuddy-board-repair.test.mjs"
+          status: passed
+        - command: "node scripts/personalize-goalbuddy.mjs --dry-run"
+          status: passed
+          summary: "Dry-run would patch 12 installed GoalBuddy files and copy 4 scripts."
+        - command: "node scripts/goalbuddy-quality-check.mjs docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/state.yaml"
+          status: passed
+      workflow_safeguards:
+        design_concept: "GoalBuddy boards should preserve shared understanding before implementation instead of treating specs-to-code as sufficient."
+        ubiquitous_language: "The scripts now use explicit board terms: workflow_safeguards, design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, and design_delta."
+        feedback_policy: "Active implementation Workers must expose feedback_policy/test_strategy/interface_contract, and final evidence must prove feedback was used."
+        test_strategy: "Checker and repair behavior is covered through deterministic Node tests with red/green evidence."
+        module_map: "Existing deep boundary preserved: checker validates, repair normalizes, personalization installs, README documents."
+        interface_contract: "state.yaml is the contract surface; repair creates fields, checker validates receipts, installer patches GoalBuddy prompts/templates."
+        architecture_review: "No upstream refactor or new subsystem; changes remain inside the local update-friendly customization layer."
+      impact_assessment_ref: T001
+      design_delta:
+        changed:
+          - "Added workflow_safeguards policy flags and final evidence checks."
+          - "Board repair now inserts safeguard flags and Scout/Judge/Worker/final-audit expectations."
+          - "Personalization patches GoalBuddy prompts/templates with video-derived workflow discipline."
+          - "README documents the new model."
+        stable:
+          - "Existing goal_policy modes remain intact."
+          - "audit_read_only and verification remain lightweight and do not require fake TDD/shipping/design ceremony."
+          - "No product code, DB, env, auth, external service, deployment, or upstream GoalBuddy source changed."
+        deferred:
+          - "Installed GoalBuddy files are applied in T005."
+
+  - id: T004
+    type: worker
+    assignee: Worker
+    status: blocked
+    reasoning_hint: medium
+    objective: "Add representative board examples and regression tests proving the new safeguards stay proportionate across implementation, verification, audit, research/docs, and architecture-sensitive goals."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T003 receipt"
+      - "Updated checker and repair behavior"
+    impact_assessment_ref: null
+    allowed_files: []
+    verify: []
+    stop_if:
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "T003 has not completed or Judge has not provided a safe second slice."
+      - "Need files outside allowed_files."
+      - "Examples require product implementation work instead of board/checker fixtures."
+      - "Verification fails twice."
+    receipt:
+      result: blocked
+      reason: "not_required_as_separate_slice"
+      summary: "T003 already added representative checker/repair tests for implementation safeguards, verification proportionality, audit/docs/data_migration/frontend existing examples, and repair output. No separate write slice is required."
+      evidence:
+        - "scripts/goalbuddy-quality-check.test.mjs"
+        - "scripts/goalbuddy-board-repair.test.mjs"
+
+  - id: T005
+    type: pm
+    assignee: PM
+    status: done
+    reasoning_hint: medium
+    objective: "Run the personalization installer and installed-template repair/check flow after implementation, then record the exact compatibility result."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T003 and T004 receipts"
+      - "Updated local scripts"
+    constraints:
+      - "Run only the local GoalBuddy personalization installer and verification commands."
+      - "Do not edit product files."
+      - "Stop if the installer would write outside expected Claude/Codex GoalBuddy customization targets."
+      - "Stop if no local GoalBuddy installation is discoverable."
+    receipt:
+      result: done
+      changed_files:
+        - "/.claude/agents/goal-worker.md"
+        - "/.claude/agents/goal-judge.md"
+        - "/.claude/skills/goalbuddy/agents/goal_worker.toml"
+        - "/.claude/skills/goalbuddy/agents/goal_judge.toml"
+        - "/.claude/skills/goalbuddy/templates/state.yaml"
+        - "/.claude/skills/goalbuddy/SKILL.md"
+        - "/.claude/skills/goalbuddy/scripts/goalbuddy-quality-check.mjs"
+        - "/.claude/skills/goalbuddy/scripts/goalbuddy-board-repair.mjs"
+        - "/.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/agents/goal-worker.md"
+        - "/.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/agents/goal-judge.md"
+        - "/.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/agents/goal_worker.toml"
+        - "/.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/agents/goal_judge.toml"
+        - "/.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/templates/state.yaml"
+        - "/.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/SKILL.md"
+        - "/.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/scripts/goalbuddy-quality-check.mjs"
+        - "/.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/scripts/goalbuddy-board-repair.mjs"
+      commands:
+        - cmd: "node scripts/personalize-goalbuddy.mjs"
+          status: passed
+          summary: "Applied patches/copies to Claude and Codex GoalBuddy installs."
+        - cmd: "node scripts/personalize-goalbuddy.mjs --dry-run"
+          status: passed
+          summary: "changed: 0, unchanged: 16, missing: 0, copied: 0"
+        - cmd: "node /.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/scripts/goalbuddy-board-repair.mjs --dry-run --json /.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/templates/state.yaml"
+          status: passed
+          summary: "changed: false, ok_after_repair: true"
+        - cmd: "node /.claude/skills/goalbuddy/scripts/goalbuddy-board-repair.mjs --dry-run --json /.claude/skills/goalbuddy/templates/state.yaml"
+          status: passed
+          summary: "changed: false, ok_after_repair: true"
+        - cmd: "node /.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/scripts/goalbuddy-quality-check.mjs /.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/templates/state.yaml"
+          status: passed
+      summary: "Local GoalBuddy installations now contain the updated workflow-safeguard checker, repair script, prompts, SKILL.md contract, and state templates."
+
+  - id: T998
+    type: pm
+    assignee: PM
+    status: blocked
+    reasoning_hint: medium
+    objective: "Commit and push the completed local customization update when a valid git repository and remote are available; otherwise record a truthful shipping blocker."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "All completed Worker receipts"
+      - "Current dirty diff"
+      - "Final verification commands"
+    impact_assessment_ref: null
+    allowed_files:
+      - "README.md"
+      - "scripts/**"
+      - "docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/**"
+    verify:
+      - "git status --short"
+      - "git rev-parse --is-inside-work-tree"
+      - "git remote -v"
+    stop_if:
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Not inside a git repository."
+      - "No GitHub remote is configured."
+      - "There are unrelated dirty changes that cannot be safely separated."
+      - "User approval is required for the remote shipping step."
+    receipt:
+      result: blocked
+      shipping_blocker: no_git_repository
+      summary: "Cannot commit or push from this workspace because it is not inside a git repository."
+      commands:
+        - cmd: "git status --short"
+          status: failed
+          output: "fatal: not a git repository (or any of the parent directories): .git"
+        - cmd: "git rev-parse --is-inside-work-tree"
+          status: failed
+          output: "fatal: not a git repository (or any of the parent directories): .git"
+        - cmd: "git remote -v"
+          status: failed
+          output: "fatal: not a git repository (or any of the parent directories): .git"
+
+  - id: T006
+    type: worker
+    assignee: Worker
+    status: done
+    reasoning_hint: medium
+    objective: "Allow final quality checks to accept an explicit no-git/no-GitHub shipping blocker without pretending commit and push happened."
+    inputs:
+      - "T998 shipping_blocker receipt"
+      - "Existing shipping gate behavior"
+      - "Completed impact_assessment receipt T001"
+      - "design_concept"
+      - "feedback_policy"
+      - "test_strategy"
+      - "module_map"
+      - "interface_contract"
+      - "architecture_review"
+    impact_assessment_ref: T001
+    allowed_files:
+      - "scripts/goalbuddy-quality-check.mjs"
+      - "scripts/goalbuddy-board-repair.mjs"
+      - "scripts/goalbuddy-quality-check.test.mjs"
+      - "scripts/personalize-goalbuddy.mjs"
+      - "README.md"
+      - "docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/state.yaml"
+    verify:
+      - "node --check scripts/goalbuddy-quality-check.mjs"
+      - "node --check scripts/personalize-goalbuddy.mjs"
+      - "node --test scripts/goalbuddy-quality-check.test.mjs scripts/goalbuddy-board-repair.test.mjs"
+      - "node scripts/goalbuddy-quality-check.mjs docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/state.yaml"
+    stop_if:
+      - "No meaningful failing test can be written."
+      - "Need files outside allowed_files."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "The change would accept vague or avoidable shipping failures as completion."
+      - "Verification fails twice."
+    receipt:
+      result: done
+      changed_files:
+        - "scripts/goalbuddy-quality-check.mjs"
+        - "scripts/goalbuddy-board-repair.mjs"
+        - "scripts/goalbuddy-quality-check.test.mjs"
+        - "scripts/personalize-goalbuddy.mjs"
+        - "README.md"
+        - "docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/state.yaml"
+      red_test:
+        command: "node --test scripts/goalbuddy-quality-check.test.mjs scripts/goalbuddy-board-repair.test.mjs"
+        status: failed_as_expected
+        summary: "New test failed because T998 blocked with shipping_blocker: no_git_repository was rejected as not done."
+      green_test:
+        command: "node --test scripts/goalbuddy-quality-check.test.mjs scripts/goalbuddy-board-repair.test.mjs"
+        status: passed
+        summary: "18 tests passed after accepting explicit no_git_repository/no_github_remote shipping blockers."
+      verification:
+        - command: "node --check scripts/goalbuddy-quality-check.mjs"
+          status: passed
+        - command: "node --check scripts/goalbuddy-board-repair.mjs"
+          status: passed
+        - command: "node --check scripts/personalize-goalbuddy.mjs"
+          status: passed
+        - command: "node --test scripts/goalbuddy-quality-check.test.mjs scripts/goalbuddy-board-repair.test.mjs"
+          status: passed
+        - command: "node scripts/personalize-goalbuddy.mjs"
+          status: passed
+        - command: "node scripts/personalize-goalbuddy.mjs --dry-run"
+          status: passed
+          summary: "changed: 0, unchanged: 16, missing: 0, copied: 0"
+        - command: "node /.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/scripts/goalbuddy-board-repair.mjs --dry-run --json /.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/templates/state.yaml"
+          status: passed
+          summary: "changed: false, ok_after_repair: true"
+        - command: "node /.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/scripts/goalbuddy-quality-check.mjs /.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/templates/state.yaml"
+          status: passed
+        - command: "node scripts/goalbuddy-quality-check.mjs docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/state.yaml"
+          status: passed
+      workflow_safeguards:
+        design_concept: "Shipping remains systematic when a repo exists, and explicitly blocked when no repo/remote exists."
+        feedback_policy: "Do not expand into git initialization or remote setup without user approval; only make checker semantics match the board contract."
+        test_strategy: "Regression test uses a final board with blocked T998 and shipping_blocker: no_git_repository."
+        module_map: "Shipping semantics stay in quality-check; generated instructions are aligned through board-repair and personalization."
+        interface_contract: "T998 accepts either commit_sha/remote_branch/push_result or shipping_blocker no_git_repository/no_github_remote; vague failures still fail."
+        architecture_review: "This preserves honest shipping guarantees without inventing commit/push proof in non-repo workspaces."
+      impact_assessment_ref: T001
+      design_delta:
+        changed:
+          - "Final checker now accepts explicit no_git_repository/no_github_remote blockers."
+          - "Board repair, personalization, and README now document the blocker contract."
+        stable:
+          - "Successful GitHub shipping still requires commit SHA, remote branch, and push result."
+          - "Vague or avoidable shipping failures are not accepted."
+
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: done
+    reasoning_hint: high
+    objective: "Audit whether the local GoalBuddy workflow upgrade tranche fully satisfies the video-derived improvement goal."
+    inputs:
+      - "design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, and design_delta evidence"
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Quality checker final output"
+      - "Completed impact_assessment receipt"
+      - "T998 shipping proof when shipping is required"
+      - "Video proposal -> implemented support matrix"
+    constraints:
+      - "Reject completion if design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, or design_delta evidence is missing when workflow_safeguards requires it."
+      - "Do not implement."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion unless impact_assessment covers db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs when impact assessment is required."
+      - "For read-only audit goals with no Worker tasks and no changed_files, accept audit_scope/audit_findings/review/decision evidence instead of TDD, impact_assessment, T998, commit, and push."
+      - "For verification goals, reject completion unless safe test/browser command evidence exists and no changed_files are reported."
+      - "Reject completion unless T998 has a commit SHA and successful push result when shipping is required."
+      - "Reject completion if audit_read_only or verification modes were made too heavy."
+      - "Reject completion if representative board examples were not checked."
+      - "If shipping is blocked due to no git repo or no remote, require explicit blocker evidence instead of pretending it happened."
+    expected_output:
+      - "design_delta"
+      - "workflow_safeguards result"
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "Implemented video-derived safeguards"
+      - "Commands and results"
+      - "Mode proportionality assessment"
+      - "Shipping result or blocker"
+      - "Remaining gaps or next task if not complete"
+    receipt:
+      result: done
+      decision: complete
+      full_outcome_complete: true
+      workflow_safeguards_result:
+        design_concept: implemented
+        ubiquitous_language: implemented
+        feedback_policy: implemented
+        test_strategy: implemented
+        module_map: implemented
+        interface_contract: implemented
+        architecture_review: implemented
+        design_delta: implemented
+      implemented_video_derived_safeguards:
+        - "Avoid blind specs-to-code: generated/repaired boards now carry explicit workflow_safeguards and final evidence checks."
+        - "Shared design concept: implementation-like boards require design_concept evidence."
+        - "Ubiquitous language: implementation-like boards require ubiquitous_language evidence."
+        - "Feedback loops and speed limit: active Workers must expose feedback_policy, test_strategy, and interface_contract."
+        - "TDD: implementation Workers still require red_test, green_test, targeted test commands, and test file evidence."
+        - "Deep modules/interface-first delegation: module_map, interface_contract, and architecture_review are required for implementation-like completion."
+        - "Daily design investment: final completion requires design_delta evidence."
+        - "Human strategy / AI tactics: Judge/PM contracts define boundaries; Worker changes internals inside them."
+      mode_proportionality_assessment:
+        implementation_like: "Heavy safeguards enabled for implementation, bugfix, refactor, frontend, and data_migration."
+        audit_read_only: "Still lightweight; no fake TDD/shipping/design ceremony."
+        verification: "Still lightweight and no file changes; fixes must move to implementation mode."
+        docs_research: "Still proportionate; safeguards disabled by default unless explicitly opted in."
+      commands_and_results:
+        - cmd: "node --test scripts/goalbuddy-quality-check.test.mjs scripts/goalbuddy-board-repair.test.mjs"
+          status: passed
+          summary: "18 tests passed."
+        - cmd: "node --check scripts/goalbuddy-quality-check.mjs"
+          status: passed
+        - cmd: "node --check scripts/goalbuddy-board-repair.mjs"
+          status: passed
+        - cmd: "node --check scripts/personalize-goalbuddy.mjs"
+          status: passed
+        - cmd: "node scripts/personalize-goalbuddy.mjs --dry-run"
+          status: passed
+          summary: "changed: 0, unchanged: 16, missing: 0, copied: 0"
+        - cmd: "node /.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/scripts/goalbuddy-board-repair.mjs --dry-run --json /.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/templates/state.yaml"
+          status: passed
+          summary: "changed: false, ok_after_repair: true"
+        - cmd: "node /.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/scripts/goalbuddy-quality-check.mjs /.codex/plugins/cache/goalbuddy/goalbuddy/0.3.6/skills/goalbuddy/templates/state.yaml"
+          status: passed
+        - cmd: "node scripts/goalbuddy-quality-check.mjs --final docs/goals/goalbuddy-video-workflow-upgrades-2026-05-19/state.yaml"
+          status: passed
+      shipping_result_or_blocker:
+        result: blocked
+        shipping_blocker: no_git_repository
+        summary: "This workspace is not inside a git repository, so no commit or push was attempted or invented."
+      design_delta:
+        changed:
+          - "Local checker/repair/personalization/README now encode the video-derived workflow model."
+          - "Installed Claude and Codex GoalBuddy copies were updated."
+          - "Final shipping gate now accepts explicit no_git_repository/no_github_remote blockers while still requiring real commit/push proof when a repo exists."
+        stable:
+          - "No product code changed."
+          - "No upstream GoalBuddy refactor was introduced."
+          - "Audit and verification modes remain proportionate."
+      remaining_gaps: []

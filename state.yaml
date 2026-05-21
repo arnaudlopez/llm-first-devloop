@@ -1,0 +1,240 @@
+# GoalBuddy v2 state.yaml
+# Board truth lives here. goal.md is the editable charter; notes/ holds long receipts only.
+
+version: 2
+
+goal:
+  title: "<Goal title>"
+  slug: "<goal-slug>"
+  kind: open_ended # specific | open_ended | existing_plan | recovery | audit
+  tranche: "<continuous execution: complete successive safe verified slices until the full original outcome is complete>"
+  status: active # active | blocked | done
+  intake:
+    original_request: "<shortest faithful user request>"
+    interpreted_outcome: "<one sentence>"
+    input_shape: vague # vague | specific | existing_plan | recovery | audit
+    audience: unknown
+    authority: requested # requested | approved | inferred | needs_approval | blocked
+    proof_type: artifact # test | demo | artifact | metric | review | source_backed_answer | decision
+    completion_proof: "<observable signal that proves the full original outcome is complete>"
+    likely_misfire: "<how GoalBuddy could succeed at the wrong thing>"
+    blind_spots_considered: []
+    existing_plan_facts: []
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  allow_read_only_goal_without_shipping: true
+  require_impact_assessment: true
+  require_quality_checker: true
+  require_github_ship_task: true
+  require_tdd_worker_flow: true
+  slice_policy:
+    max_consecutive_tiny_tasks: 2
+    prefer_vertical_slices: true
+    judge_picks_largest_safe_slice: true
+    worker_completes_whole_slice: true
+
+goal_policy:
+  # implementation | bugfix | refactor | audit_read_only | research | docs | infra | data_migration | frontend | release
+  mode: implementation
+  requires_tdd: true
+  requires_impact_assessment: true
+  requires_shipping: true
+  requires_visual_verification: false
+  requires_migration_proof: false
+  requires_infra_proof: false
+  requires_dependency_review: false
+  requires_dirty_worktree_guard: true
+  requires_refactor_proof: false
+
+workflow_safeguards:
+  requires_design_concept: true
+  requires_ubiquitous_language: true
+  requires_feedback_policy: true
+  requires_test_strategy: true
+  requires_module_map: true
+  requires_interface_contract: true
+  requires_architecture_review: true
+  requires_design_delta: true
+
+agents:
+  # installed | bundled_not_installed | missing | unknown
+  # If non-installed, /goal can continue through PM fallback; install agents before /goal only when dedicated delegation is required.
+  scout: unknown
+  worker: unknown
+  judge: unknown
+
+visual_board:
+  # none | local | github_projects | both | unknown
+  selected: unknown
+  local:
+    status: not_requested # not_requested | starting | live | generated | blocked
+    url: null
+    command: "npx goalbuddy board docs/goals/<goal-slug>"
+  github_projects:
+    status: not_requested # not_requested | needs_approval | dry_run_ready | synced | blocked
+    url: null
+    command: "npx goalbuddy extend github-projects"
+    missing: []
+
+active_task: T001
+
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: active
+    reasoning_hint: default # default | low | medium | high | xhigh
+    objective: "Map repo purpose, architecture, verification commands, health signals, and improvement candidates."
+    inputs:
+      - "ubiquitous_language"
+      - "design_concept"
+      - README.md
+      - package.json
+      - docs
+      - tests
+    constraints:
+      - "Read-only."
+      - "Do not edit implementation files."
+      - "Prefer concrete file-path evidence over generic advice."
+    expected_output:
+      - "Repo map"
+      - "Verification commands"
+      - "Ranked improvement candidates"
+      - "Candidate next tasks"
+      - "module_map: relevant deep modules, boundaries, and shallow-module risks"
+      - "ubiquitous_language: domain terms, overloaded words, and forbidden synonyms"
+      - "design_concept: shared understanding, non-goals, and decision dependencies"
+      - "impact_assessment covering db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs"
+    receipt: null
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: queued
+    reasoning_hint: default
+    objective: "Review Scout findings and choose the first safe implementation task."
+    inputs:
+      - "T001 receipt"
+    constraints:
+      - "Do not implement."
+      - "Reject implementation Worker tasks unless design_concept, feedback_policy, test_strategy, module_map, interface_contract, and architecture_review are defined or explicitly waived by workflow_safeguards."
+      - "Reject Worker tasks until a completed impact_assessment exists and the Worker references it."
+      - "Pick the largest safe useful slice with clear allowed_files, verify commands, and stop conditions."
+    expected_output:
+      - "Decision"
+      - "Exact Worker objective"
+      - "allowed_files"
+      - "verify"
+      - "stop_if"
+      - "impact_assessment_ref"
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "Blocked or deferred tasks"
+    receipt: null
+  - id: T003
+    type: worker
+    assignee: Worker
+    status: queued
+    reasoning_hint: default
+    objective: "Execute the first safe implementation task selected by Judge."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "Completed impact_assessment receipt"
+      - "design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, and design_delta evidence"
+      - "Judge decision with impact_assessment_ref"
+    impact_assessment_ref: null
+    allowed_files: []
+    verify: []
+    stop_if:
+      - "Need files outside allowed_files."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Behavior is ambiguous."
+      - "No meaningful failing test can be written."
+      - "Verification fails twice."
+    # Optional depth-1 child board promoted by PM when a task needs bounded branching work:
+    # subgoal:
+    #   status: active # active | blocked | done
+    #   path: subgoals/T003-child/state.yaml
+    #   owner: Worker
+    #   created_from: T003
+    #   depth: 1
+    #   rollup_receipt: null
+    receipt: null
+  - id: T998
+    type: pm
+    assignee: PM
+    status: queued
+    reasoning_hint: default
+    objective: "Ship verified work to GitHub before the goal can be marked done."
+    constraints:
+      - "Run git status --short."
+      - "Run git diff --check."
+      - "Verify this is a git repository with an active GitHub remote."
+      - "Run node scripts/goalbuddy-quality-check.mjs --final docs/goals/<goal-slug>/state.yaml, or the installed GoalBuddy copy if the workspace script is unavailable."
+      - "Run the goal's required verification commands."
+      - "Commit all goal-related changes with a clear message."
+      - "Push the current branch to origin."
+      - "If no GitHub remote exists, mark this task blocked with exact missing setup; do not count a local-only commit as shipped."
+      - "If commit or push is blocked by credentials, network, permissions, or approval, mark this task blocked and do not mark the goal done."
+    expected_output:
+      - "Commit SHA"
+      - "Remote branch"
+      - "Push result"
+    receipt: null
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: queued
+    reasoning_hint: default
+    objective: "Audit whether the implemented slice satisfies the original user outcome for this tranche."
+    inputs:
+      - "design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, and design_delta evidence"
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Quality checker final output"
+      - "Completed impact_assessment receipt"
+    constraints:
+      - "Do not implement."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion if design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, or design_delta evidence is missing when workflow_safeguards requires it."
+      - "Reject completion unless impact_assessment covers db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs."
+      - "For read-only audit goals with no active/done Worker and no changed_files, accept audit_scope/audit_findings/review/decision evidence instead of TDD, impact_assessment, T998, commit, and push."
+      - "Reject completion if the broader original outcome still has safe local follow-up slices."
+      - "Reject stopping only because a slice needs owner input, credentials, production access, destructive operations, or policy decisions."
+      - "Reject completion unless T998 has a commit SHA and successful push result, or an explicit shipping_blocker for no_git_repository/no_github_remote."
+      - "Reject completion unless T998 has a commit SHA and successful push result."
+    expected_output:
+      - "design_delta"
+      - "workflow_safeguards result"
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipt: null
+
+checks:
+  dirty_fingerprint: unknown
+  last_verification:
+    result: unknown
+    task: null
+    commands: []
