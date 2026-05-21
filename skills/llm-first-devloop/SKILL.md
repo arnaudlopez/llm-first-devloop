@@ -76,6 +76,16 @@ llm-first-devloop advance \
 
 Use `--next T003` for an explicit next task or `--no-next` when the task is blocked and the board should pause.
 
+When a Judge task approves future Worker boundaries, include `task_updates` in the receipt instead of hand-editing the board:
+
+```bash
+llm-first-devloop advance \
+  --state docs/goals/<slug>/state.yaml \
+  --receipt-json '{"result":"done","decision":"approved","task_updates":{"T003":{"allowed_files":["test/example.test.js"],"verify":["npm test"],"stop_if":["Need files outside allowed_files."],"impact_assessment_ref":"T001.receipt.impact_assessment"}}}'
+```
+
+Only use `task_updates` for queued future tasks and bounded execution fields: `allowed_files`, `verify`, `stop_if`, and `impact_assessment_ref`.
+
 ## Boundaries
 
 - Do not launch native `/goal` automatically in the current tranche.

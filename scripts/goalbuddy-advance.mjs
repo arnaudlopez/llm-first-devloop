@@ -51,7 +51,16 @@ export function advanceBoard(options = {}) {
     });
   }
 
+  const taskUpdates = normalizeTaskUpdates(receipt.task_updates || receipt.taskUpdates);
+  const updateValidation = validateTaskUpdates(taskUpdates, tasks, activeTask.id);
+  if (!updateValidation.ok) {
+    return blocked("invalid_task_updates", updateValidation.errors, { statePath, activeTask });
+  }
+
   let nextText = original;
+  for (const [taskId, updates] of Object.entries(taskUpdates)) {
+    nextText = replaceTaskBlock(nextText, taskId, (block) => replaceTaskFields(block, updates));
+  }
   nextText = replaceTopLevelScalar(nextText, "active_task", nextTask ? nextTask.id : "null");
   nextText = replaceTaskBlock(nextText, activeTask.id, (block) => {
     let next = replaceTaskStatus(block, status);
@@ -72,6 +81,7 @@ export function advanceBoard(options = {}) {
     statePath,
     activeTask: { id: activeTask.id, status },
     nextTask: nextTask ? { id: nextTask.id, status: "active" } : null,
+    taskUpdates: Object.keys(taskUpdates),
     check,
     errors: check.errors,
     text: options.includeText ? nextText : undefined,
@@ -149,6 +159,80 @@ function replaceReceipt(block, receipt) {
   const lines = block.split(/\r?\n/);
   const receiptIndex = lines.findIndex((line) => /^\s{4}receipt:/.test(line));
   if (receiptIndex !== -1) return `${lines.slice(0, receiptIndex).join("\n")}\n${rendered.trimEnd()}\n`;
+  return `${block.trimEnd()}\n${rendered}`;
+}
+
+const TASK_UPDATE_FIELDS = new Set(["allowed_files", "verify", "stop_if", "impact_assessment_ref"]);
+
+function normalizeTaskUpdates(value) {
+  if (!value) return {};
+  if (Array.isArray(value)) {
+    return Object.fromEntries(
+      value
+        .filter((entry) => entry && typeof entry === "object")
+        .map((entry) => {
+          const targetTaskId = clean(entry.id || entry.task_id || entry.taskId);
+          const { id, task_id, taskId, ...updates } = entry;
+          return [targetTaskId, updates];
+        }),
+    );
+  }
+  if (value && typeof value === "object") return value;
+  return {};
+}
+
+function validateTaskUpdates(taskUpdates, tasks, activeTaskId) {
+  const errors = [];
+  const taskById = new Map(tasks.map((task) => [task.id, task]));
+  for (const [taskId, updates] of Object.entries(taskUpdates)) {
+    if (!taskId) {
+      errors.push("task_updates contains an empty task id");
+      continue;
+    }
+    const task = taskById.get(taskId);
+    if (!task) {
+      errors.push(`task_updates target not found: ${taskId}`);
+      continue;
+    }
+    if (taskId === activeTaskId || task.status !== "queued") {
+      errors.push(`task_updates target ${taskId} must be a queued future task`);
+    }
+    if (!updates || typeof updates !== "object" || Array.isArray(updates)) {
+      errors.push(`task_updates.${taskId} must be an object`);
+      continue;
+    }
+    for (const field of Object.keys(updates)) {
+      if (!TASK_UPDATE_FIELDS.has(field)) {
+        errors.push(`task_updates.${taskId}.${field} is not an allowed task update field`);
+      }
+    }
+  }
+  return { ok: errors.length === 0, errors };
+}
+
+function replaceTaskFields(block, updates) {
+  return Object.entries(updates).reduce((current, [field, value]) => replaceTaskField(current, field, value), block);
+}
+
+function replaceTaskField(block, field, value) {
+  const rendered = renderYamlValue(value, 4, field).trimEnd();
+  const lines = block.split(/\r?\n/);
+  const start = lines.findIndex((line) => new RegExp(`^\\s{4}${escapeRegExp(field)}:`).test(line));
+  if (start !== -1) {
+    let end = lines.length;
+    for (let index = start + 1; index < lines.length; index += 1) {
+      if (/^\s{4}\S/.test(lines[index])) {
+        end = index;
+        break;
+      }
+    }
+    return [...lines.slice(0, start), ...rendered.split("\n"), ...lines.slice(end)].join("\n");
+  }
+
+  const receiptIndex = lines.findIndex((line) => /^\s{4}receipt:/.test(line));
+  if (receiptIndex !== -1) {
+    return [...lines.slice(0, receiptIndex), ...rendered.split("\n"), ...lines.slice(receiptIndex)].join("\n");
+  }
   return `${block.trimEnd()}\n${rendered}`;
 }
 

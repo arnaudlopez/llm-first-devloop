@@ -166,6 +166,27 @@ llm-first-devloop advance \
 
 Use `--next T003` to choose a specific next task, or `--no-next` when a task is blocked and no safe continuation should start.
 
+Judge receipts can also update queued future task boundaries before the next task becomes active:
+
+```bash
+llm-first-devloop advance \
+  --state docs/goals/<slug>/state.yaml \
+  --receipt-json '{
+    "result": "done",
+    "decision": "approved",
+    "task_updates": {
+      "T003": {
+        "allowed_files": ["test/tasks.test.js"],
+        "verify": ["npm test"],
+        "stop_if": ["Need files outside allowed_files."],
+        "impact_assessment_ref": "T001.receipt.impact_assessment"
+      }
+    }
+  }'
+```
+
+For safety, `task_updates` only targets queued future tasks and only supports bounded execution fields: `allowed_files`, `verify`, `stop_if`, and `impact_assessment_ref`.
+
 ## GoalBuddy Personalization
 
 This workspace keeps local GoalBuddy customizations that can be reapplied after each GoalBuddy update.

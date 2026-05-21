@@ -892,6 +892,7 @@ Goal:
 Work:
 
 - Add a lightweight `goalbuddy-next` runner or wrapper.
+- Extend `goalbuddy-advance` so structured Judge receipts can safely update future task fields before activation.
 - It should:
   - read `state.yaml`,
   - identify active task,
@@ -899,15 +900,18 @@ Work:
   - suggest or execute next role step,
   - refuse unsafe transitions,
   - keep receipts in state.
+  - apply bounded task updates such as `allowed_files`, `verify`, `stop_if`, and `impact_assessment_ref` when a Judge approves a Worker package.
 
 Important:
 
 - This should come after the artifact model is stable.
 - Do not build a big runner before the boards are consistently good.
+- Judge task updates must be explicit, target known queued tasks, and pass the quality checker before the board is written.
 
 Acceptance:
 
 - the user can run one command and the workflow advances until blocked or complete.
+- a Judge receipt can fill T003/T004/T005 boundaries without manual YAML editing.
 
 ### Phase 6: Long-Running Product Evolution
 

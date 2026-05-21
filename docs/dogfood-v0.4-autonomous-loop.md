@@ -71,3 +71,21 @@ Judge decisions often need to update future task fields such as allowed_files, v
 ```
 
 Today that still requires a normal board edit. A future `advance` enhancement should support safe task updates from structured Judge receipts.
+
+## Follow-Up Implemented
+
+The next tranche added `receipt.task_updates` support to `goalbuddy-advance`.
+
+Supported bounded fields:
+
+- `allowed_files`
+- `verify`
+- `stop_if`
+- `impact_assessment_ref`
+
+Safety constraints:
+
+- update targets must be known queued future tasks;
+- active/current tasks cannot be rewritten through `task_updates`;
+- unknown fields are rejected;
+- the full quality checker must pass before the board is written.

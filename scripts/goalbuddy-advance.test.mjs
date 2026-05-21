@@ -154,3 +154,124 @@ tasks:
     assert.match(updated, /id: T999[\s\S]*status: done/);
   });
 });
+
+test("advanceBoard applies structured Judge updates to queued future tasks", () => {
+  const state = `version: 2
+goal:
+  status: active
+
+goal_policy:
+  mode: docs
+  requires_shipping: false
+
+rules:
+  require_quality_checker: true
+
+active_task: T002
+tasks:
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: active
+    objective: "Approve the first Worker package."
+    receipt: null
+  - id: T003
+    type: worker
+    assignee: Worker
+    status: queued
+    objective: "Execute the approved package."
+    allowed_files: []
+    verify: []
+    stop_if:
+      - "Need files outside allowed_files."
+    receipt: null
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: queued
+    objective: "Audit whether the outcome is complete."
+    receipt: null
+`;
+
+  withState(state, (statePath) => {
+    const result = advanceBoard({
+      statePath,
+      receipt: {
+        result: "done",
+        decision: "approved",
+        task_updates: {
+          T003: {
+            allowed_files: ["docs/example.md"],
+            verify: ["npm test"],
+            stop_if: ["Need files outside allowed_files.", "Verification fails twice."],
+            impact_assessment_ref: "not_required_for_docs_mode",
+          },
+        },
+      },
+    });
+
+    assert.equal(result.ok, true, result.errors?.join("\n"));
+    assert.deepEqual(result.taskUpdates, ["T003"]);
+    const updated = readFileSync(statePath, "utf8");
+    assert.match(updated, /active_task: T003/);
+    assert.match(updated, /id: T003[\s\S]*status: active/);
+    assert.match(updated, /allowed_files:\n      - docs\/example\.md/);
+    assert.match(updated, /verify:\n      - "npm test"/);
+    assert.doesNotMatch(updated, /allowed_files: \[\]\n\s+-/);
+  });
+});
+
+test("advanceBoard rejects unsafe task update fields", () => {
+  const state = `version: 2
+goal:
+  status: active
+
+goal_policy:
+  mode: docs
+  requires_shipping: false
+
+rules:
+  require_quality_checker: true
+
+active_task: T002
+tasks:
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: active
+    objective: "Approve the first Worker package."
+    receipt: null
+  - id: T003
+    type: worker
+    assignee: Worker
+    status: queued
+    objective: "Execute the approved package."
+    allowed_files: []
+    verify: []
+    receipt: null
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: queued
+    objective: "Audit whether the outcome is complete."
+    receipt: null
+`;
+
+  withState(state, (statePath) => {
+    const result = advanceBoard({
+      statePath,
+      receipt: {
+        result: "done",
+        task_updates: {
+          T003: {
+            status: "done",
+          },
+        },
+      },
+    });
+
+    assert.equal(result.ok, false);
+    assert.equal(result.reason, "invalid_task_updates");
+    assert.match(result.errors.join("\n"), /status is not an allowed task update field/);
+  });
+});
