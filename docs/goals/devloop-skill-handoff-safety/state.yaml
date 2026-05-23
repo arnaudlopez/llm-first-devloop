@@ -2,7 +2,7 @@ version: 2
 goal:
   slug: "devloop-skill-handoff-safety"
   title: "DevLoop Skill Handoff Safety"
-  status: active
+  status: complete
   created_at: "2026-05-23"
   updated_at: "2026-05-23"
   kind: specific
@@ -76,7 +76,7 @@ agents:
   worker: installed
   judge: installed
 
-active_task: T998
+active_task: null
 tasks:
   - id: T001
     type: scout
@@ -430,7 +430,7 @@ tasks:
   - id: T998
     type: pm
     assignee: PM
-    status: active
+    status: done
     objective: "Commit all goal-related changes and push the current branch once verification is green."
     inputs:
       - "Approved implementation and verification receipts"
@@ -451,11 +451,38 @@ tasks:
       - "push_result"
       - "committed_files"
       - "unrelated_dirty_files_left_untouched"
-    receipt: null
+    receipt:
+      result: done
+      summary: "Committed and pushed DevLoop skill handoff safety update. Installed Codex skill was synced from the repo source before shipping."
+      commit_sha: 3e2ac2f
+      remote_branch: origin/main
+      push_result: "pushed to https://github.com/arnaudlopez/llm-first-devloop.git main"
+      committed_files:
+        - skills/llm-first-devloop/SKILL.md
+        - scripts/llm-first-devloop-skill.test.mjs
+        - docs/devloop-skill-handoff-safety-notes.md
+        - docs/goals/devloop-skill-handoff-safety/acceptance-contract.md
+        - docs/goals/devloop-skill-handoff-safety/brief.md
+        - docs/goals/devloop-skill-handoff-safety/goal.md
+        - docs/goals/devloop-skill-handoff-safety/state.yaml
+      unrelated_dirty_files_left_untouched:
+        []
+      installed_skill_sync: "/Users/arnaud/.codex/skills/llm-first-devloop/SKILL.md matches repo source"
+      verify:
+        -
+          command: "npm test"
+          result: pass
+          tests: "55 pass"
+        -
+          command: "git diff --check"
+          result: pass
+        -
+          command: "cmp -s skills/llm-first-devloop/SKILL.md /Users/arnaud/.codex/skills/llm-first-devloop/SKILL.md"
+          result: pass
   - id: T999
     type: judge
     assignee: Judge
-    status: queued
+    status: done
     reasoning_hint: high
     objective: "Audit whether the full original outcome is complete."
     inputs:
@@ -481,4 +508,30 @@ tasks:
       - "full_outcome_complete: true | false"
       - "missing evidence"
       - "next task if not complete"
-    receipt: null
+    receipt:
+      result: done
+      decision: complete
+      summary: "Final audit complete: the DevLoop skill now requires agents to surface Board, verify Repo, use Board command when needed, and stop on state_outside_repo without explicit owner approval."
+      full_outcome_complete: true
+      oracle_result: satisfied
+      evidence:
+        -
+          command: "node --test scripts/llm-first-devloop-skill.test.mjs"
+          result: pass
+          coverage: "skill contains Board/Repo/Board command/state_outside_repo/--allow-outside-repo requirements"
+        -
+          command: "npm test"
+          result: pass
+          tests: "55 pass"
+        -
+          command: "git diff --check"
+          result: pass
+        -
+          command: "cmp -s skills/llm-first-devloop/SKILL.md /Users/arnaud/.codex/skills/llm-first-devloop/SKILL.md"
+          result: pass
+      shipping:
+        commit_sha: 3e2ac2f
+        push_result: "origin/main pushed"
+      missing_evidence:
+        []
+      next_recommendation: "Dogfood one more run from a fresh board; the active skill should now display Board and Repo before work."
