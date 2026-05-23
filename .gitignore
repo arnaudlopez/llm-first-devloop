@@ -7,3 +7,5 @@ coverage/
 dist/
 tmp/
 *.log
+.goalbuddy-board/
+**/.goalbuddy-board/
