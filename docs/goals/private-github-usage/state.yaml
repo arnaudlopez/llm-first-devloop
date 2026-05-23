@@ -2,7 +2,7 @@ version: 2
 goal:
   slug: "private-github-usage-notes"
   title: "Private GitHub Usage Notes"
-  status: active
+  status: complete
   created_at: "2026-05-23"
   updated_at: "2026-05-23"
   kind: specific
@@ -76,7 +76,7 @@ agents:
   worker: installed
   judge: installed
 
-active_task: T998
+active_task: null
 tasks:
   - id: T001
     type: scout
@@ -397,7 +397,7 @@ tasks:
   - id: T998
     type: pm
     assignee: PM
-    status: active
+    status: done
     objective: "Commit all goal-related changes and push the current branch once verification is green."
     inputs:
       - "Approved implementation and verification receipts"
@@ -418,11 +418,26 @@ tasks:
       - "push_result"
       - "committed_files"
       - "unrelated_dirty_files_left_untouched"
-    receipt: null
+    receipt:
+      result: done
+      summary: "Committed and pushed the private/pre-public DevLoop usage documentation and acceptance test."
+      commit_sha: 0afaac4
+      remote_branch: origin/main
+      push_result: "pushed main to https://github.com/arnaudlopez/llm-first-devloop.git"
+      committed_files:
+        - README.md
+        - scripts/readme-private-usage.test.mjs
+        - examples/private-github-usage-notes.md
+        - docs/goals/private-github-usage/acceptance-contract.md
+        - docs/goals/private-github-usage/brief.md
+        - docs/goals/private-github-usage/goal.md
+        - docs/goals/private-github-usage/state.yaml
+      unrelated_dirty_files_left_untouched:
+        []
   - id: T999
     type: judge
     assignee: Judge
-    status: queued
+    status: done
     reasoning_hint: high
     objective: "Audit whether the full original outcome is complete."
     inputs:
@@ -448,4 +463,25 @@ tasks:
       - "full_outcome_complete: true | false"
       - "missing evidence"
       - "next task if not complete"
-    receipt: null
+    receipt:
+      result: done
+      decision: complete
+      full_outcome_complete: true
+      summary: "Final audit complete: the README now provides a clear pre-public local clone workflow, acceptance tests protect the documentation contract, package smoke proves installed binaries execute without npm publication, and shipping proof is recorded."
+      oracle_result: satisfied
+      evidence:
+        -
+          command: "npm test"
+          result: pass
+          tests: "51 pass"
+        -
+          command: "npm pack -> clean npm install tarball -> npx --no-install llm-first-devloop --help -> npx --no-install goalbuddy-run --help"
+          result: pass
+        -
+          commit_sha: 0afaac4
+          push_result: "origin/main pushed"
+      missing_evidence:
+        []
+      remaining_risks:
+        - "Package intentionally remains unpublished on npm."
+      next_recommendation: "Use this private/local path to dogfood the workflow on SuperMemory T4 or the next small product slice."
