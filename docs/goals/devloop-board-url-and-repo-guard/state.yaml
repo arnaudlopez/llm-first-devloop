@@ -2,7 +2,7 @@ version: 2
 goal:
   slug: "devloop-board-url-and-repo-guard"
   title: "DevLoop Board URL And Repo Guard"
-  status: active
+  status: complete
   created_at: "2026-05-23"
   updated_at: "2026-05-23"
   kind: specific
@@ -76,7 +76,7 @@ agents:
   worker: installed
   judge: installed
 
-active_task: T998
+active_task: null
 tasks:
   - id: T001
     type: scout
@@ -429,7 +429,7 @@ tasks:
   - id: T998
     type: pm
     assignee: PM
-    status: active
+    status: done
     objective: "Commit all goal-related changes and push the current branch once verification is green."
     inputs:
       - "Approved implementation and verification receipts"
@@ -450,11 +450,38 @@ tasks:
       - "push_result"
       - "committed_files"
       - "unrelated_dirty_files_left_untouched"
-    receipt: null
+    receipt:
+      result: done
+      summary: "Committed and pushed DevLoop board URL/repo guard implementation, then removed local .goalbuddy-board artifacts from git and ignored them."
+      commit_sha: 9433980
+      remote_branch: origin/main
+      push_result: "pushed to https://github.com/arnaudlopez/llm-first-devloop.git main"
+      committed_files:
+        - .gitignore
+        - scripts/goalbuddy-run.mjs
+        - scripts/goalbuddy-run.test.mjs
+        - docs/devloop-board-url-and-repo-guard-notes.md
+        - docs/goals/devloop-board-url-and-repo-guard/acceptance-contract.md
+        - docs/goals/devloop-board-url-and-repo-guard/brief.md
+        - docs/goals/devloop-board-url-and-repo-guard/goal.md
+        - docs/goals/devloop-board-url-and-repo-guard/state.yaml
+      unrelated_dirty_files_left_untouched:
+        []
+      followup_commits:
+        - "ef39029 Expose DevLoop board URL and repo guard"
+        - "9433980 Ignore local GoalBuddy board artifacts"
+      verify:
+        -
+          command: "npm test"
+          result: pass
+          tests: "54 pass"
+        -
+          command: "git diff --check"
+          result: pass
   - id: T999
     type: judge
     assignee: Judge
-    status: queued
+    status: done
     reasoning_hint: high
     objective: "Audit whether the full original outcome is complete."
     inputs:
@@ -480,4 +507,27 @@ tasks:
       - "full_outcome_complete: true | false"
       - "missing evidence"
       - "next task if not complete"
-    receipt: null
+    receipt:
+      result: done
+      decision: complete
+      summary: "Final audit complete: DevLoop now exposes board URL, board command, and repo root during run handoff, and blocks existing state outside the current repo unless explicitly allowed."
+      full_outcome_complete: true
+      oracle_result: satisfied
+      evidence:
+        -
+          command: "node --test scripts/goalbuddy-run.test.mjs"
+          result: pass
+          coverage: "run metadata, CLI output, board URL normalization, outside-repo guard, allowOutsideRepo override"
+        -
+          command: "npm test"
+          result: pass
+          tests: "54 pass"
+        -
+          command: "git diff --check"
+          result: pass
+      shipping:
+        commit_sha: 9433980
+        push_result: "origin/main pushed"
+      missing_evidence:
+        []
+      next_recommendation: "Dogfood the improved run output on the next DevLoop goal; the CLI should now print Board and Repo before the task prompt."
