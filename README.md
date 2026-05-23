@@ -92,6 +92,40 @@ Repair a hand-written or older board:
 npm run repair -- --dry-run --json docs/goals/saved-search/state.yaml
 ```
 
+## Before NPM Publication
+
+`llm-first-devloop` is not published to npm yet. Until it is, the supported
+pre-public workflow is a local clone:
+
+```bash
+git clone https://github.com/arnaudlopez/llm-first-devloop.git
+cd llm-first-devloop
+npm install
+npm test
+```
+
+From that local clone, use `npm run` commands:
+
+```bash
+npm run run -- \
+  --from examples/supermemory-t4-notes.md \
+  --out docs/goals/supermemory-t4 \
+  --oracle "A checker-clean SuperMemory T4 board reaches an active-task handoff."
+```
+
+You can also call the dispatcher directly when you need the same shape as the
+future npm binary:
+
+```bash
+node scripts/llm-first-devloop.mjs run \
+  --from examples/conversation-notes.md \
+  --out docs/goals/saved-search \
+  --oracle "Acceptance tests prove saved searches can be created, listed, reopened, renamed, and deleted."
+```
+
+The future npm path is still documented below, but it only applies after an npm
+publication.
+
 ## CLI Commands
 
 When installed as an npm package, the same tools are exposed as binaries:

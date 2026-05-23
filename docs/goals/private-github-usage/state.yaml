@@ -1,0 +1,451 @@
+version: 2
+goal:
+  slug: "private-github-usage-notes"
+  title: "Private GitHub Usage Notes"
+  status: active
+  created_at: "2026-05-23"
+  updated_at: "2026-05-23"
+  kind: specific
+  original_request: "# Private GitHub Usage Notes\n\n## Intent\n\nWe decided not to publish `llm-first-devloop` to npm yet. Users still need a clean private/pre-public workflow that works from the GitHub repository or a local clone.\n\nA developer can understand and verify how to use LLM First DevLoop before npm publication, without guessing which command path is supported.\n\n- Do not publish to npm.\n- Do not add hosted services.\n- Do not change the GoalBuddy model.\n- Do not require a global install.\n\n## Non-Goals\n\n- TODO: Name what this goal must not change.\n\n## Proposed Oracle\n\nA fresh reader can follow the README to use LLM First DevLoop without npm publication, and the package smoke tests prove the documented CLI binaries still execute.\n\n## Suggested Mode\n\nimplementation\n\n## Acceptance Hints\n\n- The README has a clear \"Before npm publication\" path.\n- The documented private/local commands match the current CLI.\n- Tests or smoke checks prove the package binary entrypoints still work from a packaged install.\n- The final evidence distinguishes GitHub/local usage from future npm usage.\n\n## Risks And Open Questions\n\n- TODO: List ambiguity, missing credentials, operational risks, or decisions needed before implementation.\n\n## Constraints\n\n- TODO: Capture constraints, must-preserve behavior, boundaries, or forbidden changes.\n\n## Ready Mode Command\n\n```bash\nnpm run ready -- --from ./docs/goals/private-github-usage/brief.md --mode implementation --oracle \"A fresh reader can follow the README to use LLM First DevLoop without npm publication, and the package smoke tests prove the documented CLI binaries still execute.\" --out docs/goals/private-github-usage-notes\n```\n\n## Source Notes\n\nCompiled from: /Users/arnaud/Documents/llm-first-devloop/examples/private-github-usage-notes.md\n\n> # Private GitHub Usage Notes\n> \n> ## Intent\n> \n> We decided not to publish `llm-first-devloop` to npm yet. Users still need a clean private/pre-public workflow that works from the GitHub repository or a local clone.\n> \n> ## User Outcome\n> \n> A developer can understand and verify how to use LLM First DevLoop before npm publication, without guessing which command path is supported.\n> \n> ## Non-Goals\n> \n> - Do not publish to npm.\n> - Do not add hosted services.\n> - Do not change the GoalBuddy model.\n> - Do not require a global install.\n> \n> ## Acceptance\n> \n> - The README has a clear \"Before npm publication\" path.\n> - The documented private/local commands match the current CLI.\n> - Tests or smoke checks prove the package binary entrypoints still work from a packaged install.\n> - The final evidence distinguishes GitHub/local usage from future npm usage.\n> \n> ## Oracle\n> \n> A fresh reader can follow the README to use LLM First DevLoop without npm publication, and the package smoke tests prove the documented CLI binaries still execute."
+  interpreted_outcome: "Run the prepared LLM-first workflow for Private GitHub Usage Notes."
+  input_shape: specific
+  audience: "Product owner and target users"
+  authority: requested
+  proof_type:
+    - test
+    - artifact
+    - review
+  completion_proof: "Final audit maps red tests, green verification, implementation receipts, and shipping proof back to the oracle."
+  goal_oracle: "A fresh reader can follow the README to use LLM First DevLoop without npm publication, and the package smoke tests prove the documented CLI binaries still execute."
+  oracle:
+    signal: "A fresh reader can follow the README to use LLM First DevLoop without npm publication, and the package smoke tests prove the documented CLI binaries still execute."
+    final_proof: "T999 states full_outcome_complete: true and cites passing acceptance evidence, verification commands, design review, and T998 shipping evidence."
+  likely_misfire: "Starting implementation from a plausible plan before converting the owner outcome into acceptance tests and observable proof."
+  constraints:
+    - "Acceptance tests or equivalent observable proof must be written before production implementation."
+    - "Implementation must stay inside Judge-approved allowed_files."
+    - "Unrelated dirty worktree changes must remain untouched."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  allow_read_only_goal_without_shipping: true
+  require_quality_checker: true
+  require_tdd_worker_flow: true
+  require_github_ship_task: true
+  require_impact_assessment: true
+  goal_pressure_requires_oracle: true
+
+goal_policy:
+  mode: implementation
+  requires_tdd: true
+  requires_impact_assessment: true
+  requires_shipping: true
+  requires_visual_verification: false
+  requires_migration_proof: false
+  requires_infra_proof: false
+  requires_dependency_review: false
+  requires_dirty_worktree_guard: true
+  requires_refactor_proof: false
+  rationale: "Ready Mode is for app-code or product-behavior work after an LLM-first spec conversation has converged."
+
+workflow_safeguards:
+  requires_design_concept: true
+  requires_ubiquitous_language: true
+  requires_feedback_policy: true
+  requires_test_strategy: true
+  requires_module_map: true
+  requires_interface_contract: true
+  requires_architecture_review: true
+  requires_design_delta: true
+  require_t998_shipping: true
+  require_t999_final_audit: true
+  protect_unrelated_dirty_worktree: true
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+active_task: T998
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    objective: "Turn the mature request into a concrete acceptance contract before any implementation work."
+    inputs:
+      - "goal.md"
+      - "acceptance-contract.md"
+      - "Current repository source, tests, scripts, docs, and dirty worktree status"
+    constraints:
+      - "Read-only."
+      - "Do not edit product files."
+      - "Do not start implementation."
+      - "Prefer observable owner outcomes over internal task completion."
+    expected_output:
+      - "design_concept: shared understanding, non-goals, and decision dependencies"
+      - "ubiquitous_language: domain terms, overloaded words, and forbidden synonyms"
+      - "module_map: relevant deep modules, boundaries, and shallow-module risks"
+      - "interface_contract: public behavior and boundaries that tests should target"
+      - "test_strategy: acceptance tests, unit/integration boundaries, mocks, browser or visual checks if relevant"
+      - "feedback_policy: targeted test cadence, typecheck, browser checks, and full-suite timing"
+      - "acceptance_contract_updates: exact end-state evidence and failure modes"
+      - "dirty_worktree_risk_map: unrelated files that must stay untouched"
+      - "impact_assessment covering db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs"
+    receipt:
+      result: done
+      summary: "Scout mapped the private/pre-npm usage gap: README currently has npm-published usage but no first-class pre-public path. Existing package smoke tests already prove tarball-installed bin entrypoints, and README/CI are the relevant surfaces."
+      design_concept: "Before npm publication, LLM First DevLoop should still feel usable: clone the repo, run npm install/npm test, use npm run or node scripts locally, and rely on package smoke tests to prove the future installed binaries remain healthy."
+      ubiquitous_language:
+        pre_public_usage: "Using the repo before npm publication."
+        local_clone_path: "Commands run from a checked-out repository."
+        package_smoke: "npm pack plus tarball install in a clean consumer project."
+        future_npm_usage: "Commands that will work only after npm publication."
+      module_map:
+        docs: "README.md is the public usage contract."
+        tests: "scripts/bin-entrypoint.test.mjs covers npm-style bin symlink behavior."
+        ci: ".github/workflows/ci.yml runs package smoke from npm pack in a clean consumer."
+        examples: "examples/private-github-usage-notes.md captures this dogfood input."
+      interface_contract: "The public contract is documentation plus executable smoke evidence: users must see supported pre-public commands, and CI must continue proving packaged binaries execute from a clean install."
+      test_strategy: "Add or preserve smoke coverage for package-installed binaries; verify with npm test and a local npm pack consumer smoke. No browser checks needed."
+      feedback_policy: "Run targeted docs/test inspection first, then npm test, npm pack smoke, and quality check before shipping."
+      acceptance_contract_updates:
+        visible_outcome: "README clearly separates before-npm-publication usage from future npm usage."
+        failure_modes:
+          - "README implies npx llm-first-devloop works before publication"
+          - "Documented command cannot run from a fresh clone"
+          - "Package bin smoke silently regresses"
+        shipping_proof: "Commit and push docs, goal receipts, and any test/CI changes."
+      dirty_worktree_risk_map:
+        current_goal_files:
+          - examples/private-github-usage-notes.md
+          - "docs/goals/private-github-usage/**"
+        unrelated_dirty_files: "none observed before goal start"
+      impact_assessment:
+        db_schema_migrations: none
+        data_backfill: none
+        env_secrets: none
+        auth_permissions: none
+        api_contract: none
+        ui_routes: none
+        background_jobs: none
+        external_services: none
+        deploy_rollback: "docs/test only; rollback by reverting commit"
+        observability: none
+        docs: "README usage contract may change"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Approve the acceptance contract and choose the largest safe red-test package."
+    inputs:
+      - "T001 receipt"
+      - "Updated acceptance-contract.md if T001 changed it"
+    constraints:
+      - "Do not implement."
+      - "Reject implementation work before tests can express the oracle."
+      - "Reject vague acceptance criteria that cannot be verified."
+      - "Choose a useful vertical slice, not tiny helper-only work."
+    expected_output:
+      - "Decision: approved | needs_more_evidence | blocked"
+      - "Approved design_concept"
+      - "Approved ubiquitous_language"
+      - "feedback_policy"
+      - "test_strategy"
+      - "module_map"
+      - "interface_contract"
+      - "architecture_review"
+      - "Exact Worker objective for red tests"
+      - "allowed_files for T003"
+      - "verify commands for T003"
+      - "stop_if conditions for T003"
+      - "impact_assessment_ref"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Approved a docs-plus-smoke slice: first write a failing README acceptance test for pre-public usage, then update README to make it pass while preserving existing package smoke coverage."
+      approved_design_concept: "Pre-public usage is a first-class path, not a footnote. The README must let a fresh reader use the tool from a clone/local package before npm publication."
+      approved_ubiquitous_language:
+        pre_public_usage: "Supported usage before npm publication."
+        future_npm_usage: "npx package-name usage after npm publication."
+        package_smoke: "npm pack plus clean tarball install proving bin entrypoints."
+      feedback_policy: "Red README test first; then README implementation; then npm test and local pack smoke."
+      test_strategy: "Add a node:test assertion that README contains a pre-publication section, clone/local commands, run command guidance, and a clear future-npm distinction."
+      module_map:
+        public_contract: README.md
+        acceptance_test: scripts/readme-private-usage.test.mjs
+        package_smoke: ".github/workflows/ci.yml and existing bin-entrypoint tests"
+      interface_contract: "README must document supported pre-public usage without implying npm-published npx commands are currently available."
+      architecture_review: "Docs-only feature; no runtime architecture change. Existing package smoke already covers installed binary execution, so the missing piece is acceptance coverage for the public usage contract."
+      impact_assessment_ref: T001.receipt.impact_assessment
+      task_updates:
+        T003:
+          allowed_files:
+            - scripts/readme-private-usage.test.mjs
+          verify:
+            - "npm test -- scripts/readme-private-usage.test.mjs"
+          stop_if:
+            - "Need files outside allowed_files."
+            - "The selected contract is ambiguous."
+            - "No meaningful failing test can be written."
+            - "Tests require production implementation changes before the red stage."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+            - "Unrelated dirty files would need to be modified."
+          impact_assessment_ref: T001.receipt.impact_assessment
+        T004:
+          allowed_files:
+            - README.md
+            - scripts/readme-private-usage.test.mjs
+          verify:
+            - "npm test -- scripts/readme-private-usage.test.mjs"
+            - "npm test"
+          stop_if:
+            - "Need files outside allowed_files."
+            - "No prior red_test evidence exists."
+            - "No meaningful failing test can be written."
+            - "README changes contradict the no-npm-publication decision."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+            - "Verification fails twice without a bounded docs/test fix."
+          impact_assessment_ref: T001.receipt.impact_assessment
+        T005:
+          allowed_files:
+            - README.md
+            - scripts/readme-private-usage.test.mjs
+          verify:
+            - "npm test"
+            - "tmpdir=$(mktemp -d) && mkdir -p \"$tmpdir/pack\" \"$tmpdir/consumer\" && packfile=$(npm pack --pack-destination \"$tmpdir/pack\" | tail -n 1) && cd \"$tmpdir/consumer\" && npm init -y >/dev/null && npm install \"$tmpdir/pack/$packfile\" >/dev/null && npx --no-install llm-first-devloop --help >/dev/null && npx --no-install goalbuddy-run --help >/dev/null"
+          stop_if:
+            - "Need files outside allowed_files."
+            - "No meaningful failing test can be written."
+            - "Package smoke requires network or npm publication."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+            - "Verification fails twice without understood cause."
+          impact_assessment_ref: T001.receipt.impact_assessment
+  - id: T003
+    type: worker
+    worker_kind: red_test
+    assignee: Worker
+    status: done
+    objective: "Write the failing acceptance tests selected by Judge, without production implementation."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T002 approved acceptance contract"
+      - "T002 allowed_files and verify commands"
+    impact_assessment_ref: T001.receipt.impact_assessment
+    allowed_files:
+      - scripts/readme-private-usage.test.mjs
+    verify:
+      - "npm test -- scripts/readme-private-usage.test.mjs"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "The selected contract is ambiguous."
+      - "No meaningful failing test can be written."
+      - "Tests require production implementation changes before the red stage."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Unrelated dirty files would need to be modified."
+    receipt:
+      result: done
+      summary: "Added a README acceptance test for pre-public/private GitHub usage. It fails before implementation because README lacks a dedicated Before NPM Publication section and local/future usage distinction."
+      red_test_evidence:
+        command: "npm test -- scripts/readme-private-usage.test.mjs"
+        result: "failed as expected"
+        failures:
+          - "README documents the supported pre-publication usage path"
+          - "README separates pre-public local usage from future npm usage"
+      changed_files:
+        - scripts/readme-private-usage.test.mjs
+      oracle_coverage: "The red test directly checks the public README contract required by the oracle."
+  - id: T004
+    type: worker
+    worker_kind: implementation
+    assignee: Worker
+    status: done
+    objective: "Implement the largest safe useful slice that makes the approved red tests pass."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T003 red test receipt"
+      - "T002 implementation boundaries"
+    impact_assessment_ref: T001.receipt.impact_assessment
+    allowed_files:
+      - README.md
+      - scripts/readme-private-usage.test.mjs
+    verify:
+      - "npm test -- scripts/readme-private-usage.test.mjs"
+      - "npm test"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "No prior red_test evidence exists."
+      - "No meaningful failing test can be written."
+      - "README changes contradict the no-npm-publication decision."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Verification fails twice without a bounded docs/test fix."
+    receipt:
+      result: done
+      summary: "Implemented the pre-publication usage contract in README and kept the acceptance test green."
+      changed_files:
+        - README.md
+        - scripts/readme-private-usage.test.mjs
+      green_test_evidence:
+        -
+          command: "npm test -- scripts/readme-private-usage.test.mjs"
+          result: "green test pass"
+          tests: "51 pass because npm test script includes scripts/*.test.mjs plus explicit file"
+        -
+          command: "npm test"
+          result: "green verification pass"
+          tests: "51 pass"
+      design_delta: "README now has a dedicated Before NPM Publication section that documents local clone usage and separates it from future npm commands."
+      oracle_coverage: "A fresh reader can now find local clone commands, run the tool without npm publication, and see future npm usage as conditional."
+  - id: T005
+    type: worker
+    worker_kind: verification
+    assignee: Worker
+    status: done
+    objective: "Run the full verification package, including browser or visual checks when the acceptance contract requires them."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T004 implementation receipt"
+      - "Approved feedback_policy"
+    impact_assessment_ref: T001.receipt.impact_assessment
+    allowed_files:
+      - README.md
+      - scripts/readme-private-usage.test.mjs
+    verify:
+      - "npm test"
+      - "tmpdir=$(mktemp -d) && mkdir -p \"$tmpdir/pack\" \"$tmpdir/consumer\" && packfile=$(npm pack --pack-destination \"$tmpdir/pack\" | tail -n 1) && cd \"$tmpdir/consumer\" && npm init -y >/dev/null && npm install \"$tmpdir/pack/$packfile\" >/dev/null && npx --no-install llm-first-devloop --help >/dev/null && npx --no-install goalbuddy-run --help >/dev/null"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Package smoke requires network or npm publication."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Verification fails twice without understood cause."
+    receipt:
+      result: done
+      summary: "Ran full verification for private/pre-public usage docs and package-installed binary smoke."
+      verification:
+        -
+          command: "npm test"
+          result: pass
+          tests: "51 pass"
+        -
+          command: "npm pack -> clean npm install tarball -> npx --no-install llm-first-devloop --help -> npx --no-install goalbuddy-run --help"
+          result: pass
+          artifact: /var/folders/r3/d7fr6bdj0hsgm1vqy5_1z67c0000gn/T/tmp.XUjI7anlzL/pack/llm-first-devloop-0.2.1.tgz
+      changed_files:
+        - README.md
+        - scripts/readme-private-usage.test.mjs
+      oracle_coverage: "README local clone path is covered by assertions; package binary entrypoints are covered by clean tarball install smoke without npm publication."
+  - id: T006
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Review architecture, spec fidelity, and test evidence before shipping."
+    inputs:
+      - "T001 through T005 receipts"
+      - "Current diff"
+      - "Last verification output"
+    constraints:
+      - "Do not implement."
+      - "Reject completion if the implementation only satisfies internal tasks but not the original oracle."
+      - "Reject hidden design drift, shallow-module sprawl, or missing acceptance evidence."
+    expected_output:
+      - "approved | changes_required"
+      - "design_delta"
+      - "architecture_review"
+      - "oracle_coverage"
+      - "remaining risks"
+      - "whether another Worker slice is needed"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Judge review approved the docs/test slice for private GitHub/local usage before npm publication."
+      design_delta: "Added a dedicated README section for pre-public clone/local usage and a README acceptance test that prevents regressions."
+      architecture_review: "No runtime architecture change. The public behavior contract is documentation plus existing package smoke coverage; this is appropriate for the oracle."
+      oracle_coverage: "Covered: fresh reader sees local clone path, npm run path, direct node dispatcher path, and future npm distinction; package smoke proves installed binaries execute without publishing."
+      remaining_risks:
+        - "GitHub npx direct usage is intentionally not promised until separately validated."
+        - "The npm package remains unpublished by product decision."
+      another_worker_slice_needed: false
+  - id: T998
+    type: pm
+    assignee: PM
+    status: active
+    objective: "Commit all goal-related changes and push the current branch once verification is green."
+    inputs:
+      - "Approved implementation and verification receipts"
+      - "Current git status"
+    constraints:
+      - "Do not include unrelated dirty files."
+      - "If the workspace is not a git repository, record shipping_blocker: no_git_repository."
+      - "If no GitHub remote exists, record shipping_blocker: no_github_remote."
+    expected_output:
+      - "Or shipping_blocker: no_git_repository | no_github_remote"
+      - "Unrelated dirty files left untouched"
+      - "Committed files"
+      - "Push result"
+      - "Remote branch"
+      - "Commit SHA"
+      - "commit_sha"
+      - "remote_branch or push string"
+      - "push_result"
+      - "committed_files"
+      - "unrelated_dirty_files_left_untouched"
+    receipt: null
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: queued
+    reasoning_hint: high
+    objective: "Audit whether the full original outcome is complete."
+    inputs:
+      - "design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, and design_delta evidence"
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Quality checker final output"
+      - "Completed impact_assessment receipt"
+      - "T998 shipping proof when shipping is required"
+    constraints:
+      - "Reject completion if design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, or design_delta evidence is missing when workflow_safeguards requires it."
+      - "Do not implement."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion unless impact_assessment covers db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs when impact assessment is required."
+      - "For read-only audit goals with no Worker tasks and no changed_files, accept audit_scope/audit_findings/review/decision evidence instead of TDD, impact_assessment, T998, commit, and push."
+      - "For verification goals, reject completion unless safe test/browser command evidence exists and no changed_files are reported."
+      - "Reject completion unless T998 has a commit SHA and successful push result, or an explicit shipping_blocker for no_git_repository/no_github_remote, when shipping is required."
+    expected_output:
+      - "design_delta"
+      - "workflow_safeguards result"
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipt: null
