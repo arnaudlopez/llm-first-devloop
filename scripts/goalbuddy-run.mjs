@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -8,7 +9,9 @@ import { analyzeInterview } from "./goalbuddy-interview.mjs";
 import { analyzeNextStep } from "./goalbuddy-next.mjs";
 import { repairStateText } from "./goalbuddy-board-repair.mjs";
 import { checkStateFile } from "./goalbuddy-quality-check.mjs";
-import { writeReadyModeArtifacts } from "./goalbuddy-ready-mode.mjs";
+import { slugify, writeReadyModeArtifacts } from "./goalbuddy-ready-mode.mjs";
+
+const LOCAL_BOARD_BASE_URL = "http://goalbuddy.localhost:41737";
 
 export function runDevLoopEntry(options = {}) {
   if (options.statePath && options.fromPath) {
@@ -21,10 +24,19 @@ export function runDevLoopEntry(options = {}) {
 
 function runExistingBoard(options) {
   const statePath = resolveString(options.statePath);
+  const repo = repoContext(statePath, options);
   if (!existsSync(statePath)) {
     return blocked("state_file_not_found", [`state file not found: ${statePath}`], {
       mode: "existing_board",
       statePath,
+      ...repo,
+    });
+  }
+  if (repo.outsideRepo && !options.allowOutsideRepo) {
+    return blocked("state_outside_repo", [`state.yaml is outside current repo: ${statePath}`], {
+      mode: "existing_board",
+      statePath,
+      ...repo,
     });
   }
 
@@ -38,6 +50,7 @@ function runExistingBoard(options) {
       mode: "existing_board",
       statePath,
       check,
+      ...repo,
     });
   }
 
@@ -46,6 +59,7 @@ function runExistingBoard(options) {
     statePath,
     repaired: repaired !== original,
     check,
+    ...repo,
   });
 }
 
@@ -53,11 +67,13 @@ function runFromNotes(options) {
   const fromPath = resolveString(options.fromPath);
   const outDir = resolveString(options.outDir);
   const force = Boolean(options.force);
+  const repo = repoContext(outDir || fromPath, options);
 
   if (!outDir) {
     return blocked("missing_output_dir", ["--out is required when using --from."], {
       mode: "notes_entry",
       fromPath,
+      ...repo,
     });
   }
   if (!existsSync(fromPath)) {
@@ -65,6 +81,7 @@ function runFromNotes(options) {
       mode: "notes_entry",
       fromPath,
       outDir,
+      ...repo,
     });
   }
   if (existsSync(join(outDir, "state.yaml")) && !force) {
@@ -72,6 +89,7 @@ function runFromNotes(options) {
       mode: "notes_entry",
       fromPath,
       outDir,
+      ...repo,
     });
   }
 
@@ -109,6 +127,7 @@ function runFromNotes(options) {
       errors: [`needs clarification: ${interview.missing.join(", ")}`],
       summary: `Needs clarification written to ${clarificationPath}`,
       prompt: "",
+      ...repo,
     };
   }
 
@@ -134,6 +153,7 @@ function runFromNotes(options) {
       briefPath,
       statePath,
       check,
+      ...repo,
     });
   }
 
@@ -145,6 +165,7 @@ function runFromNotes(options) {
     statePath,
     repaired: false,
     check,
+    ...repo,
   });
 }
 
@@ -166,6 +187,10 @@ function handoffFromState(context) {
     outDir: context.outDir,
     briefPath: context.briefPath,
     statePath: context.statePath,
+    repoRoot: context.repoRoot,
+    outsideRepo: context.outsideRepo,
+    boardUrl: boardUrlForState(context.statePath),
+    boardCommand: boardCommandForState(context.statePath),
     repaired: context.repaired,
     check: context.check,
     activeTask: next.activeTask,
@@ -189,6 +214,60 @@ function resolveString(value) {
   return value ? resolve(String(value)) : "";
 }
 
+function repoContext(targetPath, options = {}) {
+  const repoRoot = resolveString(options.repoRoot) || currentGitRoot(process.cwd());
+  const realTarget = realPathBestEffort(targetPath);
+  return {
+    repoRoot,
+    outsideRepo: Boolean(repoRoot && realTarget && !isPathInside(realTarget, repoRoot)),
+  };
+}
+
+function currentGitRoot(cwd) {
+  const result = spawnSync("git", ["rev-parse", "--show-toplevel"], {
+    cwd,
+    encoding: "utf8",
+  });
+  if (result.status !== 0) return "";
+  return result.stdout.trim();
+}
+
+function realPathBestEffort(value) {
+  const target = resolveString(value);
+  if (!target) return "";
+  try {
+    return realpathSync(target);
+  } catch {
+    return target;
+  }
+}
+
+function isPathInside(targetPath, rootPath) {
+  const target = realPathBestEffort(targetPath);
+  const root = realPathBestEffort(rootPath);
+  return target === root || target.startsWith(`${root}/`);
+}
+
+function boardUrlForState(statePath) {
+  return `${LOCAL_BOARD_BASE_URL}/${boardSlugForState(statePath)}/`;
+}
+
+function boardCommandForState(statePath) {
+  return `npx goalbuddy board ${shellQuote(dirname(resolveString(statePath)))}`;
+}
+
+function boardSlugForState(statePath) {
+  const stateText = existsSync(statePath) ? readFileSync(statePath, "utf8") : "";
+  const match = stateText.match(/^\s*slug:\s*["']?([^"'\n]+)["']?/m);
+  return slugify(match?.[1] || dirname(resolveString(statePath)).split("/").filter(Boolean).pop() || "goal");
+}
+
+function shellQuote(value) {
+  const stringValue = String(value);
+  if (/^[A-Za-z0-9_./:-]+$/.test(stringValue)) return stringValue;
+  return `'${stringValue.replaceAll("'", "'\\''")}'`;
+}
+
 const HELP_TEXT = `Usage:
   goalbuddy-run --state docs/goals/<slug>/state.yaml [--json]
   goalbuddy-run --from notes.md --out docs/goals/<slug> --oracle "Observable proof" [--force]
@@ -205,6 +284,8 @@ Options:
   --mode <mode>       Ready Mode policy hint. Default: implementation.
   --title <text>      Override generated title.
   --force             Overwrite generated files.
+  --allow-outside-repo
+                      Allow --state outside the current git repository.
   --json              Print machine-readable output.
   -h, --help          Show this help.
 `;
@@ -215,6 +296,7 @@ function parseArgs(argv) {
     const arg = argv[index];
     if (arg === "-h" || arg === "--help") args.help = true;
     else if (arg === "--force") args.force = true;
+    else if (arg === "--allow-outside-repo") args.allowOutsideRepo = true;
     else if (arg === "--json") args.json = true;
     else if (arg === "--state") args.statePath = argv[++index];
     else if (arg === "--from") args.fromPath = argv[++index];
@@ -243,6 +325,9 @@ async function main() {
     if (result.clarificationPath) process.stdout.write(`Clarification: ${result.clarificationPath}\n`);
   } else {
     process.stdout.write(`HANDOFF_READY ${result.statePath}\n`);
+    if (result.repoRoot) process.stdout.write(`Repo: ${result.repoRoot}\n`);
+    if (result.boardUrl) process.stdout.write(`Board: ${result.boardUrl}\n`);
+    if (result.boardCommand) process.stdout.write(`Board command: ${result.boardCommand}\n`);
     if (result.briefPath) process.stdout.write(`Brief: ${result.briefPath}\n`);
     process.stdout.write(`Check: ${result.check?.ok ? "PASS" : "FAIL"}\n`);
     if (result.activeTask) process.stdout.write(`Active task: ${result.activeTask.id}\n`);

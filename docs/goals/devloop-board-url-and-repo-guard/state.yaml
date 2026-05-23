@@ -1,0 +1,483 @@
+version: 2
+goal:
+  slug: "devloop-board-url-and-repo-guard"
+  title: "DevLoop Board URL And Repo Guard"
+  status: active
+  created_at: "2026-05-23"
+  updated_at: "2026-05-23"
+  kind: specific
+  original_request: "# DevLoop Board URL And Repo Guard\n\n## Intent\n\nImprove LLM First DevLoop so a Codex agent is harder to steer into the wrong repository and always surfaces the local board URL immediately after creating or continuing a board.\n\n- Do not replace GoalBuddy.\n- Do not start native `/goal` automatically.\n- Do not add hosted state, database state, or network services.\n- Do not require npm publication.\n- Do not change product repositories such as SuperMemory.\n\n## Non-Goals\n\n- TODO: Name what this goal must not change.\n\n## Proposed Oracle\n\nDevLoop run exposes repoRoot, boardUrl, and boardCommand, warns on state outside the current repo, and npm test passes.\n\n## Suggested Mode\n\nimplementation\n\n## Acceptance Hints\n\n- `runDevLoopEntry` returns `repoRoot`, `boardUrl`, and `boardCommand` for both `--from` and `--state` paths.\n- CLI text output prints `Board: http://goalbuddy.localhost:41737/<slug>/` immediately after `HANDOFF_READY`.\n- CLI text output prints `Repo: <absolute repo root>` so the agent can verify the target workspace.\n- Existing-board mode warns or blocks when `state.yaml` is outside the current git repository unless explicitly allowed.\n- Tests cover board URL generation from an output slug with spaces/special characters normalized.\n- `npm test` passes.\n\n## Risks And Open Questions\n\n- TODO: List ambiguity, missing credentials, operational risks, or decisions needed before implementation.\n\n## Constraints\n\n- Keep the system local and file-backed.\n- Prefer deterministic string generation over starting the board server inside `run`.\n- Keep the URL compatible with the existing GoalBuddy local board convention.\n- Preserve existing JSON output compatibility by adding fields rather than renaming old ones.\n\n## Ready Mode Command\n\n```bash\nnpm run ready -- --from ./docs/goals/devloop-board-url-and-repo-guard/brief.md --mode implementation --oracle \"DevLoop run exposes repoRoot, boardUrl, and boardCommand, warns on state outside the current repo, and npm test passes.\" --out docs/goals/devloop-board-url-and-repo-guard\n```\n\n## Source Notes\n\nCompiled from: /Users/arnaud/Documents/llm-first-devloop/docs/devloop-board-url-and-repo-guard-notes.md\n\n> # DevLoop Board URL And Repo Guard\n> \n> ## Intent\n> \n> Improve LLM First DevLoop so a Codex agent is harder to steer into the wrong repository and always surfaces the local board URL immediately after creating or continuing a board.\n> \n> ## Non-Goals\n> \n> - Do not replace GoalBuddy.\n> - Do not start native `/goal` automatically.\n> - Do not add hosted state, database state, or network services.\n> - Do not require npm publication.\n> - Do not change product repositories such as SuperMemory.\n> \n> ## Proposed Oracle\n> \n> The DevLoop CLI and tests prove that `run` exposes the target repo root and a deterministic local board URL, and warns when the board state is outside the current repository.\n> \n> ## Acceptance\n> \n> - `runDevLoopEntry` returns `repoRoot`, `boardUrl`, and `boardCommand` for both `--from` and `--state` paths.\n> - CLI text output prints `Board: http://goalbuddy.localhost:41737/<slug>/` immediately after `HANDOFF_READY`.\n> - CLI text output prints `Repo: <absolute repo root>` so the agent can verify the target workspace.\n> - Existing-board mode warns or blocks when `state.yaml` is outside the current git repository unless explicitly allowed.\n> - Tests cover board URL generation from an output slug with spaces/special characters normalized.\n> - `npm test` passes.\n> \n> ## Constraints\n> \n> - Keep the system local and file-backed.\n> - Prefer deterministic string generation over starting the board server inside `run`.\n> - Keep the URL compatible with the existing GoalBuddy local board convention.\n> - Preserve existing JSON output compatibility by adding fields rather than renaming old ones."
+  interpreted_outcome: "Run the prepared LLM-first workflow for DevLoop Board URL And Repo Guard."
+  input_shape: specific
+  audience: "Product owner and target users"
+  authority: requested
+  proof_type:
+    - test
+    - artifact
+    - review
+  completion_proof: "Final audit maps red tests, green verification, implementation receipts, and shipping proof back to the oracle."
+  goal_oracle: "DevLoop run exposes repoRoot, boardUrl, and boardCommand, warns on state outside the current repo, and npm test passes."
+  oracle:
+    signal: "DevLoop run exposes repoRoot, boardUrl, and boardCommand, warns on state outside the current repo, and npm test passes."
+    final_proof: "T999 states full_outcome_complete: true and cites passing acceptance evidence, verification commands, design review, and T998 shipping evidence."
+  likely_misfire: "Starting implementation from a plausible plan before converting the owner outcome into acceptance tests and observable proof."
+  constraints:
+    - "Acceptance tests or equivalent observable proof must be written before production implementation."
+    - "Implementation must stay inside Judge-approved allowed_files."
+    - "Unrelated dirty worktree changes must remain untouched."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  allow_read_only_goal_without_shipping: true
+  require_quality_checker: true
+  require_tdd_worker_flow: true
+  require_github_ship_task: true
+  require_impact_assessment: true
+  goal_pressure_requires_oracle: true
+
+goal_policy:
+  mode: implementation
+  requires_tdd: true
+  requires_impact_assessment: true
+  requires_shipping: true
+  requires_visual_verification: false
+  requires_migration_proof: false
+  requires_infra_proof: false
+  requires_dependency_review: false
+  requires_dirty_worktree_guard: true
+  requires_refactor_proof: false
+  rationale: "Ready Mode is for app-code or product-behavior work after an LLM-first spec conversation has converged."
+
+workflow_safeguards:
+  requires_design_concept: true
+  requires_ubiquitous_language: true
+  requires_feedback_policy: true
+  requires_test_strategy: true
+  requires_module_map: true
+  requires_interface_contract: true
+  requires_architecture_review: true
+  requires_design_delta: true
+  require_t998_shipping: true
+  require_t999_final_audit: true
+  protect_unrelated_dirty_worktree: true
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+active_task: T998
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    objective: "Turn the mature request into a concrete acceptance contract before any implementation work."
+    inputs:
+      - "goal.md"
+      - "acceptance-contract.md"
+      - "Current repository source, tests, scripts, docs, and dirty worktree status"
+    constraints:
+      - "Read-only."
+      - "Do not edit product files."
+      - "Do not start implementation."
+      - "Prefer observable owner outcomes over internal task completion."
+    expected_output:
+      - "design_concept: shared understanding, non-goals, and decision dependencies"
+      - "ubiquitous_language: domain terms, overloaded words, and forbidden synonyms"
+      - "module_map: relevant deep modules, boundaries, and shallow-module risks"
+      - "interface_contract: public behavior and boundaries that tests should target"
+      - "test_strategy: acceptance tests, unit/integration boundaries, mocks, browser or visual checks if relevant"
+      - "feedback_policy: targeted test cadence, typecheck, browser checks, and full-suite timing"
+      - "acceptance_contract_updates: exact end-state evidence and failure modes"
+      - "dirty_worktree_risk_map: unrelated files that must stay untouched"
+      - "impact_assessment covering db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs"
+    receipt:
+      result: done
+      summary: "Mapped DevLoop run CLI and tests. Current run output returns only state path, brief, check, and active task; it does not surface board URL, board command, or repo root. Existing-board mode accepts any absolute state path, which allowed accidental cross-repo continuation."
+      design_concept: "DevLoop remains a local entry orchestrator, not a board server manager. It should make the active surface obvious by returning deterministic board URL/command and the current git repo root, then fail closed when a state path is outside that repo unless explicitly allowed."
+      ubiquitous_language:
+        repo_root: "Current git repository root used as the intended workspace boundary."
+        board_url: "Deterministic GoalBuddy local-board URL for the state slug."
+        board_command: "Exact command to register/open the board with GoalBuddy local hub."
+        outside_repo_state: "A state.yaml whose real path is not inside repo_root."
+        allow_outside_repo: "Explicit override for advanced/cross-repo use."
+      module_map:
+        target_files:
+          - scripts/goalbuddy-run.mjs
+          - scripts/goalbuddy-run.test.mjs
+          - "docs/goals/devloop-board-url-and-repo-guard/**"
+          - docs/devloop-board-url-and-repo-guard-notes.md
+        boundaries:
+          - "scripts/llm-first-devloop.mjs delegates to goalbuddy-run.mjs using inherited stdout"
+          - "scripts/goalbuddy-ready-mode.mjs already exports slugify"
+          - "tests are node:test unit tests; no browser needed"
+        risks:
+          - "Do not start native /goal or require live board server from run"
+          - "Do not break JSON output shape; add fields only"
+      interface_contract:
+        run_result_fields:
+          - repoRoot
+          - boardUrl
+          - boardCommand
+        text_output:
+          - "HANDOFF_READY <state>"
+          - "Repo: <repoRoot>"
+          - "Board: <boardUrl>"
+          - "Board command: <boardCommand>"
+        outside_repo_policy: "Existing --state outside current git repo blocks unless --allow-outside-repo is passed."
+      test_strategy:
+        red_tests:
+          - "runDevLoopEntry from notes returns repoRoot, boardUrl, boardCommand"
+          - "existing state outside repo blocks by default"
+          - "allowOutsideRepo permits existing state and marks warning/flag"
+          - "CLI text output includes Board and Repo lines via direct script spawn"
+        verify:
+          - "npm test"
+      feedback_policy: "Run targeted node --test scripts/goalbuddy-run.test.mjs after red and green, then full npm test before shipping."
+      acceptance_contract_updates:
+        - "Board URL must be shown immediately after board creation/continuation"
+        - "Repo root must be visible to reduce wrong-repo work"
+        - "Outside-repo existing boards must require explicit override"
+      dirty_worktree_risk_map: "Current dirty files are only this DevLoop goal notes/board state generated for the active goal."
+      impact_assessment:
+        db_schema_migrations: none
+        data_backfill: none
+        env_secrets: none
+        auth_permissions: none
+        api_contract: "CLI result/output additive change"
+        ui_routes: none
+        background_jobs: none
+        external_services: none
+        deploy_rollback: "git revert; no runtime service"
+        observability: "CLI output and tests"
+        docs: "goal notes/board only unless README update is later approved"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Approve the acceptance contract and choose the largest safe red-test package."
+    inputs:
+      - "T001 receipt"
+      - "Updated acceptance-contract.md if T001 changed it"
+    constraints:
+      - "Do not implement."
+      - "Reject implementation work before tests can express the oracle."
+      - "Reject vague acceptance criteria that cannot be verified."
+      - "Choose a useful vertical slice, not tiny helper-only work."
+    expected_output:
+      - "Decision: approved | needs_more_evidence | blocked"
+      - "Approved design_concept"
+      - "Approved ubiquitous_language"
+      - "feedback_policy"
+      - "test_strategy"
+      - "module_map"
+      - "interface_contract"
+      - "architecture_review"
+      - "Exact Worker objective for red tests"
+      - "allowed_files for T003"
+      - "verify commands for T003"
+      - "stop_if conditions for T003"
+      - "impact_assessment_ref"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Approved one bounded vertical CLI slice: add run metadata and repo guard with red tests first, then implement in goalbuddy-run.mjs."
+      approved_design_concept: "DevLoop should expose the current repo and local board surface every time it hands off work, and fail closed on accidental cross-repo state usage unless explicitly overridden."
+      approved_ubiquitous_language:
+        - repo_root
+        - board_url
+        - board_command
+        - outside_repo_state
+        - allow_outside_repo
+      feedback_policy: "Run node --test scripts/goalbuddy-run.test.mjs for red/green, then npm test before shipping."
+      test_strategy: "Add failing tests for result fields, text output, outside-repo blocking, allowOutsideRepo override, and slug normalization. Then implement additive metadata fields and CLI output."
+      module_map:
+        - scripts/goalbuddy-run.mjs
+        - scripts/goalbuddy-run.test.mjs
+        - "docs/goals/devloop-board-url-and-repo-guard/**"
+        - docs/devloop-board-url-and-repo-guard-notes.md
+      interface_contract:
+        fields:
+          - repoRoot
+          - boardUrl
+          - boardCommand
+        cli_lines:
+          - Repo:
+          - Board:
+          - "Board command:"
+        guard: "--state outside current repo blocks unless allowOutsideRepo/--allow-outside-repo is set"
+      architecture_review: "Approved. Deterministic URL/command generation is preferable to starting a long-running board server inside run. Additive JSON fields preserve compatibility. The repo guard should use git rev-parse when available and skip only when no git root exists."
+      impact_assessment_ref: T001.receipt.impact_assessment
+      task_updates:
+        T003:
+          allowed_files:
+            - scripts/goalbuddy-run.test.mjs
+            - "docs/goals/devloop-board-url-and-repo-guard/**"
+          verify:
+            - "node --test scripts/goalbuddy-run.test.mjs"
+          stop_if:
+            - "Need implementation changes before red evidence."
+            - "Need files outside allowed_files."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+        T004:
+          allowed_files:
+            - scripts/goalbuddy-run.mjs
+            - scripts/goalbuddy-run.test.mjs
+            - "docs/goals/devloop-board-url-and-repo-guard/**"
+            - docs/devloop-board-url-and-repo-guard-notes.md
+          verify:
+            - "node --test scripts/goalbuddy-run.test.mjs"
+          stop_if:
+            - "Need files outside allowed_files."
+            - "No prior red_test evidence exists."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+            - "Implementation starts launching native /goal or a persistent board server."
+        T005:
+          allowed_files:
+            - scripts/goalbuddy-run.mjs
+            - scripts/goalbuddy-run.test.mjs
+            - "docs/goals/devloop-board-url-and-repo-guard/**"
+            - docs/devloop-board-url-and-repo-guard-notes.md
+          verify:
+            - "node --test scripts/goalbuddy-run.test.mjs"
+            - "npm test"
+            - "git diff --check"
+          stop_if:
+            - "Need files outside allowed_files."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+            - "Verification fails twice without understood cause."
+  - id: T003
+    type: worker
+    worker_kind: red_test
+    assignee: Worker
+    status: done
+    objective: "Write the failing acceptance tests selected by Judge, without production implementation."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T002 approved acceptance contract"
+      - "T002 allowed_files and verify commands"
+    impact_assessment_ref: null
+    allowed_files:
+      - scripts/goalbuddy-run.test.mjs
+      - "docs/goals/devloop-board-url-and-repo-guard/**"
+    verify:
+      - "node --test scripts/goalbuddy-run.test.mjs"
+    stop_if:
+      - "Need implementation changes before red evidence."
+      - "Need files outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+    receipt:
+      result: done
+      summary: "Added red tests for run metadata, board URL output, repo root output, outside-repo blocking, explicit allowOutsideRepo override, and CLI text output."
+      changed_files:
+        - scripts/goalbuddy-run.test.mjs
+      red_evidence:
+        command: "node --test scripts/goalbuddy-run.test.mjs"
+        result: "failed as expected"
+        failures:
+          - "repoRoot undefined"
+          - "boardUrl undefined"
+          - "outside repo state not blocked"
+          - "CLI output missing Repo/Board/Board command lines"
+      verify:
+        -
+          command: "node --test scripts/goalbuddy-run.test.mjs"
+          result: expected_failure
+  - id: T004
+    type: worker
+    worker_kind: implementation
+    assignee: Worker
+    status: done
+    objective: "Implement the largest safe useful slice that makes the approved red tests pass."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T003 red test receipt"
+      - "T002 implementation boundaries"
+    impact_assessment_ref: null
+    allowed_files:
+      - scripts/goalbuddy-run.mjs
+      - scripts/goalbuddy-run.test.mjs
+      - "docs/goals/devloop-board-url-and-repo-guard/**"
+      - docs/devloop-board-url-and-repo-guard-notes.md
+    verify:
+      - "node --test scripts/goalbuddy-run.test.mjs"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "No prior red_test evidence exists."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Implementation starts launching native /goal or a persistent board server."
+    receipt:
+      result: done
+      summary: "Implemented additive DevLoop run metadata and repo guard. run now returns repoRoot, boardUrl, boardCommand, outsideRepo; CLI output prints Repo, Board, and Board command; existing --state outside the current git repo blocks unless allowOutsideRepo/--allow-outside-repo is set."
+      changed_files:
+        - scripts/goalbuddy-run.mjs
+        - scripts/goalbuddy-run.test.mjs
+      design_delta: "DevLoop run now makes the active repository and local board surface explicit instead of relying on the user/agent to infer them from state paths."
+      green_test:
+        command: "node --test scripts/goalbuddy-run.test.mjs"
+        result: pass
+        tests: "7 pass"
+      verify:
+        -
+          command: "node --test scripts/goalbuddy-run.test.mjs"
+          result: pass
+  - id: T005
+    type: worker
+    worker_kind: verification
+    assignee: Worker
+    status: done
+    objective: "Run the full verification package, including browser or visual checks when the acceptance contract requires them."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T004 implementation receipt"
+      - "Approved feedback_policy"
+    impact_assessment_ref: null
+    allowed_files:
+      - scripts/goalbuddy-run.mjs
+      - scripts/goalbuddy-run.test.mjs
+      - "docs/goals/devloop-board-url-and-repo-guard/**"
+      - docs/devloop-board-url-and-repo-guard-notes.md
+    verify:
+      - "node --test scripts/goalbuddy-run.test.mjs"
+      - "npm test"
+      - "git diff --check"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Verification fails twice without understood cause."
+    receipt:
+      result: done
+      summary: "Full verification passed for DevLoop board URL and repo guard."
+      verify:
+        -
+          command: "node --test scripts/goalbuddy-run.test.mjs"
+          result: pass
+          tests: "7 pass"
+        -
+          command: "npm test"
+          result: pass
+          tests: "54 pass"
+        -
+          command: "git diff --check"
+          result: pass
+      oracle_coverage: "run exposes repoRoot, boardUrl, boardCommand; CLI text prints Repo/Board/Board command; existing out-of-repo state blocks unless explicitly allowed."
+  - id: T006
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Review architecture, spec fidelity, and test evidence before shipping."
+    inputs:
+      - "T001 through T005 receipts"
+      - "Current diff"
+      - "Last verification output"
+    constraints:
+      - "Do not implement."
+      - "Reject completion if the implementation only satisfies internal tasks but not the original oracle."
+      - "Reject hidden design drift, shallow-module sprawl, or missing acceptance evidence."
+    expected_output:
+      - "approved | changes_required"
+      - "design_delta"
+      - "architecture_review"
+      - "oracle_coverage"
+      - "remaining risks"
+      - "whether another Worker slice is needed"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Judge review approved the DevLoop board URL and repo guard implementation for shipping."
+      design_delta: "run output now makes the target repo and local board visible before the task prompt, reducing wrong-repo continuation risk."
+      architecture_review: "Good bounded CLI change. It keeps DevLoop file-backed and deterministic, avoids starting native /goal or a long-running board server, and preserves JSON compatibility by adding fields only."
+      oracle_coverage: "Covered by tests for result metadata, CLI text output, board URL slug normalization, outside-repo blocking, and explicit allowOutsideRepo override."
+      remaining_risks:
+        - "The local board server still must be started or registered separately; run prints the command rather than managing the process."
+      another_worker_slice_needed: false
+  - id: T998
+    type: pm
+    assignee: PM
+    status: active
+    objective: "Commit all goal-related changes and push the current branch once verification is green."
+    inputs:
+      - "Approved implementation and verification receipts"
+      - "Current git status"
+    constraints:
+      - "Do not include unrelated dirty files."
+      - "If the workspace is not a git repository, record shipping_blocker: no_git_repository."
+      - "If no GitHub remote exists, record shipping_blocker: no_github_remote."
+    expected_output:
+      - "Or shipping_blocker: no_git_repository | no_github_remote"
+      - "Unrelated dirty files left untouched"
+      - "Committed files"
+      - "Push result"
+      - "Remote branch"
+      - "Commit SHA"
+      - "commit_sha"
+      - "remote_branch or push string"
+      - "push_result"
+      - "committed_files"
+      - "unrelated_dirty_files_left_untouched"
+    receipt: null
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: queued
+    reasoning_hint: high
+    objective: "Audit whether the full original outcome is complete."
+    inputs:
+      - "design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, and design_delta evidence"
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Quality checker final output"
+      - "Completed impact_assessment receipt"
+      - "T998 shipping proof when shipping is required"
+    constraints:
+      - "Reject completion if design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, or design_delta evidence is missing when workflow_safeguards requires it."
+      - "Do not implement."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion unless impact_assessment covers db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs when impact assessment is required."
+      - "For read-only audit goals with no Worker tasks and no changed_files, accept audit_scope/audit_findings/review/decision evidence instead of TDD, impact_assessment, T998, commit, and push."
+      - "For verification goals, reject completion unless safe test/browser command evidence exists and no changed_files are reported."
+      - "Reject completion unless T998 has a commit SHA and successful push result, or an explicit shipping_blocker for no_git_repository/no_github_remote, when shipping is required."
+    expected_output:
+      - "design_delta"
+      - "workflow_safeguards result"
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipt: null
