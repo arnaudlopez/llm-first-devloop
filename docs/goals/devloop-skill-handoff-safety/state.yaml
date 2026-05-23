@@ -1,0 +1,484 @@
+version: 2
+goal:
+  slug: "devloop-skill-handoff-safety"
+  title: "DevLoop Skill Handoff Safety"
+  status: active
+  created_at: "2026-05-23"
+  updated_at: "2026-05-23"
+  kind: specific
+  original_request: "# DevLoop Skill Handoff Safety\n\n## Intent\n\nUpdate the LLM First DevLoop skill so Codex agents consistently use the new `run` output:\n\n- surface the board URL to the owner immediately;\n- verify the repo root before doing any task work;\n- use the board command when the local board needs registration;\n- stop on cross-repo blockers instead of improvising.\n\n- Do not change the CLI behavior beyond documentation/tests unless tests prove a gap.\n- Do not start native `/goal` automatically.\n- Do not add hosted state, background processes, or a board server manager.\n- Do not modify product repos.\n\n## Non-Goals\n\n- TODO: Name what this goal must not change.\n\n## Proposed Oracle\n\nThe skill requires agents to surface Board, Repo, and Board command from DevLoop run, handle state_outside_repo safely, and npm test passes.\n\n## Suggested Mode\n\nimplementation\n\n## Acceptance Hints\n\n- The skill explicitly says to surface `Board: ...` immediately whenever `run` returns `HANDOFF_READY`.\n- The skill explicitly says to verify `Repo: ...` matches the intended target repo before executing task work.\n- The skill explicitly says to use `Board command: ...` when the board is not registered or visible.\n- The skill explicitly says not to continue when `run` blocks with `state_outside_repo` unless the owner intentionally approves `--allow-outside-repo`.\n- A test fails if the skill no longer mentions `Board:`, `Repo:`, `Board command:`, and `state_outside_repo`.\n- `npm test` passes.\n\n## Risks And Open Questions\n\n- TODO: List ambiguity, missing credentials, operational risks, or decisions needed before implementation.\n\n## Constraints\n\n- Keep the skill concise and operational.\n- Keep the source of truth in `skills/llm-first-devloop/SKILL.md`.\n- Preserve the LLM-first principle and autonomous loop.\n\n## Ready Mode Command\n\n```bash\nnpm run ready -- --from ./docs/goals/devloop-skill-handoff-safety/brief.md --mode implementation --oracle \"The skill requires agents to surface Board, Repo, and Board command from DevLoop run, handle state_outside_repo safely, and npm test passes.\" --out docs/goals/devloop-skill-handoff-safety\n```\n\n## Source Notes\n\nCompiled from: /Users/arnaud/Documents/llm-first-devloop/docs/devloop-skill-handoff-safety-notes.md\n\n> # DevLoop Skill Handoff Safety\n> \n> ## Intent\n> \n> Update the LLM First DevLoop skill so Codex agents consistently use the new `run` output:\n> \n> - surface the board URL to the owner immediately;\n> - verify the repo root before doing any task work;\n> - use the board command when the local board needs registration;\n> - stop on cross-repo blockers instead of improvising.\n> \n> ## Non-Goals\n> \n> - Do not change the CLI behavior beyond documentation/tests unless tests prove a gap.\n> - Do not start native `/goal` automatically.\n> - Do not add hosted state, background processes, or a board server manager.\n> - Do not modify product repos.\n> \n> ## Proposed Oracle\n> \n> The skill and tests prove that a DevLoop agent must repeat the `Repo`, `Board`, and `Board command` lines from `run`, verify that the repo root matches the intended target, and continue only from that active-task handoff.\n> \n> ## Acceptance\n> \n> - The skill explicitly says to surface `Board: ...` immediately whenever `run` returns `HANDOFF_READY`.\n> - The skill explicitly says to verify `Repo: ...` matches the intended target repo before executing task work.\n> - The skill explicitly says to use `Board command: ...` when the board is not registered or visible.\n> - The skill explicitly says not to continue when `run` blocks with `state_outside_repo` unless the owner intentionally approves `--allow-outside-repo`.\n> - A test fails if the skill no longer mentions `Board:`, `Repo:`, `Board command:`, and `state_outside_repo`.\n> - `npm test` passes.\n> \n> ## Constraints\n> \n> - Keep the skill concise and operational.\n> - Keep the source of truth in `skills/llm-first-devloop/SKILL.md`.\n> - Preserve the LLM-first principle and autonomous loop."
+  interpreted_outcome: "Run the prepared LLM-first workflow for DevLoop Skill Handoff Safety."
+  input_shape: specific
+  audience: "Product owner and target users"
+  authority: requested
+  proof_type:
+    - test
+    - artifact
+    - review
+  completion_proof: "Final audit maps red tests, green verification, implementation receipts, and shipping proof back to the oracle."
+  goal_oracle: "The skill requires agents to surface Board, Repo, and Board command from DevLoop run, handle state_outside_repo safely, and npm test passes."
+  oracle:
+    signal: "The skill requires agents to surface Board, Repo, and Board command from DevLoop run, handle state_outside_repo safely, and npm test passes."
+    final_proof: "T999 states full_outcome_complete: true and cites passing acceptance evidence, verification commands, design review, and T998 shipping evidence."
+  likely_misfire: "Starting implementation from a plausible plan before converting the owner outcome into acceptance tests and observable proof."
+  constraints:
+    - "Acceptance tests or equivalent observable proof must be written before production implementation."
+    - "Implementation must stay inside Judge-approved allowed_files."
+    - "Unrelated dirty worktree changes must remain untouched."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  allow_read_only_goal_without_shipping: true
+  require_quality_checker: true
+  require_tdd_worker_flow: true
+  require_github_ship_task: true
+  require_impact_assessment: true
+  goal_pressure_requires_oracle: true
+
+goal_policy:
+  mode: implementation
+  requires_tdd: true
+  requires_impact_assessment: true
+  requires_shipping: true
+  requires_visual_verification: false
+  requires_migration_proof: false
+  requires_infra_proof: false
+  requires_dependency_review: false
+  requires_dirty_worktree_guard: true
+  requires_refactor_proof: false
+  rationale: "Ready Mode is for app-code or product-behavior work after an LLM-first spec conversation has converged."
+
+workflow_safeguards:
+  requires_design_concept: true
+  requires_ubiquitous_language: true
+  requires_feedback_policy: true
+  requires_test_strategy: true
+  requires_module_map: true
+  requires_interface_contract: true
+  requires_architecture_review: true
+  requires_design_delta: true
+  require_t998_shipping: true
+  require_t999_final_audit: true
+  protect_unrelated_dirty_worktree: true
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+active_task: T998
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    objective: "Turn the mature request into a concrete acceptance contract before any implementation work."
+    inputs:
+      - "goal.md"
+      - "acceptance-contract.md"
+      - "Current repository source, tests, scripts, docs, and dirty worktree status"
+    constraints:
+      - "Read-only."
+      - "Do not edit product files."
+      - "Do not start implementation."
+      - "Prefer observable owner outcomes over internal task completion."
+    expected_output:
+      - "design_concept: shared understanding, non-goals, and decision dependencies"
+      - "ubiquitous_language: domain terms, overloaded words, and forbidden synonyms"
+      - "module_map: relevant deep modules, boundaries, and shallow-module risks"
+      - "interface_contract: public behavior and boundaries that tests should target"
+      - "test_strategy: acceptance tests, unit/integration boundaries, mocks, browser or visual checks if relevant"
+      - "feedback_policy: targeted test cadence, typecheck, browser checks, and full-suite timing"
+      - "acceptance_contract_updates: exact end-state evidence and failure modes"
+      - "dirty_worktree_risk_map: unrelated files that must stay untouched"
+      - "impact_assessment covering db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs"
+    receipt:
+      result: done
+      summary: "Mapped the current DevLoop skill and package tests. The CLI already emits Repo, Board, and Board command, but the skill still only says to use the handoff prompt and does not require surfacing Board, verifying Repo, using Board command, or respecting state_outside_repo."
+      design_concept: "The skill should become the operator contract for DevLoop handoffs: always repeat the Board URL, confirm Repo before task work, register the board when needed with Board command, and stop on state_outside_repo unless the owner intentionally approves the override."
+      ubiquitous_language:
+        Board: "The local GoalBuddy board URL printed by run."
+        Repo: "The git root printed by run and intended execution workspace."
+        Board command: "The exact command printed by run to register/open the board in the local hub."
+        state_outside_repo: "A blocker meaning the requested state file is outside the current repo boundary."
+        allow_outside_repo: "Explicit owner-approved override for intentional cross-repo continuation."
+      module_map:
+        target_files:
+          - skills/llm-first-devloop/SKILL.md
+          - scripts/llm-first-devloop-skill.test.mjs
+          - "docs/goals/devloop-skill-handoff-safety/**"
+          - docs/devloop-skill-handoff-safety-notes.md
+        installed_skill: "/Users/arnaud/.codex/skills/llm-first-devloop/SKILL.md currently matches the repo skill and should be synced after the repo source changes."
+        boundaries:
+          - "Do not change CLI behavior unless tests reveal a gap"
+          - "Do not start /goal or a board server automatically"
+      interface_contract:
+        skill_must_mention:
+          - Board:
+          - Repo:
+          - "Board command:"
+          - state_outside_repo
+          - --allow-outside-repo
+        operator_behavior:
+          - "surface board URL immediately"
+          - "verify repo before work"
+          - "use board command if board not visible"
+          - "stop on state_outside_repo without owner approval"
+      test_strategy:
+        red_first: "Add a skill content test that fails until the required handoff safety language exists."
+        green: "Update skills/llm-first-devloop/SKILL.md, then sync installed skill copy."
+        verify:
+          - "node --test scripts/llm-first-devloop-skill.test.mjs"
+          - "npm test"
+          - "git diff --check"
+      feedback_policy: "Run targeted skill test after red and green, then full npm test before shipping."
+      acceptance_contract_updates:
+        - "Skill is the durable rule so future Codex turns do not rely on memory to display board links or verify repo."
+      dirty_worktree_risk_map: "Dirty files are only the current DevLoop skill safety notes/board generated for this goal."
+      impact_assessment:
+        db_schema_migrations: none
+        data_backfill: none
+        env_secrets: none
+        auth_permissions: none
+        api_contract: "none; documentation/test contract only"
+        ui_routes: none
+        background_jobs: none
+        external_services: none
+        deploy_rollback: "git revert; installed skill can be re-synced from repo"
+        observability: "npm test and skill content test"
+        docs: "skill markdown and goal notes"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Approve the acceptance contract and choose the largest safe red-test package."
+    inputs:
+      - "T001 receipt"
+      - "Updated acceptance-contract.md if T001 changed it"
+    constraints:
+      - "Do not implement."
+      - "Reject implementation work before tests can express the oracle."
+      - "Reject vague acceptance criteria that cannot be verified."
+      - "Choose a useful vertical slice, not tiny helper-only work."
+    expected_output:
+      - "Decision: approved | needs_more_evidence | blocked"
+      - "Approved design_concept"
+      - "Approved ubiquitous_language"
+      - "feedback_policy"
+      - "test_strategy"
+      - "module_map"
+      - "interface_contract"
+      - "architecture_review"
+      - "Exact Worker objective for red tests"
+      - "allowed_files for T003"
+      - "verify commands for T003"
+      - "stop_if conditions for T003"
+      - "impact_assessment_ref"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Approved a single bounded skill documentation/test slice. No CLI behavior change is needed."
+      approved_design_concept: "The skill must operationalize the run handoff: display Board immediately, verify Repo before task execution, register board via Board command when needed, and block state_outside_repo unless the owner approves --allow-outside-repo."
+      approved_ubiquitous_language:
+        - Board
+        - Repo
+        - "Board command"
+        - state_outside_repo
+        - --allow-outside-repo
+      feedback_policy: "Run node --test scripts/llm-first-devloop-skill.test.mjs for red/green, then npm test and git diff --check."
+      test_strategy: "Create a failing skill content test before editing the skill, then update the skill and sync the installed copy."
+      module_map:
+        - skills/llm-first-devloop/SKILL.md
+        - scripts/llm-first-devloop-skill.test.mjs
+        - "docs/goals/devloop-skill-handoff-safety/**"
+        - docs/devloop-skill-handoff-safety-notes.md
+      interface_contract:
+        required_terms:
+          - Board:
+          - Repo:
+          - "Board command:"
+          - state_outside_repo
+          - --allow-outside-repo
+        required_behaviors:
+          - "surface Board immediately"
+          - "verify Repo before work"
+          - "use Board command if local board not visible"
+          - "stop on state_outside_repo unless owner approves override"
+      architecture_review: "Approved. Keep this as a skill contract plus content test. Syncing the installed skill copy is operational, while the repo skill remains the source of truth."
+      impact_assessment_ref: T001.receipt.impact_assessment
+      task_updates:
+        T003:
+          allowed_files:
+            - scripts/llm-first-devloop-skill.test.mjs
+            - "docs/goals/devloop-skill-handoff-safety/**"
+          verify:
+            - "node --test scripts/llm-first-devloop-skill.test.mjs"
+          stop_if:
+            - "Need implementation changes before red evidence."
+            - "Need files outside allowed_files."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+        T004:
+          allowed_files:
+            - skills/llm-first-devloop/SKILL.md
+            - scripts/llm-first-devloop-skill.test.mjs
+            - "docs/goals/devloop-skill-handoff-safety/**"
+            - docs/devloop-skill-handoff-safety-notes.md
+          verify:
+            - "node --test scripts/llm-first-devloop-skill.test.mjs"
+          stop_if:
+            - "Need CLI behavior changes outside the approved skill contract."
+            - "Need files outside allowed_files."
+            - "No prior red_test evidence exists."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+        T005:
+          allowed_files:
+            - skills/llm-first-devloop/SKILL.md
+            - scripts/llm-first-devloop-skill.test.mjs
+            - "docs/goals/devloop-skill-handoff-safety/**"
+            - docs/devloop-skill-handoff-safety-notes.md
+          verify:
+            - "node --test scripts/llm-first-devloop-skill.test.mjs"
+            - "npm test"
+            - "git diff --check"
+          stop_if:
+            - "Need files outside allowed_files."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+            - "Verification fails twice without understood cause."
+  - id: T003
+    type: worker
+    worker_kind: red_test
+    assignee: Worker
+    status: done
+    objective: "Write the failing acceptance tests selected by Judge, without production implementation."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T002 approved acceptance contract"
+      - "T002 allowed_files and verify commands"
+    impact_assessment_ref: null
+    allowed_files:
+      - scripts/llm-first-devloop-skill.test.mjs
+      - "docs/goals/devloop-skill-handoff-safety/**"
+    verify:
+      - "node --test scripts/llm-first-devloop-skill.test.mjs"
+    stop_if:
+      - "Need implementation changes before red evidence."
+      - "Need files outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+    receipt:
+      result: done
+      summary: "Added red test for DevLoop skill handoff safety language. It fails because the skill does not yet mention Board, Repo, Board command, state_outside_repo, or --allow-outside-repo."
+      changed_files:
+        - scripts/llm-first-devloop-skill.test.mjs
+      red_evidence:
+        command: "node --test scripts/llm-first-devloop-skill.test.mjs"
+        result: "failed as expected"
+        failure: "missing Board/Repo/Board command/state_outside_repo language"
+      verify:
+        -
+          command: "node --test scripts/llm-first-devloop-skill.test.mjs"
+          result: expected_failure
+  - id: T004
+    type: worker
+    worker_kind: implementation
+    assignee: Worker
+    status: done
+    objective: "Implement the largest safe useful slice that makes the approved red tests pass."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T003 red test receipt"
+      - "T002 implementation boundaries"
+    impact_assessment_ref: null
+    allowed_files:
+      - skills/llm-first-devloop/SKILL.md
+      - scripts/llm-first-devloop-skill.test.mjs
+      - "docs/goals/devloop-skill-handoff-safety/**"
+      - docs/devloop-skill-handoff-safety-notes.md
+    verify:
+      - "node --test scripts/llm-first-devloop-skill.test.mjs"
+    stop_if:
+      - "Need CLI behavior changes outside the approved skill contract."
+      - "Need files outside allowed_files."
+      - "No prior red_test evidence exists."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+    receipt:
+      result: done
+      summary: "Updated the DevLoop skill to require safe handoff handling: surface Board immediately, verify Repo before work, run Board command when the board is not visible, and stop on state_outside_repo unless the owner explicitly approves --allow-outside-repo. Synced the installed Codex skill copy from the repo source."
+      changed_files:
+        - skills/llm-first-devloop/SKILL.md
+        - scripts/llm-first-devloop-skill.test.mjs
+      design_delta: "The durable operator rule now lives in the skill, so future Codex turns should not rely on memory to display board links or avoid wrong-repo continuation."
+      installed_skill_sync: "/Users/arnaud/.codex/skills/llm-first-devloop/SKILL.md synced from skills/llm-first-devloop/SKILL.md"
+      green_test:
+        command: "node --test scripts/llm-first-devloop-skill.test.mjs"
+        result: pass
+        tests: "1 pass"
+      verify:
+        -
+          command: "node --test scripts/llm-first-devloop-skill.test.mjs"
+          result: pass
+  - id: T005
+    type: worker
+    worker_kind: verification
+    assignee: Worker
+    status: done
+    objective: "Run the full verification package, including browser or visual checks when the acceptance contract requires them."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T004 implementation receipt"
+      - "Approved feedback_policy"
+    impact_assessment_ref: null
+    allowed_files:
+      - skills/llm-first-devloop/SKILL.md
+      - scripts/llm-first-devloop-skill.test.mjs
+      - "docs/goals/devloop-skill-handoff-safety/**"
+      - docs/devloop-skill-handoff-safety-notes.md
+    verify:
+      - "node --test scripts/llm-first-devloop-skill.test.mjs"
+      - "npm test"
+      - "git diff --check"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Verification fails twice without understood cause."
+    receipt:
+      result: done
+      summary: "Full verification passed for DevLoop skill handoff safety."
+      changed_files:
+        - skills/llm-first-devloop/SKILL.md
+        - scripts/llm-first-devloop-skill.test.mjs
+      verify:
+        -
+          command: "node --test scripts/llm-first-devloop-skill.test.mjs"
+          result: pass
+          tests: "1 pass"
+        -
+          command: "npm test"
+          result: pass
+          tests: "55 pass"
+        -
+          command: "git diff --check"
+          result: pass
+        -
+          command: "cmp -s skills/llm-first-devloop/SKILL.md /Users/arnaud/.codex/skills/llm-first-devloop/SKILL.md"
+          result: pass
+          note: "installed skill synced"
+      oracle_coverage: "Skill now requires Board, Repo, Board command, state_outside_repo, and --allow-outside-repo handling."
+  - id: T006
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Review architecture, spec fidelity, and test evidence before shipping."
+    inputs:
+      - "T001 through T005 receipts"
+      - "Current diff"
+      - "Last verification output"
+    constraints:
+      - "Do not implement."
+      - "Reject completion if the implementation only satisfies internal tasks but not the original oracle."
+      - "Reject hidden design drift, shallow-module sprawl, or missing acceptance evidence."
+    expected_output:
+      - "approved | changes_required"
+      - "design_delta"
+      - "architecture_review"
+      - "oracle_coverage"
+      - "remaining risks"
+      - "whether another Worker slice is needed"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Judge approved the skill handoff safety update for shipping."
+      design_delta: "The handoff safety behavior is now encoded in the skill and tested, rather than relying on conversational memory."
+      architecture_review: "Appropriate scope: skill markdown plus a content regression test. No CLI or product repo changes. Installed skill was synced from repo source after green test."
+      oracle_coverage: "The skill mentions Board, Repo, Board command, state_outside_repo, --allow-outside-repo, and tells the agent to surface/verify/block accordingly."
+      remaining_risks:
+        - "This is instruction-level enforcement, not runtime enforcement; the CLI guard added in the previous tranche remains the runtime backstop."
+      another_worker_slice_needed: false
+  - id: T998
+    type: pm
+    assignee: PM
+    status: active
+    objective: "Commit all goal-related changes and push the current branch once verification is green."
+    inputs:
+      - "Approved implementation and verification receipts"
+      - "Current git status"
+    constraints:
+      - "Do not include unrelated dirty files."
+      - "If the workspace is not a git repository, record shipping_blocker: no_git_repository."
+      - "If no GitHub remote exists, record shipping_blocker: no_github_remote."
+    expected_output:
+      - "Or shipping_blocker: no_git_repository | no_github_remote"
+      - "Unrelated dirty files left untouched"
+      - "Committed files"
+      - "Push result"
+      - "Remote branch"
+      - "Commit SHA"
+      - "commit_sha"
+      - "remote_branch or push string"
+      - "push_result"
+      - "committed_files"
+      - "unrelated_dirty_files_left_untouched"
+    receipt: null
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: queued
+    reasoning_hint: high
+    objective: "Audit whether the full original outcome is complete."
+    inputs:
+      - "design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, and design_delta evidence"
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Quality checker final output"
+      - "Completed impact_assessment receipt"
+      - "T998 shipping proof when shipping is required"
+    constraints:
+      - "Reject completion if design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, or design_delta evidence is missing when workflow_safeguards requires it."
+      - "Do not implement."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion unless impact_assessment covers db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs when impact assessment is required."
+      - "For read-only audit goals with no Worker tasks and no changed_files, accept audit_scope/audit_findings/review/decision evidence instead of TDD, impact_assessment, T998, commit, and push."
+      - "For verification goals, reject completion unless safe test/browser command evidence exists and no changed_files are reported."
+      - "Reject completion unless T998 has a commit SHA and successful push result, or an explicit shipping_blocker for no_git_repository/no_github_remote, when shipping is required."
+    expected_output:
+      - "design_delta"
+      - "workflow_safeguards result"
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipt: null

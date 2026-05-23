@@ -53,6 +53,18 @@ The `run` command is the source of truth. It:
 5. returns the active-task handoff;
 6. stops with clarification or blocker output instead of creating a weak board.
 
+When `run` returns `HANDOFF_READY`, it may print these operator lines before the prompt:
+
+```text
+Repo: /absolute/path/to/repo
+Board: http://goalbuddy.localhost:41737/<slug>/
+Board command: npx goalbuddy board /absolute/path/to/docs/goals/<slug>
+```
+
+Surface the `Board:` URL to the owner immediately every time a board is created or continued. Verify that `Repo:` matches the intended target repository before executing task work. If the board is not registered or visible in the local hub, run the exact `Board command:` from the handoff and then surface the `Board:` URL again.
+
+If `run` blocks with `state_outside_repo`, do not continue and do not use `--allow-outside-repo` by default. Ask the owner only if this is intentionally a cross-repo continuation; use `--allow-outside-repo` only after that explicit approval.
+
 ## Autonomous Session Loop
 
 After `run` returns `HANDOFF_READY`, keep working in the current Codex session when the active task can be executed locally:
