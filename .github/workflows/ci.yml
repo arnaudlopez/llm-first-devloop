@@ -25,6 +25,26 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Smoke test packaged binaries
+        run: |
+          tmpdir="$(mktemp -d)"
+          mkdir -p "$tmpdir/pack" "$tmpdir/consumer"
+          packfile="$(npm pack --pack-destination "$tmpdir/pack" | tail -n 1)"
+          cd "$tmpdir/consumer"
+          npm init -y
+          npm install "$tmpdir/pack/$packfile"
+          cp -R "$GITHUB_WORKSPACE/examples" .
+          npx --no-install llm-first-devloop --help
+          npx --no-install goalbuddy-ready --help
+          npx --no-install goalbuddy-check --help
+          npx --no-install goalbuddy-run --help
+          npx --no-install goalbuddy-advance --help
+          npx --no-install llm-first-devloop run \
+            --from examples/conversation-notes.md \
+            --out goals/pkg-saved-search \
+            --oracle "Acceptance tests prove package-installed run works." \
+            --force
+
       - name: Smoke test CLIs
         run: |
           node scripts/llm-first-devloop.mjs --help

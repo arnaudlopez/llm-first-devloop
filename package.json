@@ -1,6 +1,6 @@
 {
   "name": "llm-first-devloop",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": false,
   "type": "module",
   "description": "LLM-first, acceptance-test-driven GoalBuddy workflow tooling.",
