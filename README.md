@@ -145,6 +145,7 @@ goalbuddy-repair --help
 goalbuddy-next --help
 goalbuddy-run --help
 goalbuddy-advance --help
+llm-first-devloop-sync-skill --help
 ```
 
 Until the package is published, use the `npm run` commands from a clone. After publishing, these direct forms will work:
@@ -187,6 +188,32 @@ llm-first-devloop run \
 The command does not execute native `/goal` yet. It prepares or reuses the board, repairs/checks it, runs `next`, and prints the active-task handoff. If notes are not mature enough, it writes `needs-clarification.md` instead of creating a weak board.
 
 The matching Codex skill template lives in `skills/llm-first-devloop/SKILL.md`. Its job is to invoke `llm-first-devloop run` and continue from the handoff, not to duplicate the CLI workflow in prompt prose.
+
+## Codex Skill Sync
+
+The repository copy of the skill is the source of truth:
+
+```text
+skills/llm-first-devloop/SKILL.md
+```
+
+Install or update it into Codex with:
+
+```bash
+llm-first-devloop sync-skill
+```
+
+For a safe preview:
+
+```bash
+llm-first-devloop sync-skill --dry-run
+```
+
+Until npm publication, run the same command from the local clone:
+
+```bash
+node scripts/llm-first-devloop.mjs sync-skill
+```
 
 ## DevLoop Advance
 

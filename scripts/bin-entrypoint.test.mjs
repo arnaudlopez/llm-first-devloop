@@ -13,7 +13,8 @@ const bins = [
   ["goalbuddy-repair", "scripts/goalbuddy-board-repair.mjs"],
   ["goalbuddy-next", "scripts/goalbuddy-next.mjs"],
   ["goalbuddy-run", "scripts/goalbuddy-run.mjs"],
-  ["goalbuddy-advance", "scripts/goalbuddy-advance.mjs"]
+  ["goalbuddy-advance", "scripts/goalbuddy-advance.mjs"],
+  ["llm-first-devloop-sync-skill", "scripts/llm-first-devloop-sync-skill.mjs"]
 ];
 
 test("bin scripts run when invoked through npm-style symlinks", () => {

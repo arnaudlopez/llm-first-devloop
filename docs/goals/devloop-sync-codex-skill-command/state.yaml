@@ -1,0 +1,513 @@
+version: 2
+goal:
+  slug: "devloop-sync-codex-skill-command"
+  title: "DevLoop Sync Codex Skill Command"
+  status: active
+  created_at: "2026-05-24"
+  updated_at: "2026-05-24"
+  kind: specific
+  original_request: "# DevLoop Sync Codex Skill Command\n\n## Intent\n\nAdd an official DevLoop command that installs or updates the Codex skill from the repository source into the user's Codex skills directory.\n\nToday, after changing `skills/llm-first-devloop/SKILL.md`, we manually copy it to `~/.codex/skills/llm-first-devloop/SKILL.md`. That is fragile and easy to forget. DevLoop should make this an explicit, tested command.\n\n- Do not publish to npm.\n- Do not modify GoalBuddy plugin internals.\n- Do not change product repositories.\n- Do not require network access.\n- Do not overwrite unrelated skills.\n\n## Non-Goals\n\n- TODO: Name what this goal must not change.\n\n## Proposed Oracle\n\nllm-first-devloop sync-skill installs or updates the Codex skill from repo source with dry-run/json support, dispatcher/bin exposure, README docs, and npm test passes.\n\n## Suggested Mode\n\nimplementation\n\n## Acceptance Hints\n\n- New script copies the repo skill to `<codex-home>/skills/llm-first-devloop/SKILL.md`.\n- Command creates the target directory when missing.\n- `--dry-run` reports the pending copy without writing.\n- `--json` returns source path, target path, changed/up_to_date/dry_run status.\n- Tests use a temporary Codex home and never write to the real home.\n- Dispatcher supports `llm-first-devloop sync-skill`.\n- Package exposes a direct `llm-first-devloop-sync-skill` bin.\n- README documents the command.\n- `npm test` passes.\n\n## Risks And Open Questions\n\n- TODO: List ambiguity, missing credentials, operational risks, or decisions needed before implementation.\n\n## Constraints\n\n- Keep the repo skill as source of truth.\n- Default Codex home is `CODEX_HOME` when set, otherwise `~/.codex`.\n- Keep behavior additive and local-only.\n\n## Ready Mode Command\n\n```bash\nnpm run ready -- --from ./docs/goals/devloop-sync-codex-skill-command/brief.md --mode implementation --oracle \"llm-first-devloop sync-skill installs or updates the Codex skill from repo source with dry-run/json support, dispatcher/bin exposure, README docs, and npm test passes.\" --out docs/goals/devloop-sync-codex-skill-command\n```\n\n## Source Notes\n\nCompiled from: /Users/arnaud/Documents/llm-first-devloop/docs/devloop-sync-codex-skill-command-notes.md\n\n> # DevLoop Sync Codex Skill Command\n> \n> ## Intent\n> \n> Add an official DevLoop command that installs or updates the Codex skill from the repository source into the user's Codex skills directory.\n> \n> Today, after changing `skills/llm-first-devloop/SKILL.md`, we manually copy it to `~/.codex/skills/llm-first-devloop/SKILL.md`. That is fragile and easy to forget. DevLoop should make this an explicit, tested command.\n> \n> ## Non-Goals\n> \n> - Do not publish to npm.\n> - Do not modify GoalBuddy plugin internals.\n> - Do not change product repositories.\n> - Do not require network access.\n> - Do not overwrite unrelated skills.\n> \n> ## Proposed Oracle\n> \n> `llm-first-devloop sync-skill` copies `skills/llm-first-devloop/SKILL.md` into the target Codex home, supports dry-run/JSON output, is exposed through the dispatcher and package bin, and `npm test` passes.\n> \n> ## Acceptance\n> \n> - New script copies the repo skill to `<codex-home>/skills/llm-first-devloop/SKILL.md`.\n> - Command creates the target directory when missing.\n> - `--dry-run` reports the pending copy without writing.\n> - `--json` returns source path, target path, changed/up_to_date/dry_run status.\n> - Tests use a temporary Codex home and never write to the real home.\n> - Dispatcher supports `llm-first-devloop sync-skill`.\n> - Package exposes a direct `llm-first-devloop-sync-skill` bin.\n> - README documents the command.\n> - `npm test` passes.\n> \n> ## Constraints\n> \n> - Keep the repo skill as source of truth.\n> - Default Codex home is `CODEX_HOME` when set, otherwise `~/.codex`.\n> - Keep behavior additive and local-only."
+  interpreted_outcome: "Run the prepared LLM-first workflow for DevLoop Sync Codex Skill Command."
+  input_shape: specific
+  audience: "Product owner and target users"
+  authority: requested
+  proof_type:
+    - test
+    - artifact
+    - review
+  completion_proof: "Final audit maps red tests, green verification, implementation receipts, and shipping proof back to the oracle."
+  goal_oracle: "llm-first-devloop sync-skill installs or updates the Codex skill from repo source with dry-run/json support, dispatcher/bin exposure, README docs, and npm test passes."
+  oracle:
+    signal: "llm-first-devloop sync-skill installs or updates the Codex skill from repo source with dry-run/json support, dispatcher/bin exposure, README docs, and npm test passes."
+    final_proof: "T999 states full_outcome_complete: true and cites passing acceptance evidence, verification commands, design review, and T998 shipping evidence."
+  likely_misfire: "Starting implementation from a plausible plan before converting the owner outcome into acceptance tests and observable proof."
+  constraints:
+    - "Acceptance tests or equivalent observable proof must be written before production implementation."
+    - "Implementation must stay inside Judge-approved allowed_files."
+    - "Unrelated dirty worktree changes must remain untouched."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  allow_read_only_goal_without_shipping: true
+  require_quality_checker: true
+  require_tdd_worker_flow: true
+  require_github_ship_task: true
+  require_impact_assessment: true
+  goal_pressure_requires_oracle: true
+
+goal_policy:
+  mode: implementation
+  requires_tdd: true
+  requires_impact_assessment: true
+  requires_shipping: true
+  requires_visual_verification: false
+  requires_migration_proof: false
+  requires_infra_proof: false
+  requires_dependency_review: false
+  requires_dirty_worktree_guard: true
+  requires_refactor_proof: false
+  rationale: "Ready Mode is for app-code or product-behavior work after an LLM-first spec conversation has converged."
+
+workflow_safeguards:
+  requires_design_concept: true
+  requires_ubiquitous_language: true
+  requires_feedback_policy: true
+  requires_test_strategy: true
+  requires_module_map: true
+  requires_interface_contract: true
+  requires_architecture_review: true
+  requires_design_delta: true
+  require_t998_shipping: true
+  require_t999_final_audit: true
+  protect_unrelated_dirty_worktree: true
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+active_task: T998
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    objective: "Turn the mature request into a concrete acceptance contract before any implementation work."
+    inputs:
+      - "goal.md"
+      - "acceptance-contract.md"
+      - "Current repository source, tests, scripts, docs, and dirty worktree status"
+    constraints:
+      - "Read-only."
+      - "Do not edit product files."
+      - "Do not start implementation."
+      - "Prefer observable owner outcomes over internal task completion."
+    expected_output:
+      - "design_concept: shared understanding, non-goals, and decision dependencies"
+      - "ubiquitous_language: domain terms, overloaded words, and forbidden synonyms"
+      - "module_map: relevant deep modules, boundaries, and shallow-module risks"
+      - "interface_contract: public behavior and boundaries that tests should target"
+      - "test_strategy: acceptance tests, unit/integration boundaries, mocks, browser or visual checks if relevant"
+      - "feedback_policy: targeted test cadence, typecheck, browser checks, and full-suite timing"
+      - "acceptance_contract_updates: exact end-state evidence and failure modes"
+      - "dirty_worktree_risk_map: unrelated files that must stay untouched"
+      - "impact_assessment covering db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs"
+    receipt:
+      result: done
+      summary: "Mapped CLI dispatcher, package bin entries, bin entrypoint tests, README usage docs, and current manual skill sync gap."
+      design_concept: "The repo skill is the source of truth; syncing it into Codex should be a local, explicit, tested command instead of an ad hoc cp command after each skill update."
+      ubiquitous_language:
+        repo_skill: "skills/llm-first-devloop/SKILL.md source of truth"
+        codex_home: "CODEX_HOME or ~/.codex target root"
+        installed_skill: "<codex-home>/skills/llm-first-devloop/SKILL.md"
+        dry_run: "report pending change without writing"
+        sync_skill: "copy repo skill to installed skill target when changed"
+      module_map:
+        target_files:
+          - scripts/llm-first-devloop-sync-skill.mjs
+          - scripts/llm-first-devloop-sync-skill.test.mjs
+          - scripts/llm-first-devloop.mjs
+          - scripts/bin-entrypoint.test.mjs
+          - package.json
+          - README.md
+          - "docs/goals/devloop-sync-codex-skill-command/**"
+          - docs/devloop-sync-codex-skill-command-notes.md
+        boundaries:
+          - "No product repos"
+          - "No GoalBuddy plugin internals"
+          - "No network/npm publish"
+          - "Do not write real Codex home in tests"
+      interface_contract:
+        command: "llm-first-devloop sync-skill [--codex-home <path>] [--dry-run] [--json]"
+        direct_bin: llm-first-devloop-sync-skill
+        default_codex_home: "CODEX_HOME else ~/.codex"
+        output_fields:
+          - sourcePath
+          - targetPath
+          - changed
+          - upToDate
+          - dryRun
+      test_strategy:
+        red_first: "Add tests for temp Codex home install, dry-run no write, JSON output, dispatcher exposure, bin help."
+        green: "Implement script, dispatcher command, package bin, README docs."
+        verify:
+          - "node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs"
+          - "npm test"
+          - "git diff --check"
+      feedback_policy: "Run targeted sync-skill tests after red and green, then full npm test before shipping."
+      acceptance_contract_updates:
+        - "No manual cp should be needed after skill updates; command handles it safely and testably."
+      dirty_worktree_risk_map: "Only new notes/board for this goal are dirty before implementation."
+      impact_assessment:
+        db_schema_migrations: none
+        data_backfill: none
+        env_secrets: none
+        auth_permissions: none
+        api_contract: "additive CLI command/bin"
+        ui_routes: none
+        background_jobs: none
+        external_services: none
+        deploy_rollback: "git revert; sync command writes only target skill when invoked"
+        observability: "CLI JSON/text output and tests"
+        docs: "README update expected"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Approve the acceptance contract and choose the largest safe red-test package."
+    inputs:
+      - "T001 receipt"
+      - "Updated acceptance-contract.md if T001 changed it"
+    constraints:
+      - "Do not implement."
+      - "Reject implementation work before tests can express the oracle."
+      - "Reject vague acceptance criteria that cannot be verified."
+      - "Choose a useful vertical slice, not tiny helper-only work."
+    expected_output:
+      - "Decision: approved | needs_more_evidence | blocked"
+      - "Approved design_concept"
+      - "Approved ubiquitous_language"
+      - "feedback_policy"
+      - "test_strategy"
+      - "module_map"
+      - "interface_contract"
+      - "architecture_review"
+      - "Exact Worker objective for red tests"
+      - "allowed_files for T003"
+      - "verify commands for T003"
+      - "stop_if conditions for T003"
+      - "impact_assessment_ref"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Approved a single vertical sync-skill slice: red tests first, then script, dispatcher, package bin, and README docs."
+      approved_design_concept: "Make skill installation/sync a local CLI capability so DevLoop can update its own Codex skill without manual copy commands."
+      approved_ubiquitous_language:
+        - repo_skill
+        - codex_home
+        - installed_skill
+        - dry_run
+        - sync_skill
+      feedback_policy: "Run node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs for red/green, then npm test and git diff --check."
+      test_strategy: "Use temp Codex homes only. Cover actual copy, dry-run, JSON shape, dispatcher command, and direct bin help."
+      module_map:
+        - scripts/llm-first-devloop-sync-skill.mjs
+        - scripts/llm-first-devloop-sync-skill.test.mjs
+        - scripts/llm-first-devloop.mjs
+        - scripts/bin-entrypoint.test.mjs
+        - package.json
+        - README.md
+        - "docs/goals/devloop-sync-codex-skill-command/**"
+        - docs/devloop-sync-codex-skill-command-notes.md
+      interface_contract:
+        command: "llm-first-devloop sync-skill --codex-home <path>"
+        direct_bin: llm-first-devloop-sync-skill
+        dry_run: "reports without writing"
+        json: "machine-readable sourcePath/targetPath/changed/upToDate/dryRun"
+      architecture_review: "Approved. Keep source of truth in repo skill. Do not touch real ~/.codex during tests. No GoalBuddy internals or product repo changes."
+      impact_assessment_ref: T001.receipt.impact_assessment
+      task_updates:
+        T003:
+          allowed_files:
+            - scripts/llm-first-devloop-sync-skill.test.mjs
+            - scripts/bin-entrypoint.test.mjs
+            - "docs/goals/devloop-sync-codex-skill-command/**"
+          verify:
+            - "node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs"
+          stop_if:
+            - "Need implementation changes before red evidence."
+            - "Need files outside allowed_files."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+        T004:
+          allowed_files:
+            - scripts/llm-first-devloop-sync-skill.mjs
+            - scripts/llm-first-devloop-sync-skill.test.mjs
+            - scripts/llm-first-devloop.mjs
+            - scripts/bin-entrypoint.test.mjs
+            - package.json
+            - README.md
+            - "docs/goals/devloop-sync-codex-skill-command/**"
+            - docs/devloop-sync-codex-skill-command-notes.md
+          verify:
+            - "node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs"
+          stop_if:
+            - "Need network/npm publish/GoalBuddy internals/product repo changes."
+            - "Need files outside allowed_files."
+            - "No prior red_test evidence exists."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+        T005:
+          allowed_files:
+            - scripts/llm-first-devloop-sync-skill.mjs
+            - scripts/llm-first-devloop-sync-skill.test.mjs
+            - scripts/llm-first-devloop.mjs
+            - scripts/bin-entrypoint.test.mjs
+            - package.json
+            - README.md
+            - "docs/goals/devloop-sync-codex-skill-command/**"
+            - docs/devloop-sync-codex-skill-command-notes.md
+          verify:
+            - "node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs"
+            - "npm test"
+            - "git diff --check"
+          stop_if:
+            - "Need files outside allowed_files."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+            - "Verification fails twice without understood cause."
+  - id: T003
+    type: worker
+    worker_kind: red_test
+    assignee: Worker
+    status: done
+    objective: "Write the failing acceptance tests selected by Judge, without production implementation."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T002 approved acceptance contract"
+      - "T002 allowed_files and verify commands"
+    impact_assessment_ref: null
+    allowed_files:
+      - scripts/llm-first-devloop-sync-skill.test.mjs
+      - scripts/bin-entrypoint.test.mjs
+      - "docs/goals/devloop-sync-codex-skill-command/**"
+    verify:
+      - "node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs"
+    stop_if:
+      - "Need implementation changes before red evidence."
+      - "Need files outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+    receipt:
+      result: done
+      summary: "Added red tests for sync-skill script, dry-run/json behavior, CODEX_HOME default, dispatcher command, and direct bin help."
+      changed_files:
+        - scripts/llm-first-devloop-sync-skill.test.mjs
+        - scripts/bin-entrypoint.test.mjs
+      red_evidence:
+        command: "node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs"
+        result: "failed as expected"
+        failures:
+          - "scripts/llm-first-devloop-sync-skill.mjs missing"
+          - "dispatcher unknown command sync-skill"
+          - "direct bin target missing"
+      verify:
+        -
+          command: "node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs"
+          result: expected_failure
+  - id: T004
+    type: worker
+    worker_kind: implementation
+    assignee: Worker
+    status: done
+    objective: "Implement the largest safe useful slice that makes the approved red tests pass."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T003 red test receipt"
+      - "T002 implementation boundaries"
+    impact_assessment_ref: null
+    allowed_files:
+      - scripts/llm-first-devloop-sync-skill.mjs
+      - scripts/llm-first-devloop-sync-skill.test.mjs
+      - scripts/llm-first-devloop.mjs
+      - scripts/bin-entrypoint.test.mjs
+      - package.json
+      - README.md
+      - "docs/goals/devloop-sync-codex-skill-command/**"
+      - docs/devloop-sync-codex-skill-command-notes.md
+    verify:
+      - "node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs"
+    stop_if:
+      - "Need network/npm publish/GoalBuddy internals/product repo changes."
+      - "Need files outside allowed_files."
+      - "No prior red_test evidence exists."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+    receipt:
+      result: done
+      summary: "Implemented sync-skill as an official local command. It copies the repo skill to CODEX_HOME or ~/.codex, supports --codex-home, --dry-run, and --json, is exposed through the dispatcher and direct package bin, and is documented in README."
+      changed_files:
+        - scripts/llm-first-devloop-sync-skill.mjs
+        - scripts/llm-first-devloop-sync-skill.test.mjs
+        - scripts/llm-first-devloop.mjs
+        - scripts/bin-entrypoint.test.mjs
+        - package.json
+        - README.md
+      design_delta: "Skill sync is now a tested DevLoop command instead of an ad hoc manual copy after skill edits."
+      green_test:
+        command: "node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs"
+        result: pass
+        tests: "6 pass"
+      verify:
+        -
+          command: "node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs"
+          result: pass
+  - id: T005
+    type: worker
+    worker_kind: verification
+    assignee: Worker
+    status: done
+    objective: "Run the full verification package, including browser or visual checks when the acceptance contract requires them."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T004 implementation receipt"
+      - "Approved feedback_policy"
+    impact_assessment_ref: null
+    allowed_files:
+      - scripts/llm-first-devloop-sync-skill.mjs
+      - scripts/llm-first-devloop-sync-skill.test.mjs
+      - scripts/llm-first-devloop.mjs
+      - scripts/bin-entrypoint.test.mjs
+      - package.json
+      - README.md
+      - "docs/goals/devloop-sync-codex-skill-command/**"
+      - docs/devloop-sync-codex-skill-command-notes.md
+    verify:
+      - "node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs"
+      - "npm test"
+      - "git diff --check"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Verification fails twice without understood cause."
+    receipt:
+      result: done
+      summary: "Full verification passed for sync-skill command."
+      changed_files:
+        - scripts/llm-first-devloop-sync-skill.mjs
+        - scripts/llm-first-devloop-sync-skill.test.mjs
+        - scripts/llm-first-devloop.mjs
+        - scripts/bin-entrypoint.test.mjs
+        - package.json
+        - README.md
+      verify:
+        -
+          command: "node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs"
+          result: pass
+          tests: "6 pass"
+        -
+          command: "npm test"
+          result: pass
+          tests: "60 pass"
+        -
+          command: "git diff --check"
+          result: pass
+        -
+          command: "node scripts/llm-first-devloop.mjs sync-skill --dry-run --json"
+          result: pass
+          status: "upToDate true for /Users/arnaud/.codex/skills/llm-first-devloop/SKILL.md"
+      oracle_coverage: "sync-skill copies repo skill to target Codex home, supports dry-run/json/CODEX_HOME, dispatcher command, direct bin, README docs, and full tests."
+  - id: T006
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Review architecture, spec fidelity, and test evidence before shipping."
+    inputs:
+      - "T001 through T005 receipts"
+      - "Current diff"
+      - "Last verification output"
+    constraints:
+      - "Do not implement."
+      - "Reject completion if the implementation only satisfies internal tasks but not the original oracle."
+      - "Reject hidden design drift, shallow-module sprawl, or missing acceptance evidence."
+    expected_output:
+      - "approved | changes_required"
+      - "design_delta"
+      - "architecture_review"
+      - "oracle_coverage"
+      - "remaining risks"
+      - "whether another Worker slice is needed"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Judge approved sync-skill for shipping."
+      design_delta: "DevLoop now has an official local command to sync its Codex skill from repo source, replacing manual copy commands."
+      architecture_review: "Appropriate additive CLI slice. Tests use temporary Codex homes, real sync is explicit, no network/npm publish/product repo/GoalBuddy internals involved."
+      oracle_coverage: "Covered by temp-home copy, dry-run no-write, up-to-date detection, CODEX_HOME default, dispatcher support, direct bin help, README docs, npm test, and real dry-run showing installed skill up to date."
+      remaining_risks:
+        - "The command only syncs the Codex skill; Claude or plugin packaging remains separate future work."
+      another_worker_slice_needed: false
+  - id: T998
+    type: pm
+    assignee: PM
+    status: active
+    objective: "Commit all goal-related changes and push the current branch once verification is green."
+    inputs:
+      - "Approved implementation and verification receipts"
+      - "Current git status"
+    constraints:
+      - "Do not include unrelated dirty files."
+      - "If the workspace is not a git repository, record shipping_blocker: no_git_repository."
+      - "If no GitHub remote exists, record shipping_blocker: no_github_remote."
+    expected_output:
+      - "Or shipping_blocker: no_git_repository | no_github_remote"
+      - "Unrelated dirty files left untouched"
+      - "Committed files"
+      - "Push result"
+      - "Remote branch"
+      - "Commit SHA"
+      - "commit_sha"
+      - "remote_branch or push string"
+      - "push_result"
+      - "committed_files"
+      - "unrelated_dirty_files_left_untouched"
+    receipt: null
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: queued
+    reasoning_hint: high
+    objective: "Audit whether the full original outcome is complete."
+    inputs:
+      - "design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, and design_delta evidence"
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Quality checker final output"
+      - "Completed impact_assessment receipt"
+      - "T998 shipping proof when shipping is required"
+    constraints:
+      - "Reject completion if design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, or design_delta evidence is missing when workflow_safeguards requires it."
+      - "Do not implement."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion unless impact_assessment covers db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs when impact assessment is required."
+      - "For read-only audit goals with no Worker tasks and no changed_files, accept audit_scope/audit_findings/review/decision evidence instead of TDD, impact_assessment, T998, commit, and push."
+      - "For verification goals, reject completion unless safe test/browser command evidence exists and no changed_files are reported."
+      - "Reject completion unless T998 has a commit SHA and successful push result, or an explicit shipping_blocker for no_git_repository/no_github_remote, when shipping is required."
+    expected_output:
+      - "design_delta"
+      - "workflow_safeguards result"
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipt: null
