@@ -1,6 +1,6 @@
 ---
 name: llm-first-devloop
-description: Use when the user wants DevLoop, LLM First DevLoop, Ready Mode, or GoalBuddy entry automation for a feature/spec/PRD/conversation. Automates the entry workflow by invoking the local llm-first-devloop CLI to prepare or reuse a board, repair/check it, and return the next active-task handoff without manually running each command.
+description: Use when the user wants DevLoop, LLM First DevLoop, Ready Mode, or GoalBuddy entry automation for a feature/spec/PRD/conversation. Automates the guided loop by invoking the local llm-first-devloop CLI to prepare or reuse a board, repair/check it, and return the next safe action without manually running each command.
 ---
 
 # LLM First DevLoop
@@ -19,18 +19,18 @@ Keep the workflow LLM-first. The owner may explore the idea freely in conversati
 
 ## What To Do
 
-Do not ask the owner to manually run `interview`, `ready`, `repair`, `check`, and `next`.
+Do not ask the owner to manually run `interview`, `ready`, `repair`, `check`, `next`, or `advance`.
 
-Instead, run one of these from the target repo:
+Instead, use `loop` as the default guided command from the target repo:
 
 ```bash
-llm-first-devloop run --state docs/goals/<slug>/state.yaml
+llm-first-devloop loop --state docs/goals/<slug>/state.yaml
 ```
 
 or, for notes/spec input:
 
 ```bash
-llm-first-devloop run \
+llm-first-devloop loop \
   --from notes.md \
   --out docs/goals/<slug> \
   --oracle "<observable proof>"
@@ -39,41 +39,45 @@ llm-first-devloop run \
 If the package is not installed globally, use the repo script directly:
 
 ```bash
-node <llm-first-devloop-repo>/scripts/llm-first-devloop.mjs run ...
+node <llm-first-devloop-repo>/scripts/llm-first-devloop.mjs loop ...
 ```
+
+Use `run` only as the lower-level primitive for debugging or tool composition.
 
 ## Behavior
 
-The `run` command is the source of truth. It:
+The `loop` command is the default guided mode. It delegates board preparation to `run`, then adds the next safe action, stop rules, and a receipt template. It:
 
 1. handles existing `state.yaml` or notes/spec input;
 2. runs interview/ready when needed;
 3. repairs and checks the board;
 4. runs next;
-5. returns the active-task handoff;
+5. returns the active-task handoff with `safeAction`, `stopRules`, and `receiptTemplate`;
 6. stops with clarification or blocker output instead of creating a weak board.
 
-When `run` returns `HANDOFF_READY`, it may print these operator lines before the prompt:
+When `loop` returns `LOOP_READY`, it prints these operator lines before the prompt:
 
 ```text
 Repo: /absolute/path/to/repo
 Board: http://goalbuddy.localhost:41737/<slug>/
 Board command: npx goalbuddy board /absolute/path/to/docs/goals/<slug>
+Safe action: ...
+Receipt template:
 ```
 
 Surface the `Board:` URL to the owner immediately every time a board is created or continued. Verify that `Repo:` matches the intended target repository before executing task work. If the board is not registered or visible in the local hub, run the exact `Board command:` from the handoff and then surface the `Board:` URL again.
 
-If `run` blocks with `state_outside_repo`, do not continue and do not use `--allow-outside-repo` by default. Ask the owner only if this is intentionally a cross-repo continuation; use `--allow-outside-repo` only after that explicit approval.
+If `loop` blocks with `state_outside_repo`, do not continue and do not use `--allow-outside-repo` by default. Ask the owner only if this is intentionally a cross-repo continuation; use `--allow-outside-repo` only after that explicit approval.
 
 ## Autonomous Session Loop
 
-After `run` returns `HANDOFF_READY`, keep working in the current Codex session when the active task can be executed locally:
+After `loop` returns `LOOP_READY`, keep working in the current Codex session when the active task can be executed locally:
 
 1. read the active-task handoff and boundaries;
-2. execute only that task;
+2. execute only the `safeAction` within the active-task boundaries;
 3. produce a compact receipt with evidence, commands, changed files, blockers, and next recommendation;
 4. call `advance`;
-5. run `run --state` again to get the next handoff;
+5. run `loop --state` again to get the next guided handoff;
 6. repeat until the board is blocked, waiting for owner input, or final-audited.
 
 Do not ask the owner to manually run `/goal`, `check`, `next`, or `advance` for normal local work. Surface only real blockers, missing credentials, required approvals, or final results.
@@ -103,8 +107,8 @@ Only use `task_updates` for queued future tasks and bounded execution fields: `a
 - Do not launch native `/goal` automatically in the current tranche.
 - Do not implement product code while preparing the entry workflow.
 - Do not edit unrelated product repositories unless the active GoalBuddy task explicitly allows it.
-- If `run` returns `needs_clarification` or `blocked`, surface the blocker and ask only the missing material question.
+- If `loop` returns `needs_clarification` or `LOOP_BLOCKED`, surface the blocker and ask only the missing material question.
 
 ## After Handoff
 
-When `run` returns `HANDOFF_READY`, use the generated prompt as the next task instruction. Keep the original oracle visible, continue only within the active task boundaries, and advance the board yourself after each completed task.
+When `loop` returns `LOOP_READY`, use the generated prompt, safe action, stop rules, and receipt template as the next task instruction. Keep the original oracle visible, continue only within the active task boundaries, and advance the board yourself after each completed task.
