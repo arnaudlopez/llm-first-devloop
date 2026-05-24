@@ -2,7 +2,7 @@ version: 2
 goal:
   slug: "devloop-sync-codex-skill-command"
   title: "DevLoop Sync Codex Skill Command"
-  status: active
+  status: complete
   created_at: "2026-05-24"
   updated_at: "2026-05-24"
   kind: specific
@@ -76,7 +76,7 @@ agents:
   worker: installed
   judge: installed
 
-active_task: T998
+active_task: null
 tasks:
   - id: T001
     type: scout
@@ -459,7 +459,7 @@ tasks:
   - id: T998
     type: pm
     assignee: PM
-    status: active
+    status: done
     objective: "Commit all goal-related changes and push the current branch once verification is green."
     inputs:
       - "Approved implementation and verification receipts"
@@ -480,11 +480,42 @@ tasks:
       - "push_result"
       - "committed_files"
       - "unrelated_dirty_files_left_untouched"
-    receipt: null
+    receipt:
+      result: done
+      summary: "Committed and pushed DevLoop Codex skill sync command."
+      commit_sha: 0e44548
+      remote_branch: origin/main
+      push_result: "pushed to https://github.com/arnaudlopez/llm-first-devloop.git main"
+      committed_files:
+        - README.md
+        - package.json
+        - scripts/llm-first-devloop-sync-skill.mjs
+        - scripts/llm-first-devloop-sync-skill.test.mjs
+        - scripts/llm-first-devloop.mjs
+        - scripts/bin-entrypoint.test.mjs
+        - docs/devloop-sync-codex-skill-command-notes.md
+        - docs/goals/devloop-sync-codex-skill-command/acceptance-contract.md
+        - docs/goals/devloop-sync-codex-skill-command/brief.md
+        - docs/goals/devloop-sync-codex-skill-command/goal.md
+        - docs/goals/devloop-sync-codex-skill-command/state.yaml
+      unrelated_dirty_files_left_untouched:
+        []
+      verify:
+        -
+          command: "npm test"
+          result: pass
+          tests: "60 pass"
+        -
+          command: "git diff --check"
+          result: pass
+        -
+          command: "node scripts/llm-first-devloop.mjs sync-skill --dry-run --json"
+          result: pass
+          status: "installed skill up to date"
   - id: T999
     type: judge
     assignee: Judge
-    status: queued
+    status: done
     reasoning_hint: high
     objective: "Audit whether the full original outcome is complete."
     inputs:
@@ -510,4 +541,31 @@ tasks:
       - "full_outcome_complete: true | false"
       - "missing evidence"
       - "next task if not complete"
-    receipt: null
+    receipt:
+      result: done
+      decision: complete
+      summary: "Final audit complete: DevLoop now has a tested sync-skill command to install/update the Codex skill from repo source."
+      full_outcome_complete: true
+      oracle_result: satisfied
+      evidence:
+        -
+          command: "node --test scripts/llm-first-devloop-sync-skill.test.mjs scripts/bin-entrypoint.test.mjs"
+          result: pass
+          tests: "6 pass"
+        -
+          command: "npm test"
+          result: pass
+          tests: "60 pass"
+        -
+          command: "git diff --check"
+          result: pass
+        -
+          command: "node scripts/llm-first-devloop.mjs sync-skill --dry-run --json"
+          result: pass
+          status: "upToDate true"
+      shipping:
+        commit_sha: 0e44548
+        push_result: "origin/main pushed"
+      missing_evidence:
+        []
+      next_recommendation: "Next autonomy tranche can dogfood sync-skill from the skill instructions, or add release/version automation when publication is desired."
