@@ -1,0 +1,537 @@
+version: 2
+goal:
+  slug: "devloop-loop-default-mode-v0-3"
+  title: "DevLoop Loop Default Mode V0.3"
+  status: active
+  created_at: "2026-05-24"
+  updated_at: "2026-05-24"
+  kind: specific
+  original_request: "# DevLoop Loop Default Mode V0.3\n\n## Intent\n\nUpdate the product roadmap and implement the first prudent `loop` command as the future default DevLoop operating mode.\n\nThe owner intent is clear: after the LLM-first ping-pong phase defines the objective, DevLoop should keep the agent in the right rail with minimal repeated \"next/go/enchaine\" prompts, while still staying evidence/test/outcome driven.\n\n- Do not build a fully autonomous agent runtime yet.\n- Do not execute Codex/native `/goal` automatically.\n- Do not mutate product repos.\n- Do not bypass GoalBuddy receipts, TDD, quality check, final audit, or shipping proof.\n- Do not make `run` disappear; keep it as a lower-level primitive/debug command.\n\n## Non-Goals\n\n- TODO: Name what this goal must not change.\n\n## Proposed Oracle\n\nThe roadmap states loop is the default user experience, llm-first-devloop loop emits safe loop handoffs with receipt templates and blockers, dispatcher/bin expose it, and npm test passes.\n\n## Suggested Mode\n\nimplementation\n\n## Acceptance Hints\n\n- Roadmap explicitly says `loop` is the default user experience and `run` is the lower-level primitive.\n- New `llm-first-devloop loop` command accepts `--state` and `--from/--out/--oracle` like `run`.\n- `loop` reuses `runDevLoopEntry` instead of duplicating interview/ready/check logic.\n- Text output includes `Repo`, `Board`, `Board command`, active task, safe action, stop conditions, and a receipt template.\n- JSON output includes `loopMode`, `safeAction`, `stopRules`, and `receiptTemplate`.\n- Invalid or blocked boards surface blockers and do not invent a continuation.\n- Dispatcher supports `llm-first-devloop loop`.\n- Package exposes direct `llm-first-devloop-loop` bin.\n- Tests cover valid Scout handoff, Worker red-test handoff, blocked board, and from-notes board creation.\n- `npm test` passes.\n\n## Risks And Open Questions\n\n- TODO: List ambiguity, missing credentials, operational risks, or decisions needed before implementation.\n\n## Constraints\n\n- Keep V0.3 prudent: it guides and templates, it does not execute agent reasoning.\n- Keep behavior additive.\n- Preserve existing `run`, `next`, and `advance` APIs.\n- Keep the implementation local and file-backed.\n\n## Ready Mode Command\n\n```bash\nnpm run ready -- --from ./docs/goals/devloop-loop-default-mode-v0-3/brief.md --mode implementation --oracle \"The roadmap states loop is the default user experience, llm-first-devloop loop emits safe loop handoffs with receipt templates and blockers, dispatcher/bin expose it, and npm test passes.\" --out docs/goals/devloop-loop-default-mode-v0-3\n```\n\n## Source Notes\n\nCompiled from: /Users/arnaud/Documents/llm-first-devloop/docs/devloop-loop-default-mode-v0-3-notes.md\n\n> # DevLoop Loop Default Mode V0.3\n> \n> ## Intent\n> \n> Update the product roadmap and implement the first prudent `loop` command as the future default DevLoop operating mode.\n> \n> The owner intent is clear: after the LLM-first ping-pong phase defines the objective, DevLoop should keep the agent in the right rail with minimal repeated \"next/go/enchaine\" prompts, while still staying evidence/test/outcome driven.\n> \n> ## Non-Goals\n> \n> - Do not build a fully autonomous agent runtime yet.\n> - Do not execute Codex/native `/goal` automatically.\n> - Do not mutate product repos.\n> - Do not bypass GoalBuddy receipts, TDD, quality check, final audit, or shipping proof.\n> - Do not make `run` disappear; keep it as a lower-level primitive/debug command.\n> \n> ## Proposed Oracle\n> \n> The roadmap states that `loop` is the future default experience over `run`, and `llm-first-devloop loop` produces a safe loop handoff with Repo, Board, active task, stop rules, and a receipt template while `npm test` passes.\n> \n> ## Acceptance\n> \n> - Roadmap explicitly says `loop` is the default user experience and `run` is the lower-level primitive.\n> - New `llm-first-devloop loop` command accepts `--state` and `--from/--out/--oracle` like `run`.\n> - `loop` reuses `runDevLoopEntry` instead of duplicating interview/ready/check logic.\n> - Text output includes `Repo`, `Board`, `Board command`, active task, safe action, stop conditions, and a receipt template.\n> - JSON output includes `loopMode`, `safeAction`, `stopRules`, and `receiptTemplate`.\n> - Invalid or blocked boards surface blockers and do not invent a continuation.\n> - Dispatcher supports `llm-first-devloop loop`.\n> - Package exposes direct `llm-first-devloop-loop` bin.\n> - Tests cover valid Scout handoff, Worker red-test handoff, blocked board, and from-notes board creation.\n> - `npm test` passes.\n> \n> ## Constraints\n> \n> - Keep V0.3 prudent: it guides and templates, it does not execute agent reasoning.\n> - Keep behavior additive.\n> - Preserve existing `run`, `next`, and `advance` APIs.\n> - Keep the implementation local and file-backed."
+  interpreted_outcome: "Run the prepared LLM-first workflow for DevLoop Loop Default Mode V0.3."
+  input_shape: specific
+  audience: "Product owner and target users"
+  authority: requested
+  proof_type:
+    - test
+    - artifact
+    - review
+  completion_proof: "Final audit maps red tests, green verification, implementation receipts, and shipping proof back to the oracle."
+  goal_oracle: "The roadmap states loop is the default user experience, llm-first-devloop loop emits safe loop handoffs with receipt templates and blockers, dispatcher/bin expose it, and npm test passes."
+  oracle:
+    signal: "The roadmap states loop is the default user experience, llm-first-devloop loop emits safe loop handoffs with receipt templates and blockers, dispatcher/bin expose it, and npm test passes."
+    final_proof: "T999 states full_outcome_complete: true and cites passing acceptance evidence, verification commands, design review, and T998 shipping evidence."
+  likely_misfire: "Starting implementation from a plausible plan before converting the owner outcome into acceptance tests and observable proof."
+  constraints:
+    - "Acceptance tests or equivalent observable proof must be written before production implementation."
+    - "Implementation must stay inside Judge-approved allowed_files."
+    - "Unrelated dirty worktree changes must remain untouched."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  allow_read_only_goal_without_shipping: true
+  require_quality_checker: true
+  require_tdd_worker_flow: true
+  require_github_ship_task: true
+  require_impact_assessment: true
+  goal_pressure_requires_oracle: true
+
+goal_policy:
+  mode: implementation
+  requires_tdd: true
+  requires_impact_assessment: true
+  requires_shipping: true
+  requires_visual_verification: false
+  requires_migration_proof: false
+  requires_infra_proof: false
+  requires_dependency_review: false
+  requires_dirty_worktree_guard: true
+  requires_refactor_proof: false
+  rationale: "Ready Mode is for app-code or product-behavior work after an LLM-first spec conversation has converged."
+
+workflow_safeguards:
+  requires_design_concept: true
+  requires_ubiquitous_language: true
+  requires_feedback_policy: true
+  requires_test_strategy: true
+  requires_module_map: true
+  requires_interface_contract: true
+  requires_architecture_review: true
+  requires_design_delta: true
+  require_t998_shipping: true
+  require_t999_final_audit: true
+  protect_unrelated_dirty_worktree: true
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+active_task: T998
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    objective: "Turn the mature request into a concrete acceptance contract before any implementation work."
+    inputs:
+      - "goal.md"
+      - "acceptance-contract.md"
+      - "Current repository source, tests, scripts, docs, and dirty worktree status"
+    constraints:
+      - "Read-only."
+      - "Do not edit product files."
+      - "Do not start implementation."
+      - "Prefer observable owner outcomes over internal task completion."
+    expected_output:
+      - "design_concept: shared understanding, non-goals, and decision dependencies"
+      - "ubiquitous_language: domain terms, overloaded words, and forbidden synonyms"
+      - "module_map: relevant deep modules, boundaries, and shallow-module risks"
+      - "interface_contract: public behavior and boundaries that tests should target"
+      - "test_strategy: acceptance tests, unit/integration boundaries, mocks, browser or visual checks if relevant"
+      - "feedback_policy: targeted test cadence, typecheck, browser checks, and full-suite timing"
+      - "acceptance_contract_updates: exact end-state evidence and failure modes"
+      - "dirty_worktree_risk_map: unrelated files that must stay untouched"
+      - "impact_assessment covering db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs"
+    receipt:
+      result: done
+      summary: "Mapped DevLoop run/next/advance dispatcher, package bin entries, tests, README, and roadmap. Current run prepares/reuses a board and prints handoff metadata; next analyzes active task; advance records receipts. Missing piece is a loop-facing command that frames the next safe action and receipt template as the default user experience."
+      design_concept: "loop is the user-facing default experience after LLM-first ping-pong: it calls the existing run entry workflow, then packages the handoff as a safe loop step with stop rules and receipt template. run remains the lower-level primitive/debug command."
+      ubiquitous_language:
+        loop: "Default operator experience that prepares/reuses a board and frames the next safe continuation."
+        run: "Lower-level entry primitive used by loop."
+        safe_action: "Human/agent-readable next action permitted by the active task type and board quality."
+        stop_rules: "Reasons the loop must pause instead of improvising."
+        receipt_template: "Structured JSON starter for advance after the task is completed."
+      module_map:
+        target_files:
+          - scripts/llm-first-devloop-loop.mjs
+          - scripts/llm-first-devloop-loop.test.mjs
+          - scripts/llm-first-devloop.mjs
+          - scripts/bin-entrypoint.test.mjs
+          - scripts/readme-private-usage.test.mjs
+          - package.json
+          - README.md
+          - docs/ready-mode-implementation-strategy.md
+          - "docs/goals/devloop-loop-default-mode-v0-3/**"
+          - docs/devloop-loop-default-mode-v0-3-notes.md
+        reuse:
+          - "runDevLoopEntry from scripts/goalbuddy-run.mjs"
+          - "role semantics from goalbuddy-next.mjs/checker rather than duplicating board generation"
+        boundaries:
+          - "No native /goal execution"
+          - "No autonomous reasoning execution in V0.3"
+          - "No mutation beyond board generation/repair already performed by run"
+      interface_contract:
+        command: "llm-first-devloop loop --state ... or --from ... --out ... --oracle ..."
+        json_fields:
+          - loopMode
+          - safeAction
+          - stopRules
+          - receiptTemplate
+          - repoRoot
+          - boardUrl
+          - boardCommand
+          - activeTask
+        text_output:
+          - "LOOP_READY or LOOP_BLOCKED"
+          - Repo
+          - Board
+          - "Board command"
+          - "Active task"
+          - "Safe action"
+          - "Stop rules"
+          - "Receipt template"
+      test_strategy:
+        red_first: "Add loop command tests for valid Scout, Worker red-test, blocked board, from-notes creation, dispatcher, and bin help."
+        green: "Implement loop wrapper over runDevLoopEntry plus roadmap/README/bin updates."
+        verify:
+          - "node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs"
+          - "npm test"
+          - "git diff --check"
+      feedback_policy: "Run targeted loop/bin tests after red and green, then full npm test before shipping."
+      acceptance_contract_updates:
+        - "Roadmap must explicitly state loop as default experience and run as primitive."
+      dirty_worktree_risk_map: "Only current loop notes/board are dirty before implementation."
+      impact_assessment:
+        db_schema_migrations: none
+        data_backfill: none
+        env_secrets: none
+        auth_permissions: none
+        api_contract: "additive CLI command/bin"
+        ui_routes: none
+        background_jobs: none
+        external_services: none
+        deploy_rollback: "git revert"
+        observability: "CLI output and npm tests"
+        docs: "README and roadmap updates expected"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Approve the acceptance contract and choose the largest safe red-test package."
+    inputs:
+      - "T001 receipt"
+      - "Updated acceptance-contract.md if T001 changed it"
+    constraints:
+      - "Do not implement."
+      - "Reject implementation work before tests can express the oracle."
+      - "Reject vague acceptance criteria that cannot be verified."
+      - "Choose a useful vertical slice, not tiny helper-only work."
+    expected_output:
+      - "Decision: approved | needs_more_evidence | blocked"
+      - "Approved design_concept"
+      - "Approved ubiquitous_language"
+      - "feedback_policy"
+      - "test_strategy"
+      - "module_map"
+      - "interface_contract"
+      - "architecture_review"
+      - "Exact Worker objective for red tests"
+      - "allowed_files for T003"
+      - "verify commands for T003"
+      - "stop_if conditions for T003"
+      - "impact_assessment_ref"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Approved a bounded V0.3 loop runner slice: additive command, no autonomous code execution, roadmap update, tests first."
+      approved_design_concept: "loop becomes the default user-facing mode; it reuses run and turns the handoff into a safe action plus receipt template. run remains available for debug and lower-level use."
+      approved_ubiquitous_language:
+        - loop
+        - run
+        - safe_action
+        - stop_rules
+        - receipt_template
+      feedback_policy: "Run node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs for red/green, then npm test and git diff --check."
+      test_strategy: "Add failing tests for loop JSON/text behavior on Scout, Worker red-test, blocked board, from-notes board creation, dispatcher support, and direct bin help. Then implement wrapper and docs."
+      module_map:
+        - scripts/llm-first-devloop-loop.mjs
+        - scripts/llm-first-devloop-loop.test.mjs
+        - scripts/llm-first-devloop.mjs
+        - scripts/bin-entrypoint.test.mjs
+        - package.json
+        - README.md
+        - docs/ready-mode-implementation-strategy.md
+        - "docs/goals/devloop-loop-default-mode-v0-3/**"
+        - docs/devloop-loop-default-mode-v0-3-notes.md
+      interface_contract:
+        command: "llm-first-devloop loop"
+        text: "LOOP_READY/LOOP_BLOCKED plus Repo, Board, Board command, Active task, Safe action, Stop rules, Receipt template"
+        json: "loopMode, safeAction, stopRules, receiptTemplate"
+      architecture_review: "Approved. Keep V0.3 prudent: guide and template only. Do not execute tasks, launch /goal, or mutate state beyond existing run behavior."
+      impact_assessment_ref: T001.receipt.impact_assessment
+      task_updates:
+        T003:
+          allowed_files:
+            - scripts/llm-first-devloop-loop.test.mjs
+            - scripts/bin-entrypoint.test.mjs
+            - "docs/goals/devloop-loop-default-mode-v0-3/**"
+          verify:
+            - "node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs"
+          stop_if:
+            - "Need implementation changes before red evidence."
+            - "Need files outside allowed_files."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+        T004:
+          allowed_files:
+            - scripts/llm-first-devloop-loop.mjs
+            - scripts/llm-first-devloop-loop.test.mjs
+            - scripts/llm-first-devloop.mjs
+            - scripts/bin-entrypoint.test.mjs
+            - scripts/readme-private-usage.test.mjs
+            - package.json
+            - README.md
+            - docs/ready-mode-implementation-strategy.md
+            - "docs/goals/devloop-loop-default-mode-v0-3/**"
+            - docs/devloop-loop-default-mode-v0-3-notes.md
+          verify:
+            - "node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs"
+          stop_if:
+            - "Implementation starts executing native /goal or autonomous agent reasoning."
+            - "Need files outside allowed_files."
+            - "No prior red_test evidence exists."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+        T005:
+          allowed_files:
+            - scripts/llm-first-devloop-loop.mjs
+            - scripts/llm-first-devloop-loop.test.mjs
+            - scripts/llm-first-devloop.mjs
+            - scripts/bin-entrypoint.test.mjs
+            - scripts/readme-private-usage.test.mjs
+            - package.json
+            - README.md
+            - docs/ready-mode-implementation-strategy.md
+            - "docs/goals/devloop-loop-default-mode-v0-3/**"
+            - docs/devloop-loop-default-mode-v0-3-notes.md
+          verify:
+            - "node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs"
+            - "npm test"
+            - "git diff --check"
+          stop_if:
+            - "Need files outside allowed_files."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+            - "Verification fails twice without understood cause."
+  - id: T003
+    type: worker
+    worker_kind: red_test
+    assignee: Worker
+    status: done
+    objective: "Write the failing acceptance tests selected by Judge, without production implementation."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T002 approved acceptance contract"
+      - "T002 allowed_files and verify commands"
+    impact_assessment_ref: null
+    allowed_files:
+      - scripts/llm-first-devloop-loop.test.mjs
+      - scripts/bin-entrypoint.test.mjs
+      - "docs/goals/devloop-loop-default-mode-v0-3/**"
+    verify:
+      - "node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs"
+    stop_if:
+      - "Need implementation changes before red evidence."
+      - "Need files outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+    receipt:
+      result: done
+      summary: "Added red tests for loop command, dispatcher, direct bin, safe actions, receipt templates, blocked boards, and from-notes board creation."
+      changed_files:
+        - scripts/llm-first-devloop-loop.test.mjs
+        - scripts/bin-entrypoint.test.mjs
+      red_evidence:
+        command: "node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs"
+        result: "failed as expected"
+        failures:
+          - "scripts/llm-first-devloop-loop.mjs missing"
+          - "direct llm-first-devloop-loop bin target missing"
+      verify:
+        -
+          command: "node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs"
+          result: expected_failure
+  - id: T004
+    type: worker
+    worker_kind: implementation
+    assignee: Worker
+    status: done
+    objective: "Implement the largest safe useful slice that makes the approved red tests pass."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T003 red test receipt"
+      - "T002 implementation boundaries"
+    impact_assessment_ref: null
+    allowed_files:
+      - scripts/llm-first-devloop-loop.mjs
+      - scripts/llm-first-devloop-loop.test.mjs
+      - scripts/llm-first-devloop.mjs
+      - scripts/bin-entrypoint.test.mjs
+      - scripts/readme-private-usage.test.mjs
+      - package.json
+      - README.md
+      - docs/ready-mode-implementation-strategy.md
+      - "docs/goals/devloop-loop-default-mode-v0-3/**"
+      - docs/devloop-loop-default-mode-v0-3-notes.md
+    verify:
+      - "node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs"
+    stop_if:
+      - "Implementation starts executing native /goal or autonomous agent reasoning."
+      - "Need files outside allowed_files."
+      - "No prior red_test evidence exists."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+    receipt:
+      result: done
+      summary: "Implemented llm-first-devloop loop as a guided wrapper over runDevLoopEntry. Added safe actions, stop rules, receipt templates, dispatcher/bin exposure, npm script, README and roadmap positioning."
+      changed_files:
+        - scripts/llm-first-devloop-loop.mjs
+        - scripts/llm-first-devloop-loop.test.mjs
+        - scripts/llm-first-devloop.mjs
+        - scripts/bin-entrypoint.test.mjs
+        - scripts/readme-private-usage.test.mjs
+        - package.json
+        - README.md
+        - docs/ready-mode-implementation-strategy.md
+      green_test:
+        command: "node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs"
+        result: pass
+        tests: "7 pass"
+      verify:
+        -
+          command: "node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs"
+          result: pass
+      impact_assessment_ref: T001.receipt.impact_assessment
+  - id: T005
+    type: worker
+    worker_kind: verification
+    assignee: Worker
+    status: done
+    objective: "Run the full verification package, including browser or visual checks when the acceptance contract requires them."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T004 implementation receipt"
+      - "Approved feedback_policy"
+    impact_assessment_ref: null
+    allowed_files:
+      - scripts/llm-first-devloop-loop.mjs
+      - scripts/llm-first-devloop-loop.test.mjs
+      - scripts/llm-first-devloop.mjs
+      - scripts/bin-entrypoint.test.mjs
+      - scripts/readme-private-usage.test.mjs
+      - package.json
+      - README.md
+      - docs/ready-mode-implementation-strategy.md
+      - "docs/goals/devloop-loop-default-mode-v0-3/**"
+      - docs/devloop-loop-default-mode-v0-3-notes.md
+    verify:
+      - "node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs"
+      - "npm test"
+      - "git diff --check"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Verification fails twice without understood cause."
+    receipt:
+      result: done
+      summary: "Full verification package passed after updating the README usage test to make loop the documented default pre-publication path."
+      changed_files:
+        - scripts/readme-private-usage.test.mjs
+        - docs/goals/devloop-loop-default-mode-v0-3/state.yaml
+      verification:
+        -
+          command: "node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs"
+          result: pass
+          tests: "7 pass"
+        -
+          command: "npm test"
+          result: pass
+          tests: "66 pass"
+        -
+          command: "git diff --check"
+          result: pass
+      verify:
+        -
+          command: "node --test scripts/llm-first-devloop-loop.test.mjs scripts/bin-entrypoint.test.mjs && npm test && git diff --check"
+          result: pass
+      impact_assessment_ref: T001.receipt.impact_assessment
+  - id: T006
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Review architecture, spec fidelity, and test evidence before shipping."
+    inputs:
+      - "T001 through T005 receipts"
+      - "Current diff"
+      - "Last verification output"
+    constraints:
+      - "Do not implement."
+      - "Reject completion if the implementation only satisfies internal tasks but not the original oracle."
+      - "Reject hidden design drift, shallow-module sprawl, or missing acceptance evidence."
+    expected_output:
+      - "approved | changes_required"
+      - "design_delta"
+      - "architecture_review"
+      - "oracle_coverage"
+      - "remaining risks"
+      - "whether another Worker slice is needed"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Architecture and spec fidelity approved. The implementation satisfies the oracle without adding autonomous native /goal execution."
+      design_delta: "DevLoop now has loop as the default guided user experience. run remains the lower-level primitive; loop adds safe_action, stop_rules, receipt_template, board URL, repo guard visibility, and blocked-state behavior."
+      architecture_review: "Approved. The new module is additive and delegates board creation/resume/checking to runDevLoopEntry, avoiding duplicated state logic. CLI dispatcher, bin, package script, README, roadmap, and tests are aligned."
+      oracle_coverage:
+        roadmap_states_loop_default: true
+        loop_emits_safe_handoffs: true
+        loop_blocks_invalid_boards: true
+        dispatcher_and_bin_exposed: true
+        tests_pass: true
+      remaining_risks:
+        - "V0.3 is guided only; it does not yet execute native /goal or apply receipts automatically."
+      another_worker_slice_needed: false
+  - id: T998
+    type: pm
+    assignee: PM
+    status: active
+    objective: "Commit all goal-related changes and push the current branch once verification is green."
+    inputs:
+      - "Approved implementation and verification receipts"
+      - "Current git status"
+    constraints:
+      - "Do not include unrelated dirty files."
+      - "If the workspace is not a git repository, record shipping_blocker: no_git_repository."
+      - "If no GitHub remote exists, record shipping_blocker: no_github_remote."
+    expected_output:
+      - "Or shipping_blocker: no_git_repository | no_github_remote"
+      - "Unrelated dirty files left untouched"
+      - "Committed files"
+      - "Push result"
+      - "Remote branch"
+      - "Commit SHA"
+      - "commit_sha"
+      - "remote_branch or push string"
+      - "push_result"
+      - "committed_files"
+      - "unrelated_dirty_files_left_untouched"
+    receipt: null
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: queued
+    reasoning_hint: high
+    objective: "Audit whether the full original outcome is complete."
+    inputs:
+      - "design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, and design_delta evidence"
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Quality checker final output"
+      - "Completed impact_assessment receipt"
+      - "T998 shipping proof when shipping is required"
+    constraints:
+      - "Reject completion if design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, or design_delta evidence is missing when workflow_safeguards requires it."
+      - "Do not implement."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion unless impact_assessment covers db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs when impact assessment is required."
+      - "For read-only audit goals with no Worker tasks and no changed_files, accept audit_scope/audit_findings/review/decision evidence instead of TDD, impact_assessment, T998, commit, and push."
+      - "For verification goals, reject completion unless safe test/browser command evidence exists and no changed_files are reported."
+      - "Reject completion unless T998 has a commit SHA and successful push result, or an explicit shipping_blocker for no_git_repository/no_github_remote, when shipping is required."
+    expected_output:
+      - "design_delta"
+      - "workflow_safeguards result"
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipt: null

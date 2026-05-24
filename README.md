@@ -18,6 +18,7 @@ This repository is meant to be reusable tooling, not just an archive. It gives y
 - `scripts/goalbuddy-brief.mjs`: compiles conversation notes, a PRD, or a transcript into a Ready Mode brief.
 - `scripts/goalbuddy-interview.mjs`: checks whether LLM-first notes are mature enough, or writes clarification questions.
 - `scripts/goalbuddy-ready-mode.mjs`: generates `goal.md`, `state.yaml`, and `acceptance-contract.md` from a mature spec.
+- `scripts/llm-first-devloop-loop.mjs`: default guided mode; wraps `run` and emits the next safe action, stop rules, and receipt template.
 - `scripts/goalbuddy-next.mjs`: inspects a board and prints the exact next prompt without mutating state.
 - `scripts/goalbuddy-run.mjs`: automates the entry workflow from notes or an existing board, then returns the active-task handoff.
 - `scripts/goalbuddy-advance.mjs`: applies a receipt, marks the active task done or blocked, activates the next task, and re-checks the board.
@@ -77,13 +78,20 @@ Ask what to do next without mutating the board:
 npm run next -- docs/goals/saved-search/state.yaml
 ```
 
-Automate the whole entry workflow from notes:
+Use the default guided loop mode from notes:
 
 ```bash
-npm run run -- \
+npm run loop -- \
   --from examples/supermemory-t4-notes.md \
   --out docs/goals/supermemory-t4 \
   --oracle "A checker-clean SuperMemory T4 board reaches an active-task handoff."
+```
+
+Resume that guided loop when you already have a board:
+
+```bash
+npm run loop -- \
+  --state docs/goals/supermemory-t4/state.yaml
 ```
 
 Repair a hand-written or older board:
@@ -107,7 +115,7 @@ npm test
 From that local clone, use `npm run` commands:
 
 ```bash
-npm run run -- \
+npm run loop -- \
   --from examples/supermemory-t4-notes.md \
   --out docs/goals/supermemory-t4 \
   --oracle "A checker-clean SuperMemory T4 board reaches an active-task handoff."
@@ -117,7 +125,7 @@ You can also call the dispatcher directly when you need the same shape as the
 future npm binary:
 
 ```bash
-node scripts/llm-first-devloop.mjs run \
+node scripts/llm-first-devloop.mjs loop \
   --from examples/conversation-notes.md \
   --out docs/goals/saved-search \
   --oracle "Acceptance tests prove saved searches can be created, listed, reopened, renamed, and deleted."
@@ -137,6 +145,7 @@ llm-first-devloop interview --help
 llm-first-devloop ready --help
 llm-first-devloop next --help
 llm-first-devloop run --help
+llm-first-devloop loop --help
 goalbuddy-brief --help
 goalbuddy-interview --help
 goalbuddy-ready --help
@@ -145,6 +154,7 @@ goalbuddy-repair --help
 goalbuddy-next --help
 goalbuddy-run --help
 goalbuddy-advance --help
+llm-first-devloop-loop --help
 llm-first-devloop-sync-skill --help
 ```
 
@@ -159,16 +169,38 @@ npx --package llm-first-devloop goalbuddy-ready --help
 
 1. Start with an ordinary LLM conversation. Explore the idea, reject weak options, clarify examples, and converge on intent.
 2. Save the useful notes, PRD, or transcript to Markdown.
-3. Prefer `goalbuddy-run` when you want the entry workflow handled for you.
-4. If you need manual debugging, run `goalbuddy-interview`, `goalbuddy-brief`, `goalbuddy-ready`, `goalbuddy-check`, and `goalbuddy-next` separately.
-5. Use the generated active-task handoff with GoalBuddy or the current Codex session.
-6. Give the generated `goal.md` and `state.yaml` to GoalBuddy through `/goal` when native GoalBuddy execution is still the next boundary.
-7. Let Scout and Judge refine the acceptance contract before Worker implementation.
-8. Finish only after verification, final audit, and shipping proof or an explicit blocker.
+3. Prefer `llm-first-devloop loop` as the default guided experience once you have notes or a board.
+4. Use `goalbuddy-run` when you need the lower-level entry primitive for debugging.
+5. If you need manual debugging, run `goalbuddy-interview`, `goalbuddy-brief`, `goalbuddy-ready`, `goalbuddy-check`, and `goalbuddy-next` separately.
+6. Use the generated active-task handoff with GoalBuddy or the current Codex session.
+7. Give the generated `goal.md` and `state.yaml` to GoalBuddy through `/goal` when native GoalBuddy execution is still the next boundary.
+8. Let Scout and Judge refine the acceptance contract before Worker implementation.
+9. Finish only after verification, final audit, and shipping proof or an explicit blocker.
+
+## DevLoop Loop
+
+`llm-first-devloop loop` is the default user-facing mode. It takes mature notes or an existing board, reuses the lower-level `run` workflow, checks the board, then prints the next safe action, stop rules, and a receipt template.
+
+Continue from an existing board:
+
+```bash
+llm-first-devloop loop --state docs/goals/<slug>/state.yaml
+```
+
+Start from mature notes:
+
+```bash
+llm-first-devloop loop \
+  --from notes.md \
+  --out docs/goals/<slug> \
+  --oracle "Observable proof that the outcome is real"
+```
+
+V0.3 is deliberately guided, not magical: it does not execute native `/goal` or agent reasoning by itself. It keeps the current task, board URL, repo boundary, and receipt shape visible so Codex can keep advancing without you relaunching every subcommand manually.
 
 ## DevLoop Run
 
-`goalbuddy-run` is the operator-facing entry command. It exists so the owner does not have to manually run every low-level step.
+`goalbuddy-run` is the lower-level entry primitive. It exists for debugging, tool composition, and cases where you only want interview/ready/check/next handoff behavior without the loop framing.
 
 Continue from an existing board:
 
@@ -185,9 +217,9 @@ llm-first-devloop run \
   --oracle "Observable proof that the outcome is real"
 ```
 
-The command does not execute native `/goal` yet. It prepares or reuses the board, repairs/checks it, runs `next`, and prints the active-task handoff. If notes are not mature enough, it writes `needs-clarification.md` instead of creating a weak board.
+The command prepares or reuses the board, repairs/checks it, runs `next`, and prints the active-task handoff. If notes are not mature enough, it writes `needs-clarification.md` instead of creating a weak board.
 
-The matching Codex skill template lives in `skills/llm-first-devloop/SKILL.md`. Its job is to invoke `llm-first-devloop run` and continue from the handoff, not to duplicate the CLI workflow in prompt prose.
+The matching Codex skill template lives in `skills/llm-first-devloop/SKILL.md`. Its job is to invoke the DevLoop CLI and continue from the handoff, not to duplicate the workflow in prompt prose.
 
 ## Codex Skill Sync
 

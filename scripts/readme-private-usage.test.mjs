@@ -9,7 +9,7 @@ test("README documents the supported pre-publication usage path", () => {
   assert.match(readme, /git clone https:\/\/github\.com\/arnaudlopez\/llm-first-devloop\.git/);
   assert.match(readme, /npm install/);
   assert.match(readme, /npm test/);
-  assert.match(readme, /npm run run --/);
+  assert.match(readme, /npm run loop --/);
 });
 
 test("README separates pre-public local usage from future npm usage", () => {

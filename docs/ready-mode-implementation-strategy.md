@@ -28,7 +28,7 @@ The immediate implementation should remain small and local:
 - A generator that creates `goal.md`, `state.yaml`, and `acceptance-contract.md`.
 - A checker that enforces oracle/TDD/shipping/final-audit gates.
 - A repairer that normalizes generated boards.
-- Later, optional runner automation around these files.
+- A guided loop runner that becomes the default user experience while keeping `run` as the lower-level primitive.
 
 ## 2. Problem Statement
 
@@ -114,7 +114,16 @@ The first generated board must not pretend to know the repository. It should lea
 
 ### 4.3 Execution Phase
 
-The execution phase follows a fixed shape:
+The execution phase follows a fixed shape. The default user-facing command should be `loop`, not raw `run`:
+
+```bash
+llm-first-devloop loop --from notes.md --out docs/goals/<slug> --oracle "..."
+llm-first-devloop loop --state docs/goals/<slug>/state.yaml
+```
+
+`loop` prepares or resumes the board, checks it, shows `Repo`, `Board`, and `Board command`, then emits the next safe action, stop rules, and receipt template. `run` remains the lower-level primitive for debugging or tool composition.
+
+The underlying task sequence remains:
 
 1. Scout maps facts and test seams.
 2. Judge approves the acceptance contract and the first red-test slice.

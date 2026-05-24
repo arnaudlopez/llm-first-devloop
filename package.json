@@ -14,6 +14,7 @@
     "goalbuddy-interview": "scripts/goalbuddy-interview.mjs",
     "goalbuddy-run": "scripts/goalbuddy-run.mjs",
     "goalbuddy-advance": "scripts/goalbuddy-advance.mjs",
+    "llm-first-devloop-loop": "scripts/llm-first-devloop-loop.mjs",
     "llm-first-devloop-sync-skill": "scripts/llm-first-devloop-sync-skill.mjs"
   },
   "files": [
@@ -29,6 +30,7 @@
     "ready": "node scripts/goalbuddy-ready-mode.mjs",
     "brief": "node scripts/goalbuddy-brief.mjs",
     "interview": "node scripts/goalbuddy-interview.mjs",
+    "loop": "node scripts/llm-first-devloop-loop.mjs",
     "run": "node scripts/goalbuddy-run.mjs",
     "advance": "node scripts/goalbuddy-advance.mjs",
     "next": "node scripts/goalbuddy-next.mjs",

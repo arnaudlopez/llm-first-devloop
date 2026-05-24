@@ -13,6 +13,7 @@ const COMMANDS = {
   next: "goalbuddy-next.mjs",
   interview: "goalbuddy-interview.mjs",
   run: "goalbuddy-run.mjs",
+  loop: "llm-first-devloop-loop.mjs",
   advance: "goalbuddy-advance.mjs",
   "sync-skill": "llm-first-devloop-sync-skill.mjs",
 };
@@ -28,6 +29,7 @@ Commands:
   next      Inspect a board and print the exact next prompt without mutation.
   interview Check whether LLM-first notes are ready for Ready Mode.
   run       Automate interview/ready or existing-board entry, then check and print the handoff.
+  loop      Default guided mode: run plus safe action, stop rules, and receipt template.
   advance   Apply a task receipt, update active_task, and re-check the board.
   sync-skill
             Install or update the Codex llm-first-devloop skill from this repo.
@@ -38,6 +40,7 @@ Examples:
   llm-first-devloop check --final docs/goals/saved-search/state.yaml
   llm-first-devloop next docs/goals/saved-search/state.yaml
   llm-first-devloop run --from notes.md --out docs/goals/saved-search --oracle "Acceptance tests pass"
+  llm-first-devloop loop --state docs/goals/saved-search/state.yaml
   llm-first-devloop advance --state docs/goals/saved-search/state.yaml --receipt-json '{"result":"done","summary":"..."}'
   llm-first-devloop sync-skill --dry-run
 
