@@ -2,7 +2,7 @@ version: 2
 goal:
   slug: "devloop-judge-worker-template"
   title: "DevLoop Judge Worker Template"
-  status: active
+  status: complete
   created_at: "2026-05-24"
   updated_at: "2026-05-24"
   kind: specific
@@ -76,7 +76,7 @@ agents:
   worker: installed
   judge: installed
 
-active_task: T998
+active_task: null
 tasks:
   - id: T001
     type: scout
@@ -414,7 +414,7 @@ tasks:
   - id: T998
     type: pm
     assignee: PM
-    status: active
+    status: done
     objective: "Commit all goal-related changes and push the current branch once verification is green."
     inputs:
       - "Approved implementation and verification receipts"
@@ -435,11 +435,37 @@ tasks:
       - "push_result"
       - "committed_files"
       - "unrelated_dirty_files_left_untouched"
-    receipt: null
+    receipt:
+      result: done
+      summary: "Committed and pushed the Judge Worker task_updates scaffold improvement."
+      commit_sha: 39c8594
+      remote_branch: origin/main
+      push_result: "successfully pushed main to origin"
+      committed_files:
+        - scripts/llm-first-devloop-loop.mjs
+        - scripts/llm-first-devloop-loop.test.mjs
+        - docs/devloop-judge-worker-template-notes.md
+        - docs/goals/devloop-judge-worker-template/acceptance-contract.md
+        - docs/goals/devloop-judge-worker-template/brief.md
+        - docs/goals/devloop-judge-worker-template/goal.md
+        - docs/goals/devloop-judge-worker-template/state.yaml
+      unrelated_dirty_files_left_untouched:
+        []
+      verify:
+        -
+          command: "node --test scripts/llm-first-devloop-loop.test.mjs"
+          result: pass
+        -
+          command: "npm test"
+          result: pass
+          tests: "67 pass"
+        -
+          command: "git diff --check"
+          result: pass
   - id: T999
     type: judge
     assignee: Judge
-    status: queued
+    status: done
     reasoning_hint: high
     objective: "Audit whether the full original outcome is complete."
     inputs:
@@ -465,4 +491,32 @@ tasks:
       - "full_outcome_complete: true | false"
       - "missing evidence"
       - "next task if not complete"
-    receipt: null
+    receipt:
+      result: done
+      decision: complete
+      full_outcome_complete: true
+      design_delta: "Active Judge loop handoffs now include task_updates scaffolds for queued Worker tasks, reducing manual boundary construction after Scout/Judge."
+      workflow_safeguards:
+        design_concept: true
+        ubiquitous_language: true
+        feedback_policy: true
+        test_strategy: true
+        module_map: true
+        interface_contract: true
+        architecture_review: true
+        design_delta: true
+        impact_assessment: true
+        shipping_proof: true
+      oracle_result: satisfied
+      evidence:
+        - "scripts/llm-first-devloop-loop.test.mjs proves active Judge handoffs include T003/T004/T005 task_updates scaffolds."
+        - "Each scaffold includes allowed_files, verify, stop_if, and impact_assessment_ref."
+        - "Role-specific stop rules cover red_test, implementation, and verification Workers."
+        - "Placeholders are explicit and avoid guessed repo paths."
+        - "node --test scripts/llm-first-devloop-loop.test.mjs passed."
+        - "npm test passed with 67 tests."
+        - "git diff --check passed."
+        - "T998 recorded commit 39c8594 pushed to origin/main."
+      missing_evidence:
+        []
+      next_task_if_not_complete: null
