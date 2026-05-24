@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { realpathSync } from "node:fs";
+import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
 import { runDevLoopEntry } from "./goalbuddy-run.mjs";
@@ -22,13 +22,14 @@ export function runDevLoopLoop(options = {}) {
   }
 
   const activeTask = entry.activeTask;
+  const tasks = parseTasksFromState(entry.statePath);
   return {
     ...entry,
     status: "loop_ready",
     loopMode: "guided",
     safeAction: safeActionForTask(activeTask),
     stopRules: stopRulesForTask(activeTask),
-    receiptTemplate: receiptTemplateForTask(activeTask),
+    receiptTemplate: receiptTemplateForTask(activeTask, tasks),
   };
 }
 
@@ -77,7 +78,7 @@ function stopRulesForTask(task) {
   return base;
 }
 
-function receiptTemplateForTask(task) {
+function receiptTemplateForTask(task, tasks = []) {
   if (!task) {
     return JSON.stringify(
       {
@@ -130,7 +131,7 @@ function receiptTemplateForTask(task) {
         decision: "approved | blocked | changes_required",
         summary: "",
         architecture_review: "",
-        task_updates: {},
+        task_updates: taskUpdateScaffold(tasks),
       },
       null,
       2,
@@ -186,6 +187,89 @@ function receiptTemplateForTask(task) {
     );
   }
   return JSON.stringify({ result: "done", summary: "" }, null, 2);
+}
+
+function taskUpdateScaffold(tasks) {
+  const updates = {};
+  for (const task of tasks) {
+    if (task.type !== "worker" || task.status !== "queued") continue;
+    updates[task.id] = workerBoundaryScaffold(task);
+  }
+  return updates;
+}
+
+function workerBoundaryScaffold(task) {
+  const kind = workerKind(task);
+  return {
+    allowed_files: placeholderAllowedFiles(kind),
+    verify: placeholderVerify(kind),
+    stop_if: stopRulesForWorkerKind(kind),
+    impact_assessment_ref: "T001.receipt.impact_assessment",
+  };
+}
+
+function workerKind(task) {
+  return task.raw.match(/\bworker_kind:\s*([^\s#]+)/)?.[1] || "implementation";
+}
+
+function placeholderAllowedFiles(kind) {
+  if (kind === "red_test") return ["<test files for red evidence>"];
+  if (kind === "verification") return ["<files needed only if verification notes must be recorded>"];
+  return ["<implementation files>", "<test files>"];
+}
+
+function placeholderVerify(kind) {
+  if (kind === "red_test") return ["<targeted test command expected to fail before implementation>"];
+  if (kind === "verification") return ["<targeted verification command>", "npm test", "git diff --check"];
+  return ["<targeted test command>", "npm test"];
+}
+
+function stopRulesForWorkerKind(kind) {
+  const base = [
+    "Need files outside allowed_files.",
+    "No meaningful failing test can be written.",
+    "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files.",
+  ];
+  if (kind === "red_test") {
+    return [
+      "Need implementation changes before red evidence.",
+      ...base,
+    ];
+  }
+  if (kind === "verification") {
+    return [
+      ...base,
+      "Verification fails twice without understood cause.",
+    ];
+  }
+  return [
+    ...base,
+    "No prior red_test evidence exists.",
+    "Verification fails twice without a clear bounded fix.",
+  ];
+}
+
+function parseTasksFromState(statePath) {
+  if (!statePath || !existsSync(statePath)) return [];
+  const text = readFileSync(statePath, "utf8");
+  const lines = text.split(/\r?\n/);
+  const starts = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    if (/^\s{2}- id:\s*/.test(lines[index])) starts.push(index);
+  }
+  return starts.map((start, index) => {
+    const raw = lines.slice(start, starts[index + 1] ?? lines.length).join("\n");
+    return {
+      id: cleanYamlScalar(raw.match(/^\s{2}- id:\s*([^\s#]+)/m)?.[1]),
+      type: cleanYamlScalar(raw.match(/^\s{4}type:\s*([^\s#]+)/m)?.[1]),
+      status: cleanYamlScalar(raw.match(/^\s{4}status:\s*([^\s#]+)/m)?.[1]),
+      raw,
+    };
+  });
+}
+
+function cleanYamlScalar(value) {
+  return String(value || "").trim().replace(/^["']|["']$/g, "");
 }
 
 const HELP_TEXT = `Usage:

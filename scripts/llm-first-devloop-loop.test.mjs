@@ -90,6 +90,53 @@ test("loop returns a red-test Worker receipt template", () => {
   });
 });
 
+test("loop returns a Judge task_updates scaffold for queued Workers", () => {
+  withTempDir((dir) => {
+    const state = buildReadyModeArtifacts({
+      goalText: "Build saved searches.",
+      oracleSignal: "Acceptance tests prove saved searches work.",
+      date: "2026-05-24",
+    }).stateYaml
+      .replace("active_task: T001", "active_task: T002")
+      .replace(/(\s+- id: T001[\s\S]*?status:) active/, "$1 done")
+      .replace(/(\s+- id: T002[\s\S]*?status:) queued/, "$1 active")
+      .replace(
+        /\n    receipt: null\n\n  - id: T002/,
+        `\n    receipt:
+      result: done
+      summary: "Mapped the existing repo before Judge work."
+      impact_assessment:
+        db_schema_migrations: none
+        data_backfill: none
+        env_secrets: none
+        auth_permissions: none
+        api_contract: none
+        ui_routes: none
+        background_jobs: none
+        external_services: none
+        deploy_rollback: none
+        observability: none
+        docs: none
+  - id: T002`,
+      );
+    const statePath = writeState(dir, state);
+
+    const result = runDevLoopLoop({ statePath, allowOutsideRepo: true });
+    const template = JSON.parse(result.receiptTemplate);
+
+    assert.equal(result.ok, true, result.errors?.join("\n"));
+    assert.equal(result.activeTask.id, "T002");
+    assert.deepEqual(Object.keys(template.task_updates), ["T003", "T004", "T005"]);
+    assert.deepEqual(template.task_updates.T003.allowed_files, ["<test files for red evidence>"]);
+    assert.deepEqual(template.task_updates.T004.allowed_files, ["<implementation files>", "<test files>"]);
+    assert.deepEqual(template.task_updates.T005.verify, ["<targeted verification command>", "npm test", "git diff --check"]);
+    assert.equal(template.task_updates.T003.impact_assessment_ref, "T001.receipt.impact_assessment");
+    assert.ok(template.task_updates.T003.stop_if.some((item) => /implementation changes before red evidence/i.test(item)));
+    assert.ok(template.task_updates.T004.stop_if.some((item) => /No prior red_test evidence/i.test(item)));
+    assert.ok(template.task_updates.T005.stop_if.some((item) => /Verification fails twice/i.test(item)));
+  });
+});
+
 test("loop blocks invalid boards without inventing continuation", () => {
   withTempDir((dir) => {
     const statePath = writeState(dir, "goal:\n  status: active\n");

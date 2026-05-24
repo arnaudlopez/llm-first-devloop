@@ -1,0 +1,468 @@
+version: 2
+goal:
+  slug: "devloop-judge-worker-template"
+  title: "DevLoop Judge Worker Template"
+  status: active
+  created_at: "2026-05-24"
+  updated_at: "2026-05-24"
+  kind: specific
+  original_request: "# DevLoop Judge Worker Template\n\n## Intent\n\nUse the dogfood result to reduce the last obviously manual step in the local autonomous loop: when a Judge task is active, `llm-first-devloop loop` should give Codex a concrete `task_updates` receipt scaffold for queued Worker tasks instead of an empty object.\n\nThe owner goal is less repeated \"next/go/enchaine\" and fewer chances for the agent to forget `allowed_files`, `verify`, `stop_if`, or `impact_assessment_ref` before Worker execution.\n\n- Do not make `loop` execute native `/goal`.\n- Do not auto-approve architecture decisions.\n- Do not guess exact product files.\n- Do not mutate `state.yaml` from `loop`.\n- Do not remove Judge responsibility.\n\n## Non-Goals\n\n- TODO: Name what this goal must not change.\n\n## Proposed Oracle\n\nTests prove that an active Judge handoff includes a useful task_updates scaffold for queued red-test, implementation, and verification Workers, with required guardrails and no board mutation.\n\n## Suggested Mode\n\nimplementation\n\n## Acceptance Hints\n\n- A Judge `receiptTemplate` contains `task_updates` entries for queued Worker tasks.\n- Each Worker update includes `allowed_files`, `verify`, `stop_if`, and `impact_assessment_ref`.\n- Red-test, implementation, and verification Workers get role-specific stop rules.\n- The template uses placeholders where exact files/commands require repo-specific judgment.\n- Existing Scout, Worker, PM and blocked behavior still passes.\n- `npm test` passes.\n\n## Risks And Open Questions\n\n- TODO: List ambiguity, missing credentials, operational risks, or decisions needed before implementation.\n\n## Constraints\n\n- TODO: Capture constraints, must-preserve behavior, boundaries, or forbidden changes.\n\n## Ready Mode Command\n\n```bash\nnpm run ready -- --from ./docs/goals/devloop-judge-worker-template/brief.md --mode implementation --oracle \"Tests prove that an active Judge handoff includes a useful task_updates scaffold for queued red-test, implementation, and verification Workers, with required guardrails and no board mutation.\" --out docs/goals/devloop-judge-worker-template\n```\n\n## Source Notes\n\nCompiled from: /Users/arnaud/Documents/llm-first-devloop/docs/devloop-judge-worker-template-notes.md\n\n> # DevLoop Judge Worker Template\n> \n> ## Intent\n> \n> Use the dogfood result to reduce the last obviously manual step in the local autonomous loop: when a Judge task is active, `llm-first-devloop loop` should give Codex a concrete `task_updates` receipt scaffold for queued Worker tasks instead of an empty object.\n> \n> The owner goal is less repeated \"next/go/enchaine\" and fewer chances for the agent to forget `allowed_files`, `verify`, `stop_if`, or `impact_assessment_ref` before Worker execution.\n> \n> ## Non-Goals\n> \n> - Do not make `loop` execute native `/goal`.\n> - Do not auto-approve architecture decisions.\n> - Do not guess exact product files.\n> - Do not mutate `state.yaml` from `loop`.\n> - Do not remove Judge responsibility.\n> \n> ## Proposed Oracle\n> \n> Tests prove that an active Judge handoff includes a useful `task_updates` scaffold for queued red-test, implementation, and verification Workers, with required guardrails and no board mutation.\n> \n> ## Acceptance\n> \n> - A Judge `receiptTemplate` contains `task_updates` entries for queued Worker tasks.\n> - Each Worker update includes `allowed_files`, `verify`, `stop_if`, and `impact_assessment_ref`.\n> - Red-test, implementation, and verification Workers get role-specific stop rules.\n> - The template uses placeholders where exact files/commands require repo-specific judgment.\n> - Existing Scout, Worker, PM and blocked behavior still passes.\n> - `npm test` passes.\n> \n> ## Suggested Mode\n> \n> implementation"
+  interpreted_outcome: "Run the prepared LLM-first workflow for DevLoop Judge Worker Template."
+  input_shape: specific
+  audience: "Product owner and target users"
+  authority: requested
+  proof_type:
+    - test
+    - artifact
+    - review
+  completion_proof: "Final audit maps red tests, green verification, implementation receipts, and shipping proof back to the oracle."
+  goal_oracle: "Tests prove that an active Judge handoff includes a useful task_updates scaffold for queued red-test, implementation, and verification Workers, with required guardrails and no board mutation."
+  oracle:
+    signal: "Tests prove that an active Judge handoff includes a useful task_updates scaffold for queued red-test, implementation, and verification Workers, with required guardrails and no board mutation."
+    final_proof: "T999 states full_outcome_complete: true and cites passing acceptance evidence, verification commands, design review, and T998 shipping evidence."
+  likely_misfire: "Starting implementation from a plausible plan before converting the owner outcome into acceptance tests and observable proof."
+  constraints:
+    - "Acceptance tests or equivalent observable proof must be written before production implementation."
+    - "Implementation must stay inside Judge-approved allowed_files."
+    - "Unrelated dirty worktree changes must remain untouched."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  allow_read_only_goal_without_shipping: true
+  require_quality_checker: true
+  require_tdd_worker_flow: true
+  require_github_ship_task: true
+  require_impact_assessment: true
+  goal_pressure_requires_oracle: true
+
+goal_policy:
+  mode: implementation
+  requires_tdd: true
+  requires_impact_assessment: true
+  requires_shipping: true
+  requires_visual_verification: false
+  requires_migration_proof: false
+  requires_infra_proof: false
+  requires_dependency_review: false
+  requires_dirty_worktree_guard: true
+  requires_refactor_proof: false
+  rationale: "Ready Mode is for app-code or product-behavior work after an LLM-first spec conversation has converged."
+
+workflow_safeguards:
+  requires_design_concept: true
+  requires_ubiquitous_language: true
+  requires_feedback_policy: true
+  requires_test_strategy: true
+  requires_module_map: true
+  requires_interface_contract: true
+  requires_architecture_review: true
+  requires_design_delta: true
+  require_t998_shipping: true
+  require_t999_final_audit: true
+  protect_unrelated_dirty_worktree: true
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+active_task: T998
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    objective: "Turn the mature request into a concrete acceptance contract before any implementation work."
+    inputs:
+      - "goal.md"
+      - "acceptance-contract.md"
+      - "Current repository source, tests, scripts, docs, and dirty worktree status"
+    constraints:
+      - "Read-only."
+      - "Do not edit product files."
+      - "Do not start implementation."
+      - "Prefer observable owner outcomes over internal task completion."
+    expected_output:
+      - "design_concept: shared understanding, non-goals, and decision dependencies"
+      - "ubiquitous_language: domain terms, overloaded words, and forbidden synonyms"
+      - "module_map: relevant deep modules, boundaries, and shallow-module risks"
+      - "interface_contract: public behavior and boundaries that tests should target"
+      - "test_strategy: acceptance tests, unit/integration boundaries, mocks, browser or visual checks if relevant"
+      - "feedback_policy: targeted test cadence, typecheck, browser checks, and full-suite timing"
+      - "acceptance_contract_updates: exact end-state evidence and failure modes"
+      - "dirty_worktree_risk_map: unrelated files that must stay untouched"
+      - "impact_assessment covering db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs"
+    receipt:
+      result: done
+      summary: "Mapped the current loop implementation and dogfood gap. Judge receipt templates currently contain an empty task_updates object, forcing the agent to handcraft Worker boundaries each time."
+      design_concept: "Keep Judge responsible for decisions, but make loop provide a ready-to-fill task_updates scaffold for queued Worker tasks so the agent does not forget allowed_files, verify, stop_if, or impact_assessment_ref."
+      ubiquitous_language:
+        judge_template: "Receipt template emitted by loop for active Judge tasks."
+        task_updates: "Advance-compatible object that updates queued Worker task execution boundaries."
+        worker_boundary: "allowed_files, verify, stop_if, and impact_assessment_ref for a queued Worker."
+        placeholder: "Explicit TODO value that requires repo-specific judgment, not an invented file path."
+      module_map:
+        target_files:
+          - scripts/llm-first-devloop-loop.mjs
+          - scripts/llm-first-devloop-loop.test.mjs
+          - "docs/goals/devloop-judge-worker-template/**"
+          - docs/devloop-judge-worker-template-notes.md
+        current_behavior: "receiptTemplateForTask(task) returns generic Judge task_updates: {} without reading queued workers from state."
+      interface_contract:
+        judge_receipt_template: "For active Judge tasks, receiptTemplate includes task_updates for queued Worker tasks parsed from statePath, each with allowed_files, verify, stop_if, impact_assessment_ref placeholders."
+      test_strategy:
+        red: "Add a loop test that activates T002 Judge and asserts task_updates includes T003/T004/T005 Worker scaffolds with required fields and role-specific stop rules."
+        green: "Parse queued Worker tasks in loop and enrich Judge receipt template without mutating state."
+      feedback_policy: "Run node --test scripts/llm-first-devloop-loop.test.mjs first, then npm test and git diff --check."
+      dirty_worktree_risk_map: "Only current notes/board are dirty before implementation."
+      impact_assessment:
+        db_schema_migrations: none
+        data_backfill: none
+        env_secrets: none
+        auth_permissions: none
+        api_contract: "additive JSON/text receipt template fields"
+        ui_routes: none
+        background_jobs: none
+        external_services: none
+        deploy_rollback: "git revert"
+        observability: "unit tests and CLI output"
+        docs: "goal notes/board only"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Approve the acceptance contract and choose the largest safe red-test package."
+    inputs:
+      - "T001 receipt"
+      - "Updated acceptance-contract.md if T001 changed it"
+    constraints:
+      - "Do not implement."
+      - "Reject implementation work before tests can express the oracle."
+      - "Reject vague acceptance criteria that cannot be verified."
+      - "Choose a useful vertical slice, not tiny helper-only work."
+    expected_output:
+      - "Decision: approved | needs_more_evidence | blocked"
+      - "Approved design_concept"
+      - "Approved ubiquitous_language"
+      - "feedback_policy"
+      - "test_strategy"
+      - "module_map"
+      - "interface_contract"
+      - "architecture_review"
+      - "Exact Worker objective for red tests"
+      - "allowed_files for T003"
+      - "verify commands for T003"
+      - "stop_if conditions for T003"
+      - "impact_assessment_ref"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Approved a focused TDD slice for Judge receipt template scaffolding."
+      approved_design_concept: "loop should remain non-mutating but provide a ready-to-fill task_updates scaffold for queued Worker tasks when Judge is active."
+      approved_ubiquitous_language:
+        - judge_template
+        - task_updates
+        - worker_boundary
+        - placeholder
+      feedback_policy: "Run targeted loop test red/green, then npm test and git diff --check."
+      test_strategy: "Add failing test for active Judge receiptTemplate containing T003/T004/T005 task_updates with allowed_files, verify, stop_if, impact_assessment_ref and role-specific stop rules."
+      module_map:
+        - scripts/llm-first-devloop-loop.mjs
+        - scripts/llm-first-devloop-loop.test.mjs
+        - "docs/goals/devloop-judge-worker-template/**"
+        - docs/devloop-judge-worker-template-notes.md
+      interface_contract:
+        receiptTemplate: "Judge templates include task_updates scaffolds for queued Worker tasks parsed from the board state."
+      architecture_review: "Approved. Do not auto-apply task_updates; only improve the receipt scaffold. Use placeholders instead of guessing repo-specific file paths."
+      impact_assessment_ref: T001.receipt.impact_assessment
+      task_updates:
+        T003:
+          allowed_files:
+            - scripts/llm-first-devloop-loop.test.mjs
+            - "docs/goals/devloop-judge-worker-template/**"
+          verify:
+            - "node --test scripts/llm-first-devloop-loop.test.mjs"
+          stop_if:
+            - "Need implementation changes before red evidence."
+            - "Need files outside allowed_files."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+          impact_assessment_ref: T001.receipt.impact_assessment
+        T004:
+          allowed_files:
+            - scripts/llm-first-devloop-loop.mjs
+            - scripts/llm-first-devloop-loop.test.mjs
+            - "docs/goals/devloop-judge-worker-template/**"
+            - docs/devloop-judge-worker-template-notes.md
+          verify:
+            - "node --test scripts/llm-first-devloop-loop.test.mjs"
+          stop_if:
+            - "Need files outside allowed_files."
+            - "No prior red_test evidence exists."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+            - "Verification fails twice without a clear bounded fix."
+          impact_assessment_ref: T001.receipt.impact_assessment
+        T005:
+          allowed_files:
+            - scripts/llm-first-devloop-loop.mjs
+            - scripts/llm-first-devloop-loop.test.mjs
+            - "docs/goals/devloop-judge-worker-template/**"
+            - docs/devloop-judge-worker-template-notes.md
+          verify:
+            - "node --test scripts/llm-first-devloop-loop.test.mjs"
+            - "npm test"
+            - "git diff --check"
+          stop_if:
+            - "Need files outside allowed_files."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+            - "Verification fails twice without understood cause."
+          impact_assessment_ref: T001.receipt.impact_assessment
+  - id: T003
+    type: worker
+    worker_kind: red_test
+    assignee: Worker
+    status: done
+    objective: "Write the failing acceptance tests selected by Judge, without production implementation."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T002 approved acceptance contract"
+      - "T002 allowed_files and verify commands"
+    impact_assessment_ref: T001.receipt.impact_assessment
+    allowed_files:
+      - scripts/llm-first-devloop-loop.test.mjs
+      - "docs/goals/devloop-judge-worker-template/**"
+    verify:
+      - "node --test scripts/llm-first-devloop-loop.test.mjs"
+    stop_if:
+      - "Need implementation changes before red evidence."
+      - "Need files outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+    receipt:
+      result: done
+      summary: "Added a failing loop test for active Judge task_updates scaffolding across queued Worker tasks."
+      changed_files:
+        - scripts/llm-first-devloop-loop.test.mjs
+      red_evidence:
+        command: "node --test scripts/llm-first-devloop-loop.test.mjs"
+        result: "failed as expected"
+        failure: "Judge receiptTemplate still has empty task_updates instead of T003/T004/T005 scaffolds."
+      verify:
+        -
+          command: "node --test scripts/llm-first-devloop-loop.test.mjs"
+          result: expected_failure
+      impact_assessment_ref: T001.receipt.impact_assessment
+  - id: T004
+    type: worker
+    worker_kind: implementation
+    assignee: Worker
+    status: done
+    objective: "Implement the largest safe useful slice that makes the approved red tests pass."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T003 red test receipt"
+      - "T002 implementation boundaries"
+    impact_assessment_ref: T001.receipt.impact_assessment
+    allowed_files:
+      - scripts/llm-first-devloop-loop.mjs
+      - scripts/llm-first-devloop-loop.test.mjs
+      - "docs/goals/devloop-judge-worker-template/**"
+      - docs/devloop-judge-worker-template-notes.md
+    verify:
+      - "node --test scripts/llm-first-devloop-loop.test.mjs"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "No prior red_test evidence exists."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Verification fails twice without a clear bounded fix."
+    receipt:
+      result: done
+      summary: "Implemented Judge receipt templates that scaffold task_updates for queued Worker tasks without mutating the board."
+      changed_files:
+        - scripts/llm-first-devloop-loop.mjs
+        - scripts/llm-first-devloop-loop.test.mjs
+      green_test:
+        command: "node --test scripts/llm-first-devloop-loop.test.mjs"
+        result: pass
+        tests: "7 pass"
+      verify:
+        -
+          command: "node --test scripts/llm-first-devloop-loop.test.mjs"
+          result: pass
+        -
+          command: "npm test"
+          result: pass
+          tests: "67 pass"
+        -
+          command: "git diff --check"
+          result: pass
+      impact_assessment_ref: T001.receipt.impact_assessment
+  - id: T005
+    type: worker
+    worker_kind: verification
+    assignee: Worker
+    status: done
+    objective: "Run the full verification package, including browser or visual checks when the acceptance contract requires them."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T004 implementation receipt"
+      - "Approved feedback_policy"
+    impact_assessment_ref: T001.receipt.impact_assessment
+    allowed_files:
+      - scripts/llm-first-devloop-loop.mjs
+      - scripts/llm-first-devloop-loop.test.mjs
+      - "docs/goals/devloop-judge-worker-template/**"
+      - docs/devloop-judge-worker-template-notes.md
+    verify:
+      - "node --test scripts/llm-first-devloop-loop.test.mjs"
+      - "npm test"
+      - "git diff --check"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Verification fails twice without understood cause."
+    receipt:
+      result: done
+      summary: "Full verification passed for Judge task_updates scaffold behavior."
+      changed_files:
+        []
+      verification:
+        -
+          command: "node --test scripts/llm-first-devloop-loop.test.mjs"
+          result: pass
+          tests: "7 pass"
+        -
+          command: "npm test"
+          result: pass
+          tests: "67 pass"
+        -
+          command: "git diff --check"
+          result: pass
+      verify:
+        -
+          command: "node --test scripts/llm-first-devloop-loop.test.mjs && npm test && git diff --check"
+          result: pass
+      impact_assessment_ref: T001.receipt.impact_assessment
+  - id: T006
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Review architecture, spec fidelity, and test evidence before shipping."
+    inputs:
+      - "T001 through T005 receipts"
+      - "Current diff"
+      - "Last verification output"
+    constraints:
+      - "Do not implement."
+      - "Reject completion if the implementation only satisfies internal tasks but not the original oracle."
+      - "Reject hidden design drift, shallow-module sprawl, or missing acceptance evidence."
+    expected_output:
+      - "approved | changes_required"
+      - "design_delta"
+      - "architecture_review"
+      - "oracle_coverage"
+      - "remaining risks"
+      - "whether another Worker slice is needed"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Architecture and oracle coverage approved. Active Judge templates now scaffold queued Worker task_updates, while final Judge templates remain empty when no Worker is queued."
+      design_delta: "loop now reads board tasks for active Judge handoffs and includes ready-to-fill Worker boundary scaffolds in receiptTemplate.task_updates."
+      architecture_review: "Approved. The implementation is additive, non-mutating, and uses explicit placeholders instead of guessing repository files. It preserves existing Scout, Worker, PM, blocked, and final Judge behavior."
+      oracle_coverage:
+        judge_template_includes_task_updates: true
+        worker_updates_include_required_fields: true
+        role_specific_stop_rules: true
+        placeholders_not_guesses: true
+        existing_behaviors_pass: true
+        npm_test_passes: true
+      remaining_risks:
+        - "The agent still fills exact files and commands; loop does not infer repo-specific paths automatically yet."
+      another_worker_slice_needed: false
+  - id: T998
+    type: pm
+    assignee: PM
+    status: active
+    objective: "Commit all goal-related changes and push the current branch once verification is green."
+    inputs:
+      - "Approved implementation and verification receipts"
+      - "Current git status"
+    constraints:
+      - "Do not include unrelated dirty files."
+      - "If the workspace is not a git repository, record shipping_blocker: no_git_repository."
+      - "If no GitHub remote exists, record shipping_blocker: no_github_remote."
+    expected_output:
+      - "Or shipping_blocker: no_git_repository | no_github_remote"
+      - "Unrelated dirty files left untouched"
+      - "Committed files"
+      - "Push result"
+      - "Remote branch"
+      - "Commit SHA"
+      - "commit_sha"
+      - "remote_branch or push string"
+      - "push_result"
+      - "committed_files"
+      - "unrelated_dirty_files_left_untouched"
+    receipt: null
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: queued
+    reasoning_hint: high
+    objective: "Audit whether the full original outcome is complete."
+    inputs:
+      - "design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, and design_delta evidence"
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Quality checker final output"
+      - "Completed impact_assessment receipt"
+      - "T998 shipping proof when shipping is required"
+    constraints:
+      - "Reject completion if design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, or design_delta evidence is missing when workflow_safeguards requires it."
+      - "Do not implement."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion unless impact_assessment covers db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs when impact assessment is required."
+      - "For read-only audit goals with no Worker tasks and no changed_files, accept audit_scope/audit_findings/review/decision evidence instead of TDD, impact_assessment, T998, commit, and push."
+      - "For verification goals, reject completion unless safe test/browser command evidence exists and no changed_files are reported."
+      - "Reject completion unless T998 has a commit SHA and successful push result, or an explicit shipping_blocker for no_git_repository/no_github_remote, when shipping is required."
+    expected_output:
+      - "design_delta"
+      - "workflow_safeguards result"
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipt: null
