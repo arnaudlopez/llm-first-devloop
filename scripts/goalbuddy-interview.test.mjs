@@ -40,6 +40,21 @@ test("analyzeInterview asks clarification questions when notes are immature", ()
   assert.match(result.content, /What observable proof/);
 });
 
+test("analyzeInterview pressures light specs before Ready Mode", () => {
+  const result = analyzeInterview({
+    sourceText: "# Fast Thing\n\nMake the dashboard better.",
+  });
+
+  assert.equal(result.status, "needs_clarification");
+  assert.match(result.content, /## Why This Is Too Light/);
+  assert.match(result.content, /## Likely Misfire/);
+  assert.match(result.content, /## Priority Questions/);
+  assert.match(result.content, /## Proposed Amended Spec/);
+  assert.match(result.content, /## Minimal Oracle Before Ready Mode/);
+  assert.match(result.content, /Visible outcome/);
+  assert.match(result.content, /Acceptance evidence/);
+});
+
 test("writeInterview writes needs-clarification instead of brief when not ready", () => {
   const dir = mkdtempSync(join(tmpdir(), "goalbuddy-interview-"));
   try {

@@ -197,7 +197,11 @@ test("runDevLoopEntry stops on immature notes with clarification output", () => 
     assert.equal(result.status, "needs_clarification");
     assert.equal(result.mode, "notes_entry");
     assert.equal(existsSync(join(outDir, "needs-clarification.md")), true);
-    assert.match(readFileSync(join(outDir, "needs-clarification.md"), "utf8"), /What observable proof/);
+    const clarification = readFileSync(join(outDir, "needs-clarification.md"), "utf8");
+    assert.match(clarification, /What observable proof/);
+    assert.match(clarification, /## Likely Misfire/);
+    assert.match(clarification, /## Proposed Amended Spec/);
+    assert.match(clarification, /## Minimal Oracle Before Ready Mode/);
     assert.equal(existsSync(join(outDir, "state.yaml")), false);
   });
 });

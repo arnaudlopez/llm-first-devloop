@@ -1,0 +1,481 @@
+version: 2
+goal:
+  slug: "devloop-spec-pressure-mode"
+  title: "DevLoop Spec Pressure Mode"
+  status: active
+  created_at: "2026-05-24"
+  updated_at: "2026-05-24"
+  kind: specific
+  original_request: "# DevLoop Spec Pressure Mode\n\n## Intent\n\nStrengthen the LLM-first intake so a light spec is challenged before Ready Mode. If the input is too vague, DevLoop should not create a weak board; it should produce a useful `needs-clarification.md` that helps the owner improve the spec.\n\nThe clarification should feel like a product/engineering coach: concise, direct, and oriented toward TDD-ready evidence.\n\n- Do not use an LLM API.\n- Do not block mature specs.\n- Do not invent precise repo facts before Scout reads the repo.\n- Do not create `state.yaml` for immature inputs.\n- Do not ask dozens of questions.\n\n## Non-Goals\n\n- TODO: Name what this goal must not change.\n\n## Proposed Oracle\n\nTests prove that immature notes produce a pressure-oriented needs-clarification.md with missing inputs, risk of misfire, priority questions, an amended spec draft, and minimal oracle guidance, while mature notes still produce a brief.\n\n## Suggested Mode\n\nimplementation\n\n## Acceptance Hints\n\n- Immature notes return `needs_clarification`.\n- The clarification includes why the spec is too light.\n- The clarification includes risk/misfire warnings.\n- The clarification includes a small number of priority questions.\n- The clarification includes a proposed amended spec skeleton.\n- The clarification includes a minimal oracle/evidence section.\n- Mature notes still return `ready`.\n- `loop --from` still stops before board generation when clarification is needed.\n- `npm test` passes.\n\n## Risks And Open Questions\n\n- TODO: List ambiguity, missing credentials, operational risks, or decisions needed before implementation.\n\n## Constraints\n\n- TODO: Capture constraints, must-preserve behavior, boundaries, or forbidden changes.\n\n## Ready Mode Command\n\n```bash\nnpm run ready -- --from ./docs/goals/devloop-spec-pressure-mode/brief.md --mode implementation --oracle \"Tests prove that immature notes produce a pressure-oriented needs-clarification.md with missing inputs, risk of misfire, priority questions, an amended spec draft, and minimal oracle guidance, while mature notes still produce a brief.\" --out docs/goals/devloop-spec-pressure-mode\n```\n\n## Source Notes\n\nCompiled from: /Users/arnaud/Documents/llm-first-devloop/docs/devloop-spec-pressure-mode-notes.md\n\n> # DevLoop Spec Pressure Mode\n> \n> ## Intent\n> \n> Strengthen the LLM-first intake so a light spec is challenged before Ready Mode. If the input is too vague, DevLoop should not create a weak board; it should produce a useful `needs-clarification.md` that helps the owner improve the spec.\n> \n> The clarification should feel like a product/engineering coach: concise, direct, and oriented toward TDD-ready evidence.\n> \n> ## Non-Goals\n> \n> - Do not use an LLM API.\n> - Do not block mature specs.\n> - Do not invent precise repo facts before Scout reads the repo.\n> - Do not create `state.yaml` for immature inputs.\n> - Do not ask dozens of questions.\n> \n> ## Proposed Oracle\n> \n> Tests prove that immature notes produce a pressure-oriented `needs-clarification.md` with missing inputs, risk of misfire, priority questions, an amended spec draft, and minimal oracle guidance, while mature notes still produce a brief.\n> \n> ## Acceptance\n> \n> - Immature notes return `needs_clarification`.\n> - The clarification includes why the spec is too light.\n> - The clarification includes risk/misfire warnings.\n> - The clarification includes a small number of priority questions.\n> - The clarification includes a proposed amended spec skeleton.\n> - The clarification includes a minimal oracle/evidence section.\n> - Mature notes still return `ready`.\n> - `loop --from` still stops before board generation when clarification is needed.\n> - `npm test` passes.\n> \n> ## Suggested Mode\n> \n> implementation"
+  interpreted_outcome: "Run the prepared LLM-first workflow for DevLoop Spec Pressure Mode."
+  input_shape: specific
+  audience: "Product owner and target users"
+  authority: requested
+  proof_type:
+    - test
+    - artifact
+    - review
+  completion_proof: "Final audit maps red tests, green verification, implementation receipts, and shipping proof back to the oracle."
+  goal_oracle: "Tests prove that immature notes produce a pressure-oriented needs-clarification.md with missing inputs, risk of misfire, priority questions, an amended spec draft, and minimal oracle guidance, while mature notes still produce a brief."
+  oracle:
+    signal: "Tests prove that immature notes produce a pressure-oriented needs-clarification.md with missing inputs, risk of misfire, priority questions, an amended spec draft, and minimal oracle guidance, while mature notes still produce a brief."
+    final_proof: "T999 states full_outcome_complete: true and cites passing acceptance evidence, verification commands, design review, and T998 shipping evidence."
+  likely_misfire: "Starting implementation from a plausible plan before converting the owner outcome into acceptance tests and observable proof."
+  constraints:
+    - "Acceptance tests or equivalent observable proof must be written before production implementation."
+    - "Implementation must stay inside Judge-approved allowed_files."
+    - "Unrelated dirty worktree changes must remain untouched."
+
+rules:
+  pm_owns_state: true
+  one_active_task: true
+  max_write_workers: 1
+  no_implementation_without_worker_or_pm_task: true
+  no_completion_without_judge_or_pm_audit: true
+  planning_is_not_completion: true
+  queued_required_worker_blocks_completion: true
+  continuous_until_full_outcome: true
+  missing_input_or_credentials_do_not_stop_goal: true
+  preserve_and_validate_existing_plan: true
+  intake_misfire_must_be_audited: true
+  allow_read_only_goal_without_shipping: true
+  require_quality_checker: true
+  require_tdd_worker_flow: true
+  require_github_ship_task: true
+  require_impact_assessment: true
+  goal_pressure_requires_oracle: true
+
+goal_policy:
+  mode: implementation
+  requires_tdd: true
+  requires_impact_assessment: true
+  requires_shipping: true
+  requires_visual_verification: false
+  requires_migration_proof: false
+  requires_infra_proof: false
+  requires_dependency_review: false
+  requires_dirty_worktree_guard: true
+  requires_refactor_proof: false
+  rationale: "Ready Mode is for app-code or product-behavior work after an LLM-first spec conversation has converged."
+
+workflow_safeguards:
+  requires_design_concept: true
+  requires_ubiquitous_language: true
+  requires_feedback_policy: true
+  requires_test_strategy: true
+  requires_module_map: true
+  requires_interface_contract: true
+  requires_architecture_review: true
+  requires_design_delta: true
+  require_t998_shipping: true
+  require_t999_final_audit: true
+  protect_unrelated_dirty_worktree: true
+
+agents:
+  scout: installed
+  worker: installed
+  judge: installed
+
+active_task: T998
+tasks:
+  - id: T001
+    type: scout
+    assignee: Scout
+    status: done
+    objective: "Turn the mature request into a concrete acceptance contract before any implementation work."
+    inputs:
+      - "goal.md"
+      - "acceptance-contract.md"
+      - "Current repository source, tests, scripts, docs, and dirty worktree status"
+    constraints:
+      - "Read-only."
+      - "Do not edit product files."
+      - "Do not start implementation."
+      - "Prefer observable owner outcomes over internal task completion."
+    expected_output:
+      - "design_concept: shared understanding, non-goals, and decision dependencies"
+      - "ubiquitous_language: domain terms, overloaded words, and forbidden synonyms"
+      - "module_map: relevant deep modules, boundaries, and shallow-module risks"
+      - "interface_contract: public behavior and boundaries that tests should target"
+      - "test_strategy: acceptance tests, unit/integration boundaries, mocks, browser or visual checks if relevant"
+      - "feedback_policy: targeted test cadence, typecheck, browser checks, and full-suite timing"
+      - "acceptance_contract_updates: exact end-state evidence and failure modes"
+      - "dirty_worktree_risk_map: unrelated files that must stay untouched"
+      - "impact_assessment covering db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs"
+    receipt:
+      result: done
+      summary: "Mapped current intake. analyzeInterview already blocks missing non_goals/oracle/acceptance_evidence and writes needs-clarification.md, but the content is basic: missing inputs, questions, mode/oracle hints, next step, source notes. It does not explain misfire risk, propose an amended spec skeleton, or pressure the owner toward TDD-ready evidence."
+      design_concept: "Spec Pressure Mode remains local and deterministic. Immature input should generate a concise coaching artifact that names why it is unsafe to proceed, asks priority questions, drafts an amended spec skeleton, and defines the minimal oracle/evidence needed before Ready Mode."
+      ubiquitous_language:
+        spec_pressure: "Deterministic intake friction applied before board creation."
+        light_spec: "Input missing enough intent, non-goals, oracle, or acceptance evidence to safely enter Ready Mode."
+        misfire_risk: "What bad implementation or audit outcome is likely if DevLoop proceeds now."
+        amended_spec_draft: "A scaffold the owner can fill or validate in the LLM-first conversation."
+        minimal_oracle: "The weakest acceptable observable proof before Ready Mode."
+      module_map:
+        target_files:
+          - scripts/goalbuddy-interview.mjs
+          - scripts/goalbuddy-interview.test.mjs
+          - "docs/goals/devloop-spec-pressure-mode/**"
+          - docs/devloop-spec-pressure-mode-notes.md
+        related_files:
+          - scripts/goalbuddy-run.mjs
+          - scripts/goalbuddy-run.test.mjs
+      interface_contract:
+        analyzeInterview: "Immature input returns needs_clarification with enriched content; mature input still returns ready."
+        writeInterview: "Still writes needs-clarification.md instead of brief when not ready."
+        loop --from: "Still stops before Ready Mode board generation when interview needs clarification."
+      test_strategy:
+        red: "Add tests asserting enriched clarification sections and loop-from behavior for immature notes."
+        green: "Enhance renderClarification without weakening mature-ready detection."
+      feedback_policy: "Run node --test scripts/goalbuddy-interview.test.mjs scripts/goalbuddy-run.test.mjs for red/green, then npm test and git diff --check."
+      dirty_worktree_risk_map: "Only current notes/board are dirty before implementation."
+      impact_assessment:
+        db_schema_migrations: none
+        data_backfill: none
+        env_secrets: none
+        auth_permissions: none
+        api_contract: "additive clarification content shape"
+        ui_routes: none
+        background_jobs: none
+        external_services: none
+        deploy_rollback: "git revert"
+        observability: "unit tests and clarification artifact text"
+        docs: "goal notes/board only"
+  - id: T002
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Approve the acceptance contract and choose the largest safe red-test package."
+    inputs:
+      - "T001 receipt"
+      - "Updated acceptance-contract.md if T001 changed it"
+    constraints:
+      - "Do not implement."
+      - "Reject implementation work before tests can express the oracle."
+      - "Reject vague acceptance criteria that cannot be verified."
+      - "Choose a useful vertical slice, not tiny helper-only work."
+    expected_output:
+      - "Decision: approved | needs_more_evidence | blocked"
+      - "Approved design_concept"
+      - "Approved ubiquitous_language"
+      - "feedback_policy"
+      - "test_strategy"
+      - "module_map"
+      - "interface_contract"
+      - "architecture_review"
+      - "Exact Worker objective for red tests"
+      - "allowed_files for T003"
+      - "verify commands for T003"
+      - "stop_if conditions for T003"
+      - "impact_assessment_ref"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Approved a focused TDD slice for enriched needs-clarification output and loop-from blocking behavior."
+      approved_design_concept: "Spec Pressure Mode is deterministic coaching before Ready Mode, not LLM generation. It enriches needs-clarification.md and keeps mature specs flowing."
+      feedback_policy: "Run targeted interview/run tests red/green, then npm test and git diff --check."
+      test_strategy: "Add failing tests for sections: Why This Is Too Light, Likely Misfire, Priority Questions, Proposed Amended Spec, Minimal Oracle Before Ready Mode, plus loop --from stopping without state.yaml on vague notes."
+      module_map:
+        - scripts/goalbuddy-interview.mjs
+        - scripts/goalbuddy-interview.test.mjs
+        - scripts/goalbuddy-run.test.mjs
+        - "docs/goals/devloop-spec-pressure-mode/**"
+        - docs/devloop-spec-pressure-mode-notes.md
+      interface_contract:
+        needs_clarification_content: "pressure-oriented markdown with sections useful for improving the LLM-first spec"
+        ready_content: "unchanged for mature notes"
+      architecture_review: "Approved. Do not introduce AI calls or repo-specific invention. Use deterministic missing-input analysis and generic but actionable scaffolding."
+      impact_assessment_ref: T001.receipt.impact_assessment
+      task_updates:
+        T003:
+          allowed_files:
+            - scripts/goalbuddy-interview.test.mjs
+            - scripts/goalbuddy-run.test.mjs
+            - "docs/goals/devloop-spec-pressure-mode/**"
+          verify:
+            - "node --test scripts/goalbuddy-interview.test.mjs scripts/goalbuddy-run.test.mjs"
+          stop_if:
+            - "Need implementation changes before red evidence."
+            - "Need files outside allowed_files."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+          impact_assessment_ref: T001.receipt.impact_assessment
+        T004:
+          allowed_files:
+            - scripts/goalbuddy-interview.mjs
+            - scripts/goalbuddy-interview.test.mjs
+            - scripts/goalbuddy-run.test.mjs
+            - "docs/goals/devloop-spec-pressure-mode/**"
+            - docs/devloop-spec-pressure-mode-notes.md
+          verify:
+            - "node --test scripts/goalbuddy-interview.test.mjs scripts/goalbuddy-run.test.mjs"
+          stop_if:
+            - "Need files outside allowed_files."
+            - "No prior red_test evidence exists."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+            - "Mature notes begin returning needs_clarification incorrectly."
+          impact_assessment_ref: T001.receipt.impact_assessment
+        T005:
+          allowed_files:
+            - scripts/goalbuddy-interview.mjs
+            - scripts/goalbuddy-interview.test.mjs
+            - scripts/goalbuddy-run.test.mjs
+            - "docs/goals/devloop-spec-pressure-mode/**"
+            - docs/devloop-spec-pressure-mode-notes.md
+          verify:
+            - "node --test scripts/goalbuddy-interview.test.mjs scripts/goalbuddy-run.test.mjs"
+            - "npm test"
+            - "git diff --check"
+          stop_if:
+            - "Need files outside allowed_files."
+            - "No meaningful failing test can be written."
+            - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+            - "Verification fails twice without understood cause."
+          impact_assessment_ref: T001.receipt.impact_assessment
+  - id: T003
+    type: worker
+    worker_kind: red_test
+    assignee: Worker
+    status: done
+    objective: "Write the failing acceptance tests selected by Judge, without production implementation."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T002 approved acceptance contract"
+      - "T002 allowed_files and verify commands"
+    impact_assessment_ref: T001.receipt.impact_assessment
+    allowed_files:
+      - scripts/goalbuddy-interview.test.mjs
+      - scripts/goalbuddy-run.test.mjs
+      - "docs/goals/devloop-spec-pressure-mode/**"
+    verify:
+      - "node --test scripts/goalbuddy-interview.test.mjs scripts/goalbuddy-run.test.mjs"
+    stop_if:
+      - "Need implementation changes before red evidence."
+      - "Need files outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+    receipt:
+      result: done
+      summary: "Added failing tests for pressure-oriented needs-clarification output and loop-from blocking behavior."
+      changed_files:
+        - scripts/goalbuddy-interview.test.mjs
+        - scripts/goalbuddy-run.test.mjs
+      red_evidence:
+        command: "node --test scripts/goalbuddy-interview.test.mjs scripts/goalbuddy-run.test.mjs"
+        result: "failed as expected"
+        failure: "Clarification output lacks Why This Is Too Light, Likely Misfire, Proposed Amended Spec, and Minimal Oracle sections."
+      verify:
+        -
+          command: "node --test scripts/goalbuddy-interview.test.mjs scripts/goalbuddy-run.test.mjs"
+          result: expected_failure
+      impact_assessment_ref: T001.receipt.impact_assessment
+  - id: T004
+    type: worker
+    worker_kind: implementation
+    assignee: Worker
+    status: done
+    objective: "Implement the largest safe useful slice that makes the approved red tests pass."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T003 red test receipt"
+      - "T002 implementation boundaries"
+    impact_assessment_ref: T001.receipt.impact_assessment
+    allowed_files:
+      - scripts/goalbuddy-interview.mjs
+      - scripts/goalbuddy-interview.test.mjs
+      - scripts/goalbuddy-run.test.mjs
+      - "docs/goals/devloop-spec-pressure-mode/**"
+      - docs/devloop-spec-pressure-mode-notes.md
+    verify:
+      - "node --test scripts/goalbuddy-interview.test.mjs scripts/goalbuddy-run.test.mjs"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "No prior red_test evidence exists."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Mature notes begin returning needs_clarification incorrectly."
+    receipt:
+      result: done
+      summary: "Implemented pressure-oriented needs-clarification output without changing mature spec readiness behavior."
+      changed_files:
+        - scripts/goalbuddy-interview.mjs
+        - scripts/goalbuddy-interview.test.mjs
+        - scripts/goalbuddy-run.test.mjs
+      green_test:
+        command: "node --test scripts/goalbuddy-interview.test.mjs scripts/goalbuddy-run.test.mjs"
+        result: pass
+        tests: "11 pass"
+      verify:
+        -
+          command: "node --test scripts/goalbuddy-interview.test.mjs scripts/goalbuddy-run.test.mjs"
+          result: pass
+        -
+          command: "npm test"
+          result: pass
+          tests: "68 pass"
+        -
+          command: "git diff --check"
+          result: pass
+      impact_assessment_ref: T001.receipt.impact_assessment
+  - id: T005
+    type: worker
+    worker_kind: verification
+    assignee: Worker
+    status: done
+    objective: "Run the full verification package, including browser or visual checks when the acceptance contract requires them."
+    inputs:
+      - "architecture_review"
+      - "interface_contract"
+      - "module_map"
+      - "test_strategy"
+      - "feedback_policy"
+      - "ubiquitous_language"
+      - "design_concept"
+      - "T004 implementation receipt"
+      - "Approved feedback_policy"
+    impact_assessment_ref: T001.receipt.impact_assessment
+    allowed_files:
+      - scripts/goalbuddy-interview.mjs
+      - scripts/goalbuddy-interview.test.mjs
+      - scripts/goalbuddy-run.test.mjs
+      - "docs/goals/devloop-spec-pressure-mode/**"
+      - docs/devloop-spec-pressure-mode-notes.md
+    verify:
+      - "node --test scripts/goalbuddy-interview.test.mjs scripts/goalbuddy-run.test.mjs"
+      - "npm test"
+      - "git diff --check"
+    stop_if:
+      - "Need files outside allowed_files."
+      - "No meaningful failing test can be written."
+      - "Need DB migration, schema change, backfill, env/secret, auth/RLS/permission, external service, background job, deploy, or rollback work outside allowed_files."
+      - "Verification fails twice without understood cause."
+    receipt:
+      result: done
+      summary: "Full verification passed for Spec Pressure Mode."
+      changed_files:
+        []
+      verification:
+        -
+          command: "node --test scripts/goalbuddy-interview.test.mjs scripts/goalbuddy-run.test.mjs"
+          result: pass
+          tests: "11 pass"
+        -
+          command: "npm test"
+          result: pass
+          tests: "68 pass"
+        -
+          command: "git diff --check"
+          result: pass
+      verify:
+        -
+          command: "node --test scripts/goalbuddy-interview.test.mjs scripts/goalbuddy-run.test.mjs && npm test && git diff --check"
+          result: pass
+      impact_assessment_ref: T001.receipt.impact_assessment
+  - id: T006
+    type: judge
+    assignee: Judge
+    status: done
+    objective: "Review architecture, spec fidelity, and test evidence before shipping."
+    inputs:
+      - "T001 through T005 receipts"
+      - "Current diff"
+      - "Last verification output"
+    constraints:
+      - "Do not implement."
+      - "Reject completion if the implementation only satisfies internal tasks but not the original oracle."
+      - "Reject hidden design drift, shallow-module sprawl, or missing acceptance evidence."
+    expected_output:
+      - "approved | changes_required"
+      - "design_delta"
+      - "architecture_review"
+      - "oracle_coverage"
+      - "remaining risks"
+      - "whether another Worker slice is needed"
+    receipt:
+      result: done
+      decision: approved
+      summary: "Architecture and behavior approved. Spec Pressure Mode enriches the existing needs-clarification path without changing mature spec readiness."
+      design_delta: "Immature LLM-first notes now produce a coaching clarification artifact with why the spec is too light, likely misfire, priority questions, proposed amended spec, minimal oracle, and acceptance evidence guidance."
+      architecture_review: "Approved. Deterministic local rendering only; no LLM API, no repo-specific invention, no board generation for immature input."
+      oracle_coverage:
+        immature_notes_need_clarification: true
+        why_too_light_section: true
+        likely_misfire_section: true
+        priority_questions_section: true
+        proposed_amended_spec_section: true
+        minimal_oracle_section: true
+        mature_notes_still_ready: true
+        loop_from_stops_before_state_yaml: true
+        npm_test_passes: true
+      remaining_risks:
+        - "This pressures missing core sections; future work could score weak-but-present acceptance evidence more aggressively."
+      another_worker_slice_needed: false
+  - id: T998
+    type: pm
+    assignee: PM
+    status: active
+    objective: "Commit all goal-related changes and push the current branch once verification is green."
+    inputs:
+      - "Approved implementation and verification receipts"
+      - "Current git status"
+    constraints:
+      - "Do not include unrelated dirty files."
+      - "If the workspace is not a git repository, record shipping_blocker: no_git_repository."
+      - "If no GitHub remote exists, record shipping_blocker: no_github_remote."
+    expected_output:
+      - "Or shipping_blocker: no_git_repository | no_github_remote"
+      - "Unrelated dirty files left untouched"
+      - "Committed files"
+      - "Push result"
+      - "Remote branch"
+      - "Commit SHA"
+      - "commit_sha"
+      - "remote_branch or push string"
+      - "push_result"
+      - "committed_files"
+      - "unrelated_dirty_files_left_untouched"
+    receipt: null
+  - id: T999
+    type: judge
+    assignee: Judge
+    status: queued
+    reasoning_hint: high
+    objective: "Audit whether the full original outcome is complete."
+    inputs:
+      - "design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, and design_delta evidence"
+      - "All done task receipts"
+      - "Last verification"
+      - "Current dirty diff"
+      - "Quality checker final output"
+      - "Completed impact_assessment receipt"
+      - "T998 shipping proof when shipping is required"
+    constraints:
+      - "Reject completion if design_concept, ubiquitous_language, feedback_policy, test_strategy, module_map, interface_contract, architecture_review, or design_delta evidence is missing when workflow_safeguards requires it."
+      - "Do not implement."
+      - "Reject completion if required Worker work is still queued or active."
+      - "Reject completion unless impact_assessment covers db_schema_migrations, data_backfill, env_secrets, auth_permissions, api_contract, ui_routes, background_jobs, external_services, deploy_rollback, observability, and docs when impact assessment is required."
+      - "For read-only audit goals with no Worker tasks and no changed_files, accept audit_scope/audit_findings/review/decision evidence instead of TDD, impact_assessment, T998, commit, and push."
+      - "For verification goals, reject completion unless safe test/browser command evidence exists and no changed_files are reported."
+      - "Reject completion unless T998 has a commit SHA and successful push result, or an explicit shipping_blocker for no_git_repository/no_github_remote, when shipping is required."
+    expected_output:
+      - "design_delta"
+      - "workflow_safeguards result"
+      - "complete | not_complete"
+      - "full_outcome_complete: true | false"
+      - "missing evidence"
+      - "next task if not complete"
+    receipt: null

@@ -89,18 +89,69 @@ export function writeInterview(options = {}) {
 }
 
 function renderClarification({ title, mode, oracle, missing, sourceText }) {
-  const questions = missing.map((item) => `- ${questionFor(item)}`).join("\n");
+  const questions = missing.slice(0, 7).map((item) => `- ${questionFor(item)}`).join("\n");
+  const minimalOracle = oracle || "Acceptance tests or equivalent verification prove the owner-visible outcome works, including at least one edge case and one failure mode.";
   return `# ${title} Needs Clarification
 
-This LLM-first input is not ready for Ready Mode yet.
+This LLM-first input is not ready for Ready Mode yet. DevLoop is stopping here because the spec is too light to drive tests without guessing.
+
+## Why This Is Too Light
+
+${whyTooLight(missing)}
+
+## Likely Misfire
+
+If DevLoop starts now, the agent is likely to implement a plausible slice that feels productive but does not prove the owner outcome. The most likely failure is weak tests that validate generic behavior instead of the specific result you want.
 
 ## Missing Inputs
 
 ${missing.map((item) => `- ${item}`).join("\n")}
 
-## Questions To Resolve
+## Priority Questions
 
 ${questions}
+
+## Proposed Amended Spec
+
+Use this as the next LLM-first draft. Fill the TODOs, delete what is wrong, and rerun DevLoop only after the oracle and acceptance evidence are concrete.
+
+\`\`\`md
+# ${title}
+
+## Intent
+
+TODO: Visible outcome the owner expects at the end.
+
+## Non-Goals
+
+TODO: What must stay out of scope.
+
+## Proposed Oracle
+
+${minimalOracle}
+
+## Acceptance
+
+- TODO: First behavior or artifact that must be proven.
+- TODO: Edge case or failure mode that must be covered.
+- TODO: Final manual, visual, source-backed, or shipping proof if relevant.
+
+## Constraints
+
+TODO: Boundaries, credentials, data safety, external services, or forbidden actions.
+\`\`\`
+
+## Minimal Oracle Before Ready Mode
+
+${minimalOracle}
+
+## Acceptance Evidence To Define
+
+Acceptance evidence should be concrete enough to become the first test, check, artifact review, or manual proof.
+
+- A first automated test, browser check, source-backed check, or artifact review that proves the main behavior.
+- At least one edge case or failure mode.
+- Any manual, visual, shipping, migration, or external-service proof needed for this type of work.
 
 ## Current Mode Hint
 
@@ -126,6 +177,16 @@ ${sourceText
   .map((line) => `> ${line}`)
   .join("\n")}
 `;
+}
+
+function whyTooLight(missing) {
+  const reasons = {
+    intent: "The visible outcome is not concrete enough to know what should change for the owner.",
+    non_goals: "The scope has no guardrails, so the agent could spend time on adjacent work.",
+    oracle: "There is no observable proof, so completion would be based on vibes instead of evidence.",
+    acceptance_evidence: "There are no first tests, edge cases, or manual checks to drive implementation.",
+  };
+  return missing.map((item) => `- ${reasons[item] || `Missing ${item}.`}`).join("\n");
 }
 
 function questionFor(key) {
